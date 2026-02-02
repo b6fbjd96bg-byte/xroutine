@@ -15,41 +15,57 @@ const ProgressChart = ({ completed, total }: ProgressChartProps) => {
     { name: "Remaining", value: remaining > 0 ? remaining : 0 },
   ];
 
-  const COLORS = ["hsl(168, 76%, 42%)", "hsl(217, 33%, 17%)"];
+  const COLORS = ["hsl(160, 84%, 39%)", "hsl(230, 40%, 14%)"];
 
   return (
-    <div className="glass-card p-6">
-      <h2 className="text-xl font-bold font-display mb-6 text-center">Overall Daily Progress</h2>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5, delay: 0.1 }}
+      className="glass-card p-6"
+    >
+      <h2 className="text-xl font-bold font-display mb-6 text-center">Overall Progress</h2>
       
-      <div className="relative w-48 h-48 mx-auto">
+      <div className="relative w-44 h-44 mx-auto">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={data}
               cx="50%"
               cy="50%"
-              innerRadius={60}
-              outerRadius={80}
+              innerRadius={55}
+              outerRadius={75}
               startAngle={90}
               endAngle={-270}
-              paddingAngle={2}
+              paddingAngle={3}
               dataKey="value"
             >
               {data.map((_, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={COLORS[index % COLORS.length]}
+                  stroke="transparent"
+                />
               ))}
             </Pie>
           </PieChart>
         </ResponsiveContainer>
         
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
+          initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
           className="absolute inset-0 flex items-center justify-center"
         >
           <div className="text-center">
-            <div className="text-3xl font-bold text-primary">{percentage}%</div>
+            <motion.div 
+              className="text-4xl font-bold text-gradient"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+            >
+              {percentage}%
+            </motion.div>
           </div>
         </motion.div>
       </div>
@@ -64,7 +80,7 @@ const ProgressChart = ({ completed, total }: ProgressChartProps) => {
           <span className="text-sm text-muted-foreground">Remaining</span>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

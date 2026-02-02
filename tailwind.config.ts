@@ -67,6 +67,7 @@ export default {
           blue: "hsl(var(--chart-blue))",
           yellow: "hsl(var(--chart-yellow))",
           green: "hsl(var(--chart-green))",
+          cyan: "hsl(var(--chart-cyan))",
         },
       },
       borderRadius: {
