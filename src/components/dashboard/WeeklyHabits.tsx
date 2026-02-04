@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Plus, ChevronDown, ChevronUp } from "lucide-react";
+import { Check, Plus, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import HabitActions from "./HabitActions";
 
 interface WeeklyHabit {
   id: string;
@@ -25,6 +26,8 @@ interface WeeklyHabitsProps {
   numberOfWeeks: number;
   onToggleWeek: (habitId: string, week: number) => void;
   onAddHabit: (name: string, goal: number) => void;
+  onEditHabit: (id: string, name: string, goal: number) => void;
+  onDeleteHabit: (id: string) => void;
 }
 
 const weekColors = [
@@ -43,7 +46,7 @@ const weekBorderColors = [
   "border-primary",
 ];
 
-const WeeklyHabits = ({ habits, numberOfWeeks, onToggleWeek, onAddHabit }: WeeklyHabitsProps) => {
+const WeeklyHabits = ({ habits, numberOfWeeks, onToggleWeek, onAddHabit, onEditHabit, onDeleteHabit }: WeeklyHabitsProps) => {
   const [newHabitName, setNewHabitName] = useState("");
   const [newHabitGoal, setNewHabitGoal] = useState("5");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -176,9 +179,18 @@ const WeeklyHabits = ({ habits, numberOfWeeks, onToggleWeek, onAddHabit }: Weekl
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05, duration: 0.3 }}
-                    className="grid grid-cols-[180px_60px_repeat(5,1fr)_100px] gap-3 py-3 border-t border-border/30 items-center"
+                    className="grid grid-cols-[180px_60px_repeat(5,1fr)_100px] gap-3 py-3 border-t border-border/30 items-center group"
                   >
-                    <div className="text-sm font-medium truncate">{habit.name}</div>
+                    <div className="text-sm font-medium truncate flex items-center gap-1">
+                      <span className="truncate">{habit.name}</span>
+                      <HabitActions
+                        habitId={habit.id}
+                        habitName={habit.name}
+                        habitGoal={habit.goal}
+                        onEdit={onEditHabit}
+                        onDelete={onDeleteHabit}
+                      />
+                    </div>
                     <div className="text-sm text-muted-foreground text-center">{habit.goal}</div>
                     {weeks.map((week, weekIndex) => {
                       const isCompleted = habit.completedWeeks.includes(week);

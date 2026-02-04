@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Plus, ChevronDown, ChevronUp } from "lucide-react";
+import { Check, Plus, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import HabitActions from "./HabitActions";
 
 interface Habit {
   id: string;
@@ -26,6 +27,8 @@ interface HabitGridProps {
   currentDay: number;
   onToggleDay: (habitId: string, day: number) => void;
   onAddHabit: (name: string, goal: number) => void;
+  onEditHabit: (id: string, name: string, goal: number) => void;
+  onDeleteHabit: (id: string) => void;
 }
 
 const weekColors = [
@@ -36,7 +39,7 @@ const weekColors = [
   "bg-primary",
 ];
 
-const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit }: HabitGridProps) => {
+const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, onEditHabit, onDeleteHabit }: HabitGridProps) => {
   const [newHabitName, setNewHabitName] = useState("");
   const [newHabitGoal, setNewHabitGoal] = useState("30");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -172,9 +175,18 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit }:
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.03, duration: 0.3 }}
-                  className="grid grid-cols-[150px_60px_repeat(31,32px)] gap-1 py-2 border-t border-border/30"
+                  className="grid grid-cols-[150px_60px_repeat(31,32px)] gap-1 py-2 border-t border-border/30 group"
                 >
-                  <div className="text-sm font-medium truncate flex items-center">{habit.name}</div>
+                  <div className="text-sm font-medium truncate flex items-center gap-1">
+                    <span className="truncate">{habit.name}</span>
+                    <HabitActions
+                      habitId={habit.id}
+                      habitName={habit.name}
+                      habitGoal={habit.goal}
+                      onEdit={onEditHabit}
+                      onDelete={onDeleteHabit}
+                    />
+                  </div>
                   <div className="text-sm text-muted-foreground text-center flex items-center justify-center">
                     {habit.goal}
                   </div>
