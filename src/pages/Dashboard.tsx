@@ -3,12 +3,15 @@ import { motion } from "framer-motion";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import HabitGrid from "@/components/dashboard/HabitGrid";
 import WeeklyProgress from "@/components/dashboard/WeeklyProgress";
-import ProgressChart from "@/components/dashboard/ProgressChart";
 import TopHabits from "@/components/dashboard/TopHabits";
 import StatsCards from "@/components/dashboard/StatsCards";
 import MonthSelector from "@/components/dashboard/MonthSelector";
 import TrendLineChart from "@/components/dashboard/TrendLineChart";
 import WeeklyHabits from "@/components/dashboard/WeeklyHabits";
+import CalendarView from "@/components/dashboard/CalendarView";
+import AnalyticsPanel from "@/components/dashboard/AnalyticsPanel";
+import EnhancedProgressChart from "@/components/dashboard/EnhancedProgressChart";
+import AIMotivationAgent from "@/components/dashboard/AIMotivationAgent";
 
 interface Habit {
   id: string;
@@ -45,6 +48,7 @@ const Dashboard = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [habits, setHabits] = useState<Habit[]>(initialHabits);
   const [weeklyHabits, setWeeklyHabits] = useState<WeeklyHabit[]>(initialWeeklyHabits);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const daysInMonth = new Date(
     currentMonth.getFullYear(),
@@ -63,10 +67,12 @@ const Dashboard = () => {
 
   const handlePrevMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
+    setSelectedDate(null);
   };
 
   const handleNextMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
+    setSelectedDate(null);
   };
 
   const handleToggleDay = (habitId: string, day: number) => {
@@ -123,6 +129,10 @@ const Dashboard = () => {
     setWeeklyHabits((prev) => [...prev, newHabit]);
   };
 
+  const handleSelectDate = (date: Date) => {
+    setSelectedDate(date);
+  };
+
   // Calculate daily trend data
   const trendData = useMemo(() => {
     return Array.from({ length: Math.min(currentDay, daysInMonth) }, (_, i) => {
@@ -165,9 +175,32 @@ const Dashboard = () => {
     return weeks;
   }, [habits, daysInMonth]);
 
-  // Calculate total progress
-  const totalCompleted = habits.reduce((sum, h) => sum + h.completedDays.length, 0);
-  const totalPossible = habits.reduce((sum, h) => sum + Math.min(currentDay, h.goal), 0);
+  // Calculate progress stats
+  const dailyCompleted = habits.filter((h) => h.completedDays.includes(currentDay)).length;
+  const dailyTotal = habits.length;
+
+  const weeklyCompleted = useMemo(() => {
+    const currentWeek = Math.ceil(currentDay / 7);
+    const startDay = (currentWeek - 1) * 7 + 1;
+    const endDay = Math.min(currentWeek * 7, currentDay);
+    let count = 0;
+    habits.forEach((habit) => {
+      habit.completedDays.forEach((day) => {
+        if (day >= startDay && day <= endDay) count++;
+      });
+    });
+    return count;
+  }, [habits, currentDay]);
+
+  const weeklyTotal = useMemo(() => {
+    const currentWeek = Math.ceil(currentDay / 7);
+    const startDay = (currentWeek - 1) * 7 + 1;
+    const endDay = Math.min(currentWeek * 7, currentDay);
+    return habits.length * (endDay - startDay + 1);
+  }, [habits, currentDay]);
+
+  const monthlyCompleted = habits.reduce((sum, h) => sum + h.completedDays.length, 0);
+  const monthlyTotal = habits.length * currentDay;
 
   // Calculate habit stats for top habits
   const habitStats = habits.map((habit) => {
@@ -211,7 +244,7 @@ const Dashboard = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="max-w-[1600px] mx-auto space-y-8"
+          className="max-w-[1600px] mx-auto space-y-6"
         >
           {/* Header */}
           <motion.div 
@@ -241,12 +274,29 @@ const Dashboard = () => {
             weeklyProgress={avgWeeklyProgress}
           />
 
+          {/* Calendar & Analytics Row */}
+          <div className="grid lg:grid-cols-2 gap-6">
+            <CalendarView
+              habits={habits}
+              currentMonth={currentMonth}
+              onPrevMonth={handlePrevMonth}
+              onNextMonth={handleNextMonth}
+              onSelectDate={handleSelectDate}
+              selectedDate={selectedDate}
+            />
+            <AnalyticsPanel
+              habits={habits}
+              daysInMonth={daysInMonth}
+              currentDay={currentDay}
+            />
+          </div>
+
           {/* Trend Chart */}
           <TrendLineChart data={trendData} />
 
           {/* Main Grid */}
-          <div className="grid lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-8">
+          <div className="grid lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
               <HabitGrid
                 habits={habits}
                 daysInMonth={daysInMonth}
@@ -261,8 +311,15 @@ const Dashboard = () => {
                 onAddHabit={handleAddWeeklyHabit}
               />
             </div>
-            <div className="space-y-8">
-              <ProgressChart completed={totalCompleted} total={totalPossible} />
+            <div className="space-y-6">
+              <EnhancedProgressChart
+                dailyCompleted={dailyCompleted}
+                dailyTotal={dailyTotal}
+                weeklyCompleted={weeklyCompleted}
+                weeklyTotal={weeklyTotal}
+                monthlyCompleted={monthlyCompleted}
+                monthlyTotal={monthlyTotal}
+              />
               <TopHabits habits={habitStats} />
             </div>
           </div>
@@ -271,6 +328,14 @@ const Dashboard = () => {
           <WeeklyProgress weeks={weeklyProgress} />
         </motion.div>
       </main>
+
+      {/* AI Motivation Agent */}
+      <AIMotivationAgent
+        completedToday={completedToday}
+        totalHabits={habits.length}
+        currentStreak={maxStreak}
+        weeklyProgress={avgWeeklyProgress}
+      />
     </div>
   );
 };
