@@ -119,6 +119,18 @@ const Dashboard = () => {
     setHabits((prev) => [...prev, newHabit]);
   };
 
+  const handleEditHabit = (id: string, name: string, goal: number) => {
+    setHabits((prev) =>
+      prev.map((habit) =>
+        habit.id === id ? { ...habit, name, goal } : habit
+      )
+    );
+  };
+
+  const handleDeleteHabit = (id: string) => {
+    setHabits((prev) => prev.filter((habit) => habit.id !== id));
+  };
+
   const handleAddWeeklyHabit = (name: string, goal: number) => {
     const newHabit: WeeklyHabit = {
       id: `w${Date.now()}`,
@@ -127,6 +139,18 @@ const Dashboard = () => {
       completedWeeks: [],
     };
     setWeeklyHabits((prev) => [...prev, newHabit]);
+  };
+
+  const handleEditWeeklyHabit = (id: string, name: string, goal: number) => {
+    setWeeklyHabits((prev) =>
+      prev.map((habit) =>
+        habit.id === id ? { ...habit, name, goal } : habit
+      )
+    );
+  };
+
+  const handleDeleteWeeklyHabit = (id: string) => {
+    setWeeklyHabits((prev) => prev.filter((habit) => habit.id !== id));
   };
 
   const handleSelectDate = (date: Date) => {
@@ -303,12 +327,16 @@ const Dashboard = () => {
                 currentDay={currentDay}
                 onToggleDay={handleToggleDay}
                 onAddHabit={handleAddHabit}
+                onEditHabit={handleEditHabit}
+                onDeleteHabit={handleDeleteHabit}
               />
               <WeeklyHabits
                 habits={weeklyHabits}
                 numberOfWeeks={numberOfWeeks}
                 onToggleWeek={handleToggleWeek}
                 onAddHabit={handleAddWeeklyHabit}
+                onEditHabit={handleEditWeeklyHabit}
+                onDeleteHabit={handleDeleteWeeklyHabit}
               />
             </div>
             <div className="space-y-6">
