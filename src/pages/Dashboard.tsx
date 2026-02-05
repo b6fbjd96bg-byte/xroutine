@@ -2,16 +2,13 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import HabitGrid from "@/components/dashboard/HabitGrid";
-import WeeklyProgress from "@/components/dashboard/WeeklyProgress";
-import TopHabits from "@/components/dashboard/TopHabits";
-import StatsCards from "@/components/dashboard/StatsCards";
 import MonthSelector from "@/components/dashboard/MonthSelector";
 import TrendLineChart from "@/components/dashboard/TrendLineChart";
 import WeeklyHabits from "@/components/dashboard/WeeklyHabits";
-import CalendarView from "@/components/dashboard/CalendarView";
-import AnalyticsPanel from "@/components/dashboard/AnalyticsPanel";
-import EnhancedProgressChart from "@/components/dashboard/EnhancedProgressChart";
 import AIMotivationAgent from "@/components/dashboard/AIMotivationAgent";
+ import TodaysFocus from "@/components/dashboard/TodaysFocus";
+ import QuickStats from "@/components/dashboard/QuickStats";
+ import TopHabits from "@/components/dashboard/TopHabits";
 
 interface Habit {
   id: string;
@@ -259,6 +256,22 @@ const Dashboard = () => {
     ? Math.round(weeklyProgress.reduce((sum, w) => sum + w.percentage, 0) / weeklyProgress.length)
     : 0;
 
+   // Calculate best day
+   const bestDay = useMemo(() => {
+     let best = 0;
+     let bestDayNum = 0;
+     for (let day = 1; day <= currentDay; day++) {
+       const completed = habits.filter(h => h.completedDays.includes(day)).length;
+       if (completed > best || (completed === habits.length && completed > 0)) {
+         best = completed;
+         bestDayNum = day;
+       }
+     }
+     return bestDayNum;
+   }, [habits, currentDay]);
+ 
+   const monthlyProgress = monthlyTotal > 0 ? Math.round((monthlyCompleted / monthlyTotal) * 100) : 0;
+ 
   return (
     <div className="min-h-screen bg-background">
       <DashboardSidebar />
@@ -268,7 +281,7 @@ const Dashboard = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="max-w-[1600px] mx-auto space-y-6"
+           className="max-w-[1400px] mx-auto space-y-6"
         >
           {/* Header */}
           <motion.div 
@@ -278,7 +291,7 @@ const Dashboard = () => {
             className="flex items-center justify-between"
           >
             <div>
-              <h1 className="text-3xl font-bold font-display mb-2">
+               <h1 className="text-4xl font-bold font-display mb-2">
                 <span className="text-gradient">Habit Tracker</span>
               </h1>
               <p className="text-muted-foreground">Track your daily habits and build better routines</p>
@@ -290,82 +303,108 @@ const Dashboard = () => {
             />
           </motion.div>
 
-          {/* Stats Cards */}
-          <StatsCards
+           {/* Quick Stats Row */}
+           <QuickStats
             totalHabits={habits.length}
             completedToday={completedToday}
             currentStreak={maxStreak}
             weeklyProgress={avgWeeklyProgress}
+             monthlyProgress={monthlyProgress}
+             bestDay={bestDay}
           />
 
-          {/* Calendar & Analytics Row */}
-          <div className="grid lg:grid-cols-2 gap-6">
-            <CalendarView
-              habits={habits}
-              currentMonth={currentMonth}
-              onPrevMonth={handlePrevMonth}
-              onNextMonth={handleNextMonth}
-              onSelectDate={handleSelectDate}
-              selectedDate={selectedDate}
-            />
-            <AnalyticsPanel
-              habits={habits}
-              daysInMonth={daysInMonth}
-              currentDay={currentDay}
-            />
-          </div>
-
-          {/* Trend Chart */}
-          <TrendLineChart data={trendData} />
-
-          {/* Main Grid */}
-          <div className="grid lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 space-y-6">
-              <HabitGrid
-                habits={habits}
-                daysInMonth={daysInMonth}
-                currentDay={currentDay}
-                onToggleDay={handleToggleDay}
-                onAddHabit={handleAddHabit}
-                onEditHabit={handleEditHabit}
-                onDeleteHabit={handleDeleteHabit}
-              />
-              <WeeklyHabits
-                habits={weeklyHabits}
-                numberOfWeeks={numberOfWeeks}
-                onToggleWeek={handleToggleWeek}
-                onAddHabit={handleAddWeeklyHabit}
-                onEditHabit={handleEditWeeklyHabit}
-                onDeleteHabit={handleDeleteWeeklyHabit}
-              />
-            </div>
-            <div className="space-y-6">
-              <EnhancedProgressChart
-                dailyCompleted={dailyCompleted}
-                dailyTotal={dailyTotal}
-                weeklyCompleted={weeklyCompleted}
-                weeklyTotal={weeklyTotal}
-                monthlyCompleted={monthlyCompleted}
-                monthlyTotal={monthlyTotal}
-              />
-              <TopHabits habits={habitStats} />
-            </div>
-          </div>
-
-          {/* Weekly Progress */}
-          <WeeklyProgress weeks={weeklyProgress} />
-        </motion.div>
-      </main>
-
-      {/* AI Motivation Agent */}
-      <AIMotivationAgent
-        completedToday={completedToday}
-        totalHabits={habits.length}
-        currentStreak={maxStreak}
-        weeklyProgress={avgWeeklyProgress}
-      />
-    </div>
-  );
-};
-
-export default Dashboard;
+           {/* Main Content - Today's Focus first for better UX */}
+           <div className="grid lg:grid-cols-3 gap-6">
+             {/* Today's Focus - Most important, leftmost position */}
+             <div className="lg:col-span-1">
+               <TodaysFocus
+                 habits={habits}
+                 currentDay={currentDay}
+                 onToggleDay={handleToggleDay}
+               />
+             </div>
+ 
+             {/* Daily Habits Grid - Main content */}
+             <div className="lg:col-span-2 space-y-6">
+               <HabitGrid
+                 habits={habits}
+                 daysInMonth={daysInMonth}
+                 currentDay={currentDay}
+                 onToggleDay={handleToggleDay}
+                 onAddHabit={handleAddHabit}
+                 onEditHabit={handleEditHabit}
+                 onDeleteHabit={handleDeleteHabit}
+               />
+             </div>
+           </div>
+ 
+           {/* Trend Chart - Full width for impact */}
+           <TrendLineChart data={trendData} />
+ 
+           {/* Secondary Content */}
+           <div className="grid lg:grid-cols-3 gap-6">
+             {/* Weekly Habits */}
+             <div className="lg:col-span-2">
+               <WeeklyHabits
+                 habits={weeklyHabits}
+                 numberOfWeeks={numberOfWeeks}
+                 onToggleWeek={handleToggleWeek}
+                 onAddHabit={handleAddWeeklyHabit}
+                 onEditHabit={handleEditWeeklyHabit}
+                 onDeleteHabit={handleDeleteWeeklyHabit}
+               />
+             </div>
+ 
+             {/* Top Habits */}
+             <div className="lg:col-span-1">
+               <TopHabits habits={habitStats} />
+             </div>
+           </div>
+ 
+           {/* Quick Links to other pages */}
+           <motion.div
+             initial={{ opacity: 0, y: 20 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ delay: 0.5 }}
+             className="grid grid-cols-3 gap-4"
+           >
+             <a
+               href="/dashboard/calendar"
+               className="glass-card p-4 text-center hover:scale-[1.02] transition-transform group"
+             >
+               <div className="text-3xl mb-2">📅</div>
+               <h3 className="font-bold font-display group-hover:text-primary transition-colors">Calendar</h3>
+               <p className="text-sm text-muted-foreground">View history</p>
+             </a>
+             <a
+               href="/dashboard/analytics"
+               className="glass-card p-4 text-center hover:scale-[1.02] transition-transform group"
+             >
+               <div className="text-3xl mb-2">📊</div>
+               <h3 className="font-bold font-display group-hover:text-primary transition-colors">Analytics</h3>
+               <p className="text-sm text-muted-foreground">Deep insights</p>
+             </a>
+             <a
+               href="/dashboard/settings"
+               className="glass-card p-4 text-center hover:scale-[1.02] transition-transform group"
+             >
+               <div className="text-3xl mb-2">⚙️</div>
+               <h3 className="font-bold font-display group-hover:text-primary transition-colors">Settings</h3>
+               <p className="text-sm text-muted-foreground">Customize app</p>
+             </a>
+           </motion.div>
+         </motion.div>
+       </main>
+ 
+       {/* AI Motivation Agent */}
+       <AIMotivationAgent
+         completedToday={completedToday}
+         totalHabits={habits.length}
+         currentStreak={maxStreak}
+         weeklyProgress={avgWeeklyProgress}
+       />
+     </div>
+   );
+ };
+ 
+ export default Dashboard;
