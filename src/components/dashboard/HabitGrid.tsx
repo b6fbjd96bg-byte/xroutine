@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Plus, ChevronUp } from "lucide-react";
+import { Check, Plus, ChevronUp, Play, Link2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,21 +12,37 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import HabitActions from "./HabitActions";
+import FocusTimer from "@/components/gamification/FocusTimer";
 
 interface Habit {
   id: string;
   name: string;
   goal: number;
   completedDays: number[];
+  linkedTo?: string; // Habit bundling - linked to another habit
+  hasFocusTimer?: boolean; // Whether this habit has a focus timer
 }
 
 interface HabitGridProps {
   habits: Habit[];
   daysInMonth: number;
   currentDay: number;
-  onToggleDay: (habitId: string, day: number) => void;
-  onAddHabit: (name: string, goal: number) => void;
+  onToggleDay: (habitId: string, day: number, event?: React.MouseEvent) => void;
+  onAddHabit: (name: string, goal: number, linkedTo?: string) => void;
   onEditHabit: (id: string, name: string, goal: number) => void;
   onDeleteHabit: (id: string) => void;
 }
@@ -39,11 +55,16 @@ const weekColors = [
   "bg-primary",
 ];
 
+// Habits that can have focus timers
+const focusTimerHabits = ["meditation", "reading", "study", "work", "focus", "deep work", "writing"];
+
 const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, onEditHabit, onDeleteHabit }: HabitGridProps) => {
   const [newHabitName, setNewHabitName] = useState("");
   const [newHabitGoal, setNewHabitGoal] = useState("30");
+  const [linkedHabit, setLinkedHabit] = useState<string>("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
+  const [focusTimerHabit, setFocusTimerHabit] = useState<Habit | null>(null);
 
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
   const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -51,11 +72,16 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
   const getWeekNumber = (day: number) => Math.ceil(day / 7) - 1;
   const getWeekColor = (day: number) => weekColors[getWeekNumber(day) % weekColors.length];
 
+  const canHaveFocusTimer = (name: string) => {
+    return focusTimerHabits.some(h => name.toLowerCase().includes(h));
+  };
+
   const handleAddHabit = () => {
     if (newHabitName.trim()) {
-      onAddHabit(newHabitName, parseInt(newHabitGoal) || 30);
+      onAddHabit(newHabitName, parseInt(newHabitGoal) || 30, linkedHabit || undefined);
       setNewHabitName("");
       setNewHabitGoal("30");
+      setLinkedHabit("");
       setIsDialogOpen(false);
     }
   };
@@ -90,7 +116,7 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
                   <Label htmlFor="habitName">Habit Name</Label>
                   <Input
                     id="habitName"
-                    placeholder="e.g., Running"
+                    placeholder="e.g., Meditation"
                     value={newHabitName}
                     onChange={(e) => setNewHabitName(e.target.value)}
                     className="bg-secondary/50"
@@ -107,6 +133,33 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
                     className="bg-secondary/50"
                   />
                 </div>
+                
+                {/* Habit Bundling */}
+                {habits.length > 0 && (
+                  <div className="space-y-2">
+                    <Label className="flex items-center gap-2">
+                      <Link2 className="w-4 h-4 text-primary" />
+                      Habit Stacking (Optional)
+                    </Label>
+                    <Select value={linkedHabit} onValueChange={setLinkedHabit}>
+                      <SelectTrigger className="bg-secondary/50">
+                        <SelectValue placeholder="I will do this after..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">No linking</SelectItem>
+                        {habits.map((habit) => (
+                          <SelectItem key={habit.id} value={habit.id}>
+                            After: {habit.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <p className="text-xs text-muted-foreground">
+                      Link habits together to build stronger routines
+                    </p>
+                  </div>
+                )}
+
                 <Button onClick={handleAddHabit} className="w-full">
                   Add Habit
                 </Button>
@@ -169,7 +222,14 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
               </div>
 
               {/* Habits */}
-              {habits.map((habit, index) => (
+              <TooltipProvider>
+              {habits.map((habit, index) => {
+                const linkedHabitName = habit.linkedTo 
+                  ? habits.find(h => h.id === habit.linkedTo)?.name 
+                  : null;
+                const showFocusButton = canHaveFocusTimer(habit.name);
+
+                return (
                 <motion.div
                   key={habit.id}
                   initial={{ opacity: 0, x: -20 }}
@@ -178,7 +238,35 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
                   className="grid grid-cols-[150px_60px_repeat(31,32px)] gap-1 py-2 border-t border-border/30 group"
                 >
                   <div className="text-sm font-medium truncate flex items-center gap-1">
-                    <span className="truncate">{habit.name}</span>
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <div className="flex items-center gap-1">
+                        <span className="truncate">{habit.name}</span>
+                        {showFocusButton && (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setFocusTimerHabit(habit);
+                                }}
+                              >
+                                <Play className="w-3 h-3 text-primary" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Focus Timer</TooltipContent>
+                          </Tooltip>
+                        )}
+                      </div>
+                      {linkedHabitName && (
+                        <span className="text-[10px] text-primary/70 flex items-center gap-1">
+                          <Link2 className="w-2.5 h-2.5" />
+                          After: {linkedHabitName}
+                        </span>
+                      )}
+                    </div>
                     <HabitActions
                       habitId={habit.id}
                       habitName={habit.name}
@@ -201,7 +289,7 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
                         key={day}
                         whileHover={!isFuture ? { scale: 1.15 } : {}}
                         whileTap={!isFuture ? { scale: 0.9 } : {}}
-                        onClick={() => !isFuture && onToggleDay(habit.id, day)}
+                        onClick={(e) => !isFuture && onToggleDay(habit.id, day, e)}
                         disabled={isFuture}
                         className={cn(
                           "w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-300",
@@ -224,7 +312,9 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
                     );
                   })}
                 </motion.div>
-              ))}
+              );
+              })}
+              </TooltipProvider>
 
               {habits.length === 0 && (
                 <div className="text-center py-12 text-muted-foreground border-t border-border/30">
@@ -235,6 +325,21 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Focus Timer Modal */}
+      {focusTimerHabit && (
+        <FocusTimer
+          habitName={focusTimerHabit.name}
+          isOpen={!!focusTimerHabit}
+          onClose={() => setFocusTimerHabit(null)}
+          onComplete={() => {
+            if (focusTimerHabit) {
+              onToggleDay(focusTimerHabit.id, currentDay);
+            }
+            setFocusTimerHabit(null);
+          }}
+        />
+      )}
     </div>
   );
 };
