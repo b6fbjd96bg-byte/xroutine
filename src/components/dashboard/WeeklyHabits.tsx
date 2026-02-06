@@ -24,7 +24,7 @@ interface WeeklyHabit {
 interface WeeklyHabitsProps {
   habits: WeeklyHabit[];
   numberOfWeeks: number;
-  onToggleWeek: (habitId: string, week: number) => void;
+  onToggleWeek: (habitId: string, week: number, event?: React.MouseEvent) => void;
   onAddHabit: (name: string, goal: number) => void;
   onEditHabit: (id: string, name: string, goal: number) => void;
   onDeleteHabit: (id: string) => void;
@@ -200,7 +200,7 @@ const WeeklyHabits = ({ habits, numberOfWeeks, onToggleWeek, onAddHabit, onEditH
                           <motion.button
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.95 }}
-                            onClick={() => onToggleWeek(habit.id, week)}
+                            onClick={(e) => onToggleWeek(habit.id, week, e)}
                             className={cn(
                               "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300",
                               isCompleted 

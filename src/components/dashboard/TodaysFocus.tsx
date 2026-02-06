@@ -1,25 +1,36 @@
- import { useState } from "react";
- import { motion, AnimatePresence } from "framer-motion";
- import { Check, Circle, Sparkles, Trophy, Target, Flame, Clock } from "lucide-react";
- import { cn } from "@/lib/utils";
- import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Check, Circle, Sparkles, Trophy, Target, Flame, Clock, Play } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import DailyQuote from "@/components/gamification/DailyQuote";
+import FocusTimer from "@/components/gamification/FocusTimer";
+
+interface Habit {
+  id: string;
+  name: string;
+  goal: number;
+  completedDays: number[];
+}
+
+interface TodaysFocusProps {
+  habits: Habit[];
+  currentDay: number;
+  onToggleDay: (habitId: string, day: number, event?: React.MouseEvent) => void;
+}
+
+// Habits that can have focus timers
+const focusTimerHabits = ["meditation", "reading", "study", "work", "focus", "deep work", "writing"];
  
- interface Habit {
-   id: string;
-   name: string;
-   goal: number;
-   completedDays: number[];
- }
- 
- interface TodaysFocusProps {
-   habits: Habit[];
-   currentDay: number;
-   onToggleDay: (habitId: string, day: number) => void;
- }
- 
- const TodaysFocus = ({ habits, currentDay, onToggleDay }: TodaysFocusProps) => {
-   const completedToday = habits.filter(h => h.completedDays.includes(currentDay));
-   const pendingToday = habits.filter(h => !h.completedDays.includes(currentDay));
+const TodaysFocus = ({ habits, currentDay, onToggleDay }: TodaysFocusProps) => {
+  const [focusTimerHabit, setFocusTimerHabit] = useState<Habit | null>(null);
+  
+  const completedToday = habits.filter(h => h.completedDays.includes(currentDay));
+  const pendingToday = habits.filter(h => !h.completedDays.includes(currentDay));
+
+  const canHaveFocusTimer = (name: string) => {
+    return focusTimerHabits.some(h => name.toLowerCase().includes(h));
+  };
    const completionPercentage = habits.length > 0 
      ? Math.round((completedToday.length / habits.length) * 100) 
      : 0;
@@ -68,18 +79,23 @@
            </div>
          </div>
  
-         {/* Motivational Message */}
-         <motion.div
-           key={completionPercentage}
-           initial={{ opacity: 0, scale: 0.95 }}
-           animate={{ opacity: 1, scale: 1 }}
-           className="mb-6 p-4 rounded-xl bg-gradient-to-r from-primary/10 to-chart-purple/10 border border-primary/20"
-         >
-           <div className="flex items-center gap-3">
-             <Sparkles className="w-5 h-5 text-chart-yellow" />
-             <span className="font-medium">{getMotivationalMessage()}</span>
-           </div>
-         </motion.div>
+          {/* Motivational Message */}
+          <motion.div
+            key={completionPercentage}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mb-4 p-4 rounded-xl bg-gradient-to-r from-primary/10 to-chart-purple/10 border border-primary/20"
+          >
+            <div className="flex items-center gap-3">
+              <Sparkles className="w-5 h-5 text-chart-yellow" />
+              <span className="font-medium">{getMotivationalMessage()}</span>
+            </div>
+          </motion.div>
+
+          {/* Daily Quote */}
+          <div className="mb-6">
+            <DailyQuote />
+          </div>
  
          {/* Progress Ring */}
          <div className="flex justify-center mb-6">
@@ -130,73 +146,102 @@
  
          {/* Pending Habits */}
          {pendingToday.length > 0 && (
-           <div className="mb-4">
-             <h3 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
-               <Circle className="w-4 h-4" />
-               Pending ({pendingToday.length})
-             </h3>
-             <div className="space-y-2">
-               {pendingToday.map((habit, index) => (
-                 <motion.button
-                   key={habit.id}
-                   initial={{ opacity: 0, x: -20 }}
-                   animate={{ opacity: 1, x: 0 }}
-                   transition={{ delay: index * 0.05 }}
-                   onClick={() => onToggleDay(habit.id, currentDay)}
-                   className="w-full flex items-center gap-3 p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50 border border-border/30 hover:border-primary/30 transition-all group"
-                 >
-                   <div className="w-6 h-6 rounded-full border-2 border-muted-foreground/30 group-hover:border-primary transition-colors flex items-center justify-center">
-                     <div className="w-2 h-2 rounded-full bg-muted-foreground/30 group-hover:bg-primary transition-colors" />
-                   </div>
-                   <span className="flex-1 text-left font-medium">{habit.name}</span>
-                   <span className="text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
-                     Click to complete
-                   </span>
-                 </motion.button>
-               ))}
-             </div>
-           </div>
-         )}
+            <div className="mb-4">
+              <h3 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
+                <Circle className="w-4 h-4" />
+                Pending ({pendingToday.length})
+              </h3>
+              <div className="space-y-2">
+                {pendingToday.map((habit, index) => (
+                  <motion.div
+                    key={habit.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="w-full flex items-center gap-3 p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50 border border-border/30 hover:border-primary/30 transition-all group"
+                  >
+                    <button
+                      onClick={(e) => onToggleDay(habit.id, currentDay, e)}
+                      className="w-6 h-6 rounded-full border-2 border-muted-foreground/30 group-hover:border-primary transition-colors flex items-center justify-center"
+                    >
+                      <div className="w-2 h-2 rounded-full bg-muted-foreground/30 group-hover:bg-primary transition-colors" />
+                    </button>
+                    <span className="flex-1 text-left font-medium">{habit.name}</span>
+                    {canHaveFocusTimer(habit.name) && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setFocusTimerHabit(habit);
+                        }}
+                      >
+                        <Play className="w-4 h-4 text-primary" />
+                      </Button>
+                    )}
+                    <span className="text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
+                      Click to complete
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
  
-         {/* Completed Habits */}
-         {completedToday.length > 0 && (
-           <div>
-             <h3 className="text-sm font-semibold text-primary mb-3 flex items-center gap-2">
-               <Check className="w-4 h-4" />
-               Completed ({completedToday.length})
-             </h3>
-             <div className="space-y-2">
-               {completedToday.map((habit, index) => (
-                 <motion.button
-                   key={habit.id}
-                   initial={{ opacity: 0, x: -20 }}
-                   animate={{ opacity: 1, x: 0 }}
-                   transition={{ delay: index * 0.05 }}
-                   onClick={() => onToggleDay(habit.id, currentDay)}
-                   className="w-full flex items-center gap-3 p-3 rounded-xl bg-primary/10 border border-primary/20 transition-all group hover:bg-primary/20"
-                 >
-                   <motion.div
-                     initial={{ scale: 0 }}
-                     animate={{ scale: 1 }}
-                     className="w-6 h-6 rounded-full bg-primary flex items-center justify-center"
-                   >
-                     <Check className="w-4 h-4 text-primary-foreground" />
-                   </motion.div>
-                   <span className="flex-1 text-left font-medium text-primary line-through opacity-80">{habit.name}</span>
-                 </motion.button>
-               ))}
-             </div>
-           </div>
-         )}
- 
-         {habits.length === 0 && (
-           <div className="text-center py-8 text-muted-foreground">
-             <p>No habits yet. Add your first habit to get started!</p>
-           </div>
-         )}
-       </div>
-     </motion.div>
-   );
- };
- 
- export default TodaysFocus;
+          {completedToday.length > 0 && (
+            <div>
+              <h3 className="text-sm font-semibold text-primary mb-3 flex items-center gap-2">
+                <Check className="w-4 h-4" />
+                Completed ({completedToday.length})
+              </h3>
+              <div className="space-y-2">
+                {completedToday.map((habit, index) => (
+                  <motion.button
+                    key={habit.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    onClick={(e) => onToggleDay(habit.id, currentDay, e)}
+                    className="w-full flex items-center gap-3 p-3 rounded-xl bg-primary/10 border border-primary/20 transition-all group hover:bg-primary/20"
+                  >
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="w-6 h-6 rounded-full bg-primary flex items-center justify-center"
+                    >
+                      <Check className="w-4 h-4 text-primary-foreground" />
+                    </motion.div>
+                    <span className="flex-1 text-left font-medium text-primary line-through opacity-80">{habit.name}</span>
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {habits.length === 0 && (
+            <div className="text-center py-8 text-muted-foreground">
+              <p>No habits yet. Add your first habit to get started!</p>
+            </div>
+          )}
+        </div>
+
+        {/* Focus Timer Modal */}
+        {focusTimerHabit && (
+          <FocusTimer
+            habitName={focusTimerHabit.name}
+            isOpen={!!focusTimerHabit}
+            onClose={() => setFocusTimerHabit(null)}
+            onComplete={() => {
+              if (focusTimerHabit) {
+                onToggleDay(focusTimerHabit.id, currentDay);
+              }
+              setFocusTimerHabit(null);
+            }}
+          />
+        )}
+      </motion.div>
+    );
+  };
+
+export default TodaysFocus;

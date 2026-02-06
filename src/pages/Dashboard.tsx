@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import HabitGrid from "@/components/dashboard/HabitGrid";
@@ -6,15 +6,22 @@ import MonthSelector from "@/components/dashboard/MonthSelector";
 import TrendLineChart from "@/components/dashboard/TrendLineChart";
 import WeeklyHabits from "@/components/dashboard/WeeklyHabits";
 import AIMotivationAgent from "@/components/dashboard/AIMotivationAgent";
- import TodaysFocus from "@/components/dashboard/TodaysFocus";
- import QuickStats from "@/components/dashboard/QuickStats";
- import TopHabits from "@/components/dashboard/TopHabits";
+import TodaysFocus from "@/components/dashboard/TodaysFocus";
+import QuickStats from "@/components/dashboard/QuickStats";
+import TopHabits from "@/components/dashboard/TopHabits";
+import XPSystem from "@/components/gamification/XPSystem";
+import FloatingXP from "@/components/gamification/FloatingXP";
+import StreakProtection from "@/components/gamification/StreakProtection";
+import ConfettiCelebration from "@/components/gamification/ConfettiCelebration";
+import { useGameification } from "@/hooks/useGameification";
+import { useToast } from "@/hooks/use-toast";
 
 interface Habit {
   id: string;
   name: string;
   goal: number;
   completedDays: number[];
+  linkedTo?: string;
 }
 
 interface WeeklyHabit {
@@ -46,6 +53,24 @@ const Dashboard = () => {
   const [habits, setHabits] = useState<Habit[]>(initialHabits);
   const [weeklyHabits, setWeeklyHabits] = useState<WeeklyHabit[]>(initialWeeklyHabits);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const prevCompletedToday = useRef<number>(0);
+  const { toast } = useToast();
+  
+  // Gamification hooks
+  const {
+    totalXP,
+    emergencySkipsRemaining,
+    emergencySkipsUsed,
+    isStreakProtected,
+    xpNotifications,
+    showConfetti,
+    addDailyXP,
+    addWeeklyXP,
+    removeXPNotification,
+    useEmergencySkip,
+    triggerConfetti,
+    resetConfetti,
+  } = useGameification();
 
   const daysInMonth = new Date(
     currentMonth.getFullYear(),
@@ -72,7 +97,10 @@ const Dashboard = () => {
     setSelectedDate(null);
   };
 
-  const handleToggleDay = (habitId: string, day: number) => {
+  const handleToggleDay = (habitId: string, day: number, event?: React.MouseEvent) => {
+    const habit = habits.find(h => h.id === habitId);
+    const wasCompleted = habit?.completedDays.includes(day);
+    
     setHabits((prev) =>
       prev.map((habit) => {
         if (habit.id === habitId) {
@@ -87,9 +115,21 @@ const Dashboard = () => {
         return habit;
       })
     );
+
+    // Award XP for completing (not uncompleting)
+    if (!wasCompleted && day === currentDay) {
+      addDailyXP(event);
+      toast({
+        title: "Habit completed! 🎯",
+        description: `+10 XP earned`,
+      });
+    }
   };
 
-  const handleToggleWeek = (habitId: string, week: number) => {
+  const handleToggleWeek = (habitId: string, week: number, event?: React.MouseEvent) => {
+    const habit = weeklyHabits.find(h => h.id === habitId);
+    const wasCompleted = habit?.completedWeeks.includes(week);
+    
     setWeeklyHabits((prev) =>
       prev.map((habit) => {
         if (habit.id === habitId) {
@@ -104,16 +144,30 @@ const Dashboard = () => {
         return habit;
       })
     );
+
+    // Award XP for completing weekly habit
+    if (!wasCompleted) {
+      addWeeklyXP(event);
+      toast({
+        title: "Weekly habit completed! 🏆",
+        description: `+50 XP earned`,
+      });
+    }
   };
 
-  const handleAddHabit = (name: string, goal: number) => {
+  const handleAddHabit = (name: string, goal: number, linkedTo?: string) => {
     const newHabit: Habit = {
       id: Date.now().toString(),
       name,
       goal,
       completedDays: [],
+      linkedTo,
     };
     setHabits((prev) => [...prev, newHabit]);
+    toast({
+      title: "Habit created! 🌱",
+      description: `"${name}" has been added to your tracker`,
+    });
   };
 
   const handleEditHabit = (id: string, name: string, goal: number) => {
@@ -122,10 +176,18 @@ const Dashboard = () => {
         habit.id === id ? { ...habit, name, goal } : habit
       )
     );
+    toast({
+      title: "Habit updated! ✏️",
+      description: `Changes saved successfully`,
+    });
   };
 
   const handleDeleteHabit = (id: string) => {
     setHabits((prev) => prev.filter((habit) => habit.id !== id));
+    toast({
+      title: "Habit deleted",
+      description: "The habit has been removed",
+    });
   };
 
   const handleAddWeeklyHabit = (name: string, goal: number) => {
@@ -136,6 +198,10 @@ const Dashboard = () => {
       completedWeeks: [],
     };
     setWeeklyHabits((prev) => [...prev, newHabit]);
+    toast({
+      title: "Weekly habit created! 📅",
+      description: `"${name}" has been added`,
+    });
   };
 
   const handleEditWeeklyHabit = (id: string, name: string, goal: number) => {
@@ -144,10 +210,18 @@ const Dashboard = () => {
         habit.id === id ? { ...habit, name, goal } : habit
       )
     );
+    toast({
+      title: "Habit updated! ✏️",
+      description: `Changes saved successfully`,
+    });
   };
 
   const handleDeleteWeeklyHabit = (id: string) => {
     setWeeklyHabits((prev) => prev.filter((habit) => habit.id !== id));
+    toast({
+      title: "Habit deleted",
+      description: "The weekly habit has been removed",
+    });
   };
 
   const handleSelectDate = (date: Date) => {
@@ -251,6 +325,20 @@ const Dashboard = () => {
   });
 
   const completedToday = habits.filter((h) => h.completedDays.includes(currentDay)).length;
+  const dailyCompletedForWeek = weeklyHabits.filter(h => h.completedWeeks.includes(Math.ceil(currentDay / 7))).length;
+
+  // Check for 100% completion and trigger confetti
+  useEffect(() => {
+    if (habits.length > 0 && completedToday === habits.length && prevCompletedToday.current < habits.length) {
+      triggerConfetti();
+      toast({
+        title: "🎉 Perfect Day!",
+        description: "You completed all your habits! Amazing work!",
+      });
+    }
+    prevCompletedToday.current = completedToday;
+  }, [completedToday, habits.length, triggerConfetti, toast]);
+
   const maxStreak = Math.max(...habitStats.map((h) => h.currentStreak), 0);
   const avgWeeklyProgress = weeklyProgress.length > 0
     ? Math.round(weeklyProgress.reduce((sum, w) => sum + w.percentage, 0) / weeklyProgress.length)
@@ -270,10 +358,16 @@ const Dashboard = () => {
      return bestDayNum;
    }, [habits, currentDay]);
  
-   const monthlyProgress = monthlyTotal > 0 ? Math.round((monthlyCompleted / monthlyTotal) * 100) : 0;
- 
+  const monthlyProgress = monthlyTotal > 0 ? Math.round((monthlyCompleted / monthlyTotal) * 100) : 0;
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Floating XP Notifications */}
+      <FloatingXP notifications={xpNotifications} onComplete={removeXPNotification} />
+      
+      {/* Confetti Celebration */}
+      <ConfettiCelebration trigger={showConfetti} onComplete={resetConfetti} />
+
       <DashboardSidebar />
       
       <main className="ml-64 p-8">
@@ -303,6 +397,22 @@ const Dashboard = () => {
             />
           </motion.div>
 
+           {/* XP System & Streak Protection Row */}
+           <div className="grid lg:grid-cols-2 gap-4">
+             <XPSystem
+               totalXP={totalXP}
+               dailyCompleted={completedToday}
+               weeklyCompleted={dailyCompletedForWeek}
+             />
+             <StreakProtection
+               emergencySkipsRemaining={emergencySkipsRemaining}
+               emergencySkipsUsed={emergencySkipsUsed}
+               isStreakProtected={isStreakProtected}
+               currentStreak={maxStreak}
+               onUseSkip={useEmergencySkip}
+             />
+           </div>
+
            {/* Quick Stats Row */}
            <QuickStats
             totalHabits={habits.length}
@@ -312,8 +422,6 @@ const Dashboard = () => {
              monthlyProgress={monthlyProgress}
              bestDay={bestDay}
           />
-
-           {/* Main Content - Today's Focus first for better UX */}
            <div className="grid lg:grid-cols-3 gap-6">
              {/* Today's Focus - Most important, leftmost position */}
              <div className="lg:col-span-1">
