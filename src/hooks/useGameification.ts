@@ -28,26 +28,28 @@ const getInitialState = (): GameState => {
     };
   }
   
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved) {
-    const parsed = JSON.parse(saved);
-    // Reset skips at the start of each month
-    const now = new Date();
-    const lastReset = parsed.lastMonthReset ? new Date(parsed.lastMonthReset) : null;
-    if (!lastReset || lastReset.getMonth() !== now.getMonth()) {
-      return {
-        ...parsed,
-        emergencySkipsRemaining: 1,
-        emergencySkipsUsed: 0,
-        isStreakProtected: false,
-        lastMonthReset: now.toISOString(),
-      };
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Reset skips at the start of each month
+      const now = new Date();
+      const lastReset = parsed.lastMonthReset ? new Date(parsed.lastMonthReset) : null;
+      if (!lastReset || lastReset.getMonth() !== now.getMonth()) {
+        return {
+          ...parsed,
+          emergencySkipsRemaining: 1,
+          emergencySkipsUsed: 0,
+          isStreakProtected: false,
+          lastMonthReset: now.toISOString(),
+        };
+      }
+      return parsed;
     }
-    return parsed;
-  }
+  } catch {}
   
   return {
-    totalXP: 350, // Start with some XP for demo
+    totalXP: 0,
     emergencySkipsRemaining: 1,
     emergencySkipsUsed: 0,
     isStreakProtected: false,

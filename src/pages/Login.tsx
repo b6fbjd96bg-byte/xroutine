@@ -5,16 +5,34 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link, useNavigate } from "react-router-dom";
 import { CheckCircle, Eye, EyeOff, ArrowLeft } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // For now, navigate to dashboard
+
+    if (!email.trim() || !password.trim()) {
+      toast({
+        title: "Missing fields",
+        description: "Please enter your email and password.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Mark as returning user (no onboarding)
+    localStorage.removeItem("routinex_is_new_user");
+    
+    toast({
+      title: "Welcome back! 👋",
+      description: "Loading your dashboard...",
+    });
     navigate("/dashboard");
   };
 
@@ -63,6 +81,7 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="bg-secondary/50"
+                required
               />
             </div>
 
@@ -76,6 +95,7 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="bg-secondary/50 pr-10"
+                  required
                 />
                 <button
                   type="button"
@@ -95,7 +115,7 @@ const Login = () => {
           <p className="text-sm text-muted-foreground text-center mt-6">
             Don't have an account?{" "}
             <Link to="/signup" className="text-primary hover:underline">
-              Sign up
+              Sign up free
             </Link>
           </p>
         </div>
