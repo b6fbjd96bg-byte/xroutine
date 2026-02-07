@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link, useNavigate } from "react-router-dom";
 import { CheckCircle, Eye, EyeOff, ArrowLeft } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,10 +13,41 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // For now, navigate to dashboard
+
+    if (!name.trim() || !email.trim() || !password.trim()) {
+      toast({
+        title: "Missing fields",
+        description: "Please fill in all fields to create your account.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (password.length < 6) {
+      toast({
+        title: "Password too short",
+        description: "Password must be at least 6 characters.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Mark as new user for onboarding
+    localStorage.setItem("routinex_is_new_user", "true");
+    localStorage.setItem("routinex_user_name", name.trim());
+    // Clear any existing game/habit state for fresh start
+    localStorage.removeItem("routinex_game_state");
+    localStorage.removeItem("routinex_habits");
+    localStorage.removeItem("routinex_weekly_habits");
+
+    toast({
+      title: "Account created! 🎉",
+      description: "Welcome to RoutineX!",
+    });
     navigate("/dashboard");
   };
 
@@ -51,7 +83,7 @@ const Signup = () => {
 
           <h1 className="text-2xl font-bold font-display mb-2">Create your account</h1>
           <p className="text-muted-foreground mb-8">
-            Start building better habits today
+            Start building better habits today — it's free
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -64,6 +96,7 @@ const Signup = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="bg-secondary/50"
+                required
               />
             </div>
 
@@ -76,6 +109,7 @@ const Signup = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="bg-secondary/50"
+                required
               />
             </div>
 
@@ -89,6 +123,8 @@ const Signup = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="bg-secondary/50 pr-10"
+                  required
+                  minLength={6}
                 />
                 <button
                   type="button"
@@ -98,6 +134,7 @@ const Signup = () => {
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
+              <p className="text-xs text-muted-foreground">Minimum 6 characters</p>
             </div>
 
             <Button type="submit" variant="hero" className="w-full" size="lg">
