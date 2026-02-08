@@ -8,10 +8,10 @@ const Hero = () => {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 py-20">
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-chart-purple/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-primary/5 to-transparent rounded-full" />
-        <div className="absolute top-10 right-10 w-64 h-64 bg-chart-blue/8 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }} />
+        <div className="absolute top-1/4 left-1/4 w-48 sm:w-96 h-48 sm:h-96 bg-primary/10 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-1/4 right-1/4 w-40 sm:w-80 h-40 sm:h-80 bg-chart-purple/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-gradient-radial from-primary/5 to-transparent rounded-full" />
+        <div className="hidden sm:block absolute top-10 right-10 w-64 h-64 bg-chart-blue/8 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }} />
       </div>
 
       {/* Grid Pattern */}
@@ -34,7 +34,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-5xl md:text-7xl font-bold font-display mb-6 leading-tight"
+          className="text-3xl sm:text-5xl md:text-7xl font-bold font-display mb-4 sm:mb-6 leading-tight"
         >
           Stop Tracking. Start{" "}
           <span className="text-gradient">Transforming.</span>
@@ -44,7 +44,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed"
+          className="text-base sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8 sm:mb-10 leading-relaxed px-2"
         >
           RoutineX uses <strong className="text-foreground">XP leveling</strong>, <strong className="text-foreground">streak protection</strong>, and <strong className="text-foreground">smart analytics</strong> to turn your daily habits into a game you actually want to play.
         </motion.p>
@@ -73,7 +73,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="flex flex-wrap gap-6 justify-center mb-16"
+          className="flex flex-wrap gap-3 sm:gap-6 justify-center mb-12 sm:mb-16 px-2"
         >
           {[
             { icon: Zap, text: "Earn XP & Level Up" },
@@ -126,7 +126,7 @@ const Hero = () => {
               </div>
 
               {/* Mini Chart Preview */}
-              <div className="grid grid-cols-7 gap-2 mb-6">
+              <div className="hidden sm:grid grid-cols-7 gap-2 mb-6">
                 {[40, 60, 80, 45, 90, 70, 55].map((height, i) => (
                   <motion.div 
                     key={i} 
@@ -147,18 +147,18 @@ const Hero = () => {
               </div>
 
               {/* Stats Row */}
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-3 sm:gap-4">
                 <div className="bg-secondary/50 rounded-lg p-4 text-center">
-                  <div className="text-2xl font-bold text-primary">87%</div>
-                  <div className="text-xs text-muted-foreground">Completion</div>
+                  <div className="text-lg sm:text-2xl font-bold text-primary">87%</div>
+                  <div className="text-[10px] sm:text-xs text-muted-foreground">Completion</div>
                 </div>
                 <div className="bg-secondary/50 rounded-lg p-4 text-center">
-                  <div className="text-2xl font-bold text-chart-purple">14</div>
-                  <div className="text-xs text-muted-foreground">Day Streak 🔥</div>
+                  <div className="text-lg sm:text-2xl font-bold text-chart-purple">14</div>
+                  <div className="text-[10px] sm:text-xs text-muted-foreground">Day Streak 🔥</div>
                 </div>
                 <div className="bg-secondary/50 rounded-lg p-4 text-center flex items-center justify-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-chart-green" />
-                  <div className="text-2xl font-bold text-chart-green">+12%</div>
+                  <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-chart-green" />
+                  <div className="text-lg sm:text-2xl font-bold text-chart-green">+12%</div>
                 </div>
               </div>
             </div>

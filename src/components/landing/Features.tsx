@@ -82,11 +82,11 @@ const Features = () => {
             <Zap className="w-4 h-4" />
             Why RoutineX?
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold font-display mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display mb-4">
             Not just tracking.{" "}
             <span className="text-gradient">Behavioral change.</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base sm:text-xl text-muted-foreground max-w-2xl mx-auto px-2">
             Every feature is designed based on habit psychology — from gamification that motivates to analytics that educate.
           </p>
         </motion.div>

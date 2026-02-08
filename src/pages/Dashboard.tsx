@@ -311,19 +311,19 @@ const Dashboard = () => {
       <ConfettiCelebration trigger={showConfetti} onComplete={resetConfetti} />
       <DashboardSidebar />
 
-      <main className="ml-64 p-8">
+      <main className="md:ml-64 p-4 sm:p-6 lg:p-8">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="max-w-[1400px] mx-auto space-y-6"
+          className="max-w-[1400px] mx-auto space-y-4 sm:space-y-6"
         >
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="flex items-center justify-between"
+            className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
           >
             <div>
               <h1 className="text-4xl font-bold font-display mb-2">
@@ -345,7 +345,7 @@ const Dashboard = () => {
           </motion.div>
 
           {/* XP System & Streak Protection Row */}
-          <div className="grid lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <XPSystem totalXP={totalXP} dailyCompleted={completedToday} weeklyCompleted={dailyCompletedForWeek} />
             <StreakProtection
               emergencySkipsRemaining={emergencySkipsRemaining}
@@ -366,11 +366,11 @@ const Dashboard = () => {
             bestDay={bestDay}
           />
 
-          <div className="grid lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
             <div className="lg:col-span-1">
               <TodaysFocus habits={habits} currentDay={currentDay} onToggleDay={handleToggleDay} />
             </div>
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-4 sm:space-y-6">
               <HabitGrid
                 habits={habits}
                 daysInMonth={daysInMonth}
@@ -385,7 +385,7 @@ const Dashboard = () => {
 
           {habits.length > 0 && <TrendLineChart data={trendData} />}
 
-          <div className="grid lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
             <div className="lg:col-span-2">
               <WeeklyHabits
                 habits={weeklyHabits}
@@ -406,7 +406,7 @@ const Dashboard = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="grid grid-cols-3 gap-4"
+            className="grid grid-cols-1 sm:grid-cols-3 gap-4"
           >
             <Link to="/dashboard/calendar" className="glass-card p-4 text-center hover:scale-[1.02] transition-transform group">
               <div className="text-3xl mb-2">📅</div>

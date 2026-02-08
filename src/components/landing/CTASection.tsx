@@ -17,7 +17,7 @@ const CTASection = () => {
         transition={{ duration: 0.6 }}
         className="max-w-4xl mx-auto relative z-10"
       >
-        <div className="glass-card p-12 md:p-16 text-center relative overflow-hidden">
+        <div className="glass-card p-8 sm:p-12 md:p-16 text-center relative overflow-hidden">
           {/* Background glow */}
           <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
           
@@ -32,7 +32,7 @@ const CTASection = () => {
               <Sparkles className="w-8 h-8 text-primary" />
             </motion.div>
 
-            <h2 className="text-4xl md:text-5xl font-bold font-display mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display mb-4">
               Ready to <span className="text-gradient">level up?</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
