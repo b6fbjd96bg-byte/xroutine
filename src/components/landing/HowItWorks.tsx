@@ -44,7 +44,7 @@ const HowItWorks = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold font-display mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display mb-4">
             How it <span className="text-gradient">works</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -52,7 +52,7 @@ const HowItWorks = () => {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {steps.map((item, index) => (
             <motion.div
               key={item.step}

@@ -5,9 +5,9 @@ const Footer = () => {
   return (
     <footer className="py-16 px-4 border-t border-border/50">
       <div className="max-w-6xl mx-auto">
-        <div className="grid md:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           {/* Brand */}
-          <div className="md:col-span-2">
+          <div className="col-span-2">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
                 <CheckCircle className="w-5 h-5 text-primary-foreground" />
