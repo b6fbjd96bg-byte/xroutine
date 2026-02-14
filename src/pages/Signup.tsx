@@ -37,16 +37,16 @@ const Signup = () => {
     }
 
     // Mark as new user for onboarding
-    localStorage.setItem("routinex_is_new_user", "true");
-    localStorage.setItem("routinex_user_name", name.trim());
+    localStorage.setItem("superoutine_is_new_user", "true");
+    localStorage.setItem("superoutine_user_name", name.trim());
     // Clear any existing game/habit state for fresh start
-    localStorage.removeItem("routinex_game_state");
-    localStorage.removeItem("routinex_habits");
-    localStorage.removeItem("routinex_weekly_habits");
+    localStorage.removeItem("superoutine_game_state");
+    localStorage.removeItem("superoutine_habits");
+    localStorage.removeItem("superoutine_weekly_habits");
 
     toast({
       title: "Account created! 🎉",
-      description: "Welcome to RoutineX!",
+      description: "Welcome to Superoutine!",
     });
     navigate("/dashboard");
   };
@@ -78,7 +78,7 @@ const Signup = () => {
             <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
               <CheckCircle className="w-6 h-6 text-primary-foreground" />
             </div>
-            <span className="text-2xl font-bold font-display">RoutineX</span>
+            <span className="text-2xl font-bold font-display">Superoutine</span>
           </div>
 
           <h1 className="text-2xl font-bold font-display mb-2">Create your account</h1>

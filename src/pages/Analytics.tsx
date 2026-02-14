@@ -205,12 +205,12 @@ const Analytics = () => {
     let mimeType: string;
     if (format === "json") {
       content = JSON.stringify(exportData, null, 2);
-      filename = `routinex-analytics-${new Date().toISOString().split("T")[0]}.json`;
+      filename = `superoutine-analytics-${new Date().toISOString().split("T")[0]}.json`;
       mimeType = "application/json";
     } else {
       const csvRows = [["Habit Name", "Completed Days", "Goal", "Completion %"], ...habitStats.map((h) => [h.name, h.completed, h.goal, `${h.percentage}%`])];
       content = csvRows.map((row) => row.join(",")).join("\n");
-      filename = `routinex-analytics-${new Date().toISOString().split("T")[0]}.csv`;
+      filename = `superoutine-analytics-${new Date().toISOString().split("T")[0]}.csv`;
       mimeType = "text/csv";
     }
     const blob = new Blob([content], { type: mimeType });

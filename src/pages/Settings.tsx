@@ -209,7 +209,7 @@ const Settings = () => {
 
           {/* Version */}
           <motion.p variants={itemVariants} className="text-center text-xs sm:text-sm text-muted-foreground pb-4">
-            RoutineX v1.0.0
+            Superoutine v1.0.0
           </motion.p>
         </motion.div>
       </main>

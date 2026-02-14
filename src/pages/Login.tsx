@@ -27,7 +27,7 @@ const Login = () => {
     }
 
     // Mark as returning user (no onboarding)
-    localStorage.removeItem("routinex_is_new_user");
+    localStorage.removeItem("superoutine_is_new_user");
     
     toast({
       title: "Welcome back! 👋",
@@ -63,7 +63,7 @@ const Login = () => {
             <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
               <CheckCircle className="w-6 h-6 text-primary-foreground" />
             </div>
-            <span className="text-2xl font-bold font-display">RoutineX</span>
+            <span className="text-2xl font-bold font-display">Superoutine</span>
           </div>
 
           <h1 className="text-2xl font-bold font-display mb-2">Welcome back</h1>

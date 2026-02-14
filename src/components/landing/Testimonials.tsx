@@ -5,7 +5,7 @@ const testimonials = [
   {
     name: "Sarah K.",
     role: "Fitness Coach",
-    quote: "RoutineX turned my scattered routine into a system. The XP leveling is addictive — I've maintained a 45-day streak!",
+    quote: "Superoutine turned my scattered routine into a system. The XP leveling is addictive — I've maintained a 45-day streak!",
     rating: 5,
     avatar: "SK",
   },

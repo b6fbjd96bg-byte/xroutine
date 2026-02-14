@@ -36,7 +36,7 @@ const CTASection = () => {
               Ready to <span className="text-gradient">level up?</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
-              Join thousands who've transformed their routines with RoutineX. 
+              Join thousands who've transformed their routines with Superoutine. 
               Your future self will thank you.
             </p>
 

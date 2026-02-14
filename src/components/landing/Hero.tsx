@@ -46,7 +46,7 @@ const Hero = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-base sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8 sm:mb-10 leading-relaxed px-2"
         >
-          RoutineX uses <strong className="text-foreground">XP leveling</strong>, <strong className="text-foreground">streak protection</strong>, and <strong className="text-foreground">smart analytics</strong> to turn your daily habits into a game you actually want to play.
+          Superoutine uses <strong className="text-foreground">XP leveling</strong>, <strong className="text-foreground">streak protection</strong>, and <strong className="text-foreground">smart analytics</strong> to turn your daily habits into a game you actually want to play.
         </motion.p>
 
         <motion.div

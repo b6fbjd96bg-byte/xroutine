@@ -12,7 +12,7 @@ const Footer = () => {
               <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
                 <CheckCircle className="w-5 h-5 text-primary-foreground" />
               </div>
-              <span className="text-xl font-bold font-display">RoutineX</span>
+              <span className="text-xl font-bold font-display">Superoutine</span>
             </div>
             <p className="text-muted-foreground text-sm max-w-xs leading-relaxed">
               The gamified habit tracker that turns your daily routines into lasting behavioral change. Built with psychology, powered by design.
@@ -42,7 +42,7 @@ const Footer = () => {
 
         <div className="border-t border-border/30 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} RoutineX. All rights reserved.
+            © {new Date().getFullYear()} Superoutine. All rights reserved.
           </p>
           <p className="text-sm text-muted-foreground">
             Built with 💚 for habit builders everywhere

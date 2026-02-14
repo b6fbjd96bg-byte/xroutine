@@ -33,8 +33,8 @@ interface WeeklyHabit {
   completedWeeks: number[];
 }
 
-const HABITS_KEY = "routinex_habits";
-const WEEKLY_HABITS_KEY = "routinex_weekly_habits";
+const HABITS_KEY = "superoutine_habits";
+const WEEKLY_HABITS_KEY = "superoutine_weekly_habits";
 
 const loadHabits = (): Habit[] => {
   try {
@@ -55,7 +55,7 @@ const loadWeeklyHabits = (): WeeklyHabit[] => {
 const Dashboard = () => {
   // ALL hooks at the top, before any conditional logic
   const [showOnboarding, setShowOnboarding] = useState(() => {
-    return localStorage.getItem("routinex_is_new_user") === "true";
+    return localStorage.getItem("superoutine_is_new_user") === "true";
   });
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [habits, setHabits] = useState<Habit[]>(loadHabits);
@@ -204,7 +204,7 @@ const Dashboard = () => {
     }));
     setHabits(newHabits);
     setShowOnboarding(false);
-    localStorage.removeItem("routinex_is_new_user");
+    localStorage.removeItem("superoutine_is_new_user");
     toast({
       title: "🚀 Dashboard ready!",
       description: `${newHabits.length} habits loaded. Start checking them off!`,
@@ -217,7 +217,7 @@ const Dashboard = () => {
     return <OnboardingWizard onComplete={handleOnboardingComplete} />;
   }
 
-  const userName = localStorage.getItem("routinex_user_name") || "there";
+  const userName = localStorage.getItem("superoutine_user_name") || "there";
 
   const handlePrevMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));

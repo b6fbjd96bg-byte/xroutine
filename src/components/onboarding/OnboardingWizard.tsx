@@ -25,7 +25,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
   const [customHabit, setCustomHabit] = useState("");
 
   const steps = [
-    { icon: Sparkles, title: "Welcome to RoutineX!", subtitle: "Let's set up your habit tracker in 30 seconds" },
+    { icon: Sparkles, title: "Welcome to Superoutine!", subtitle: "Let's set up your habit tracker in 30 seconds" },
     { icon: Target, title: "Pick Your Habits", subtitle: "Choose habits you want to build (you can always add more later)" },
     { icon: Zap, title: "How It Works", subtitle: "Quick tour of your superpowers" },
     { icon: Trophy, title: "You're All Set!", subtitle: "Let's start your journey" },
@@ -95,7 +95,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
                   <CheckCircle className="w-10 h-10 text-primary" />
                 </motion.div>
                 <h1 className="text-3xl font-bold font-display mb-3">
-                  Welcome to <span className="text-gradient">RoutineX</span>
+                  Welcome to <span className="text-gradient">Superoutine</span>
                 </h1>
                 <p className="text-muted-foreground mb-8">
                   You're about to join thousands of people building better habits with gamification, streaks, and smart analytics.
@@ -175,7 +175,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
               <div className="glass-card p-8">
                 <div className="text-center mb-6">
                   <h2 className="text-2xl font-bold font-display mb-2">Your Superpowers</h2>
-                  <p className="text-muted-foreground text-sm">Here's what makes RoutineX different</p>
+                  <p className="text-muted-foreground text-sm">Here's what makes Superoutine different</p>
                 </div>
                 <div className="space-y-4 mb-8">
                   {[

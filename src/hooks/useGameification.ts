@@ -15,7 +15,7 @@ interface GameState {
   lastSkipDate: string | null;
 }
 
-const STORAGE_KEY = "routinex_game_state";
+const STORAGE_KEY = "superoutine_game_state";
 
 const getInitialState = (): GameState => {
   if (typeof window === "undefined") {

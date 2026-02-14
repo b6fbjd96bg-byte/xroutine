@@ -22,7 +22,7 @@ const SidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => {
         <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
           <CheckCircle className="w-6 h-6 text-primary-foreground" />
         </div>
-        <span className="text-xl font-bold font-display">RoutineX</span>
+          <span className="text-xl font-bold font-display">Superoutine</span>
       </Link>
 
       <nav className="flex-1 space-y-2">
@@ -66,7 +66,7 @@ const DashboardSidebar = () => {
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
               <CheckCircle className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="text-lg font-bold font-display">RoutineX</span>
+              <span className="text-lg font-bold font-display">Superoutine</span>
           </Link>
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
