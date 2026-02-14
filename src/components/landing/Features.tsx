@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { BarChart3, Calendar, CheckCircle2, Flame, PieChart, Target, Zap, Shield, Timer, Trophy, Brain, Sparkles } from "lucide-react";
+import { BarChart3, Calendar, CheckCircle2, Flame, PieChart, Target, Zap, Shield, Timer, Trophy, Brain, Sparkles, Bell, Share2 } from "lucide-react";
 
 const features = [
   {
@@ -65,6 +65,20 @@ const features = [
     color: "text-chart-pink",
     bg: "bg-chart-pink/10",
   },
+  {
+    icon: Bell,
+    title: "Smart Reminders",
+    description: "Personalized reminders and nudges based on your routine patterns to keep you consistent without overwhelm.",
+    color: "text-chart-blue",
+    bg: "bg-chart-blue/10",
+  },
+  {
+    icon: Share2,
+    title: "Social Sharing",
+    description: "Share milestones and streaks with friends to celebrate wins and invite others to join your journey.",
+    color: "text-primary",
+    bg: "bg-primary/10",
+  },
 ];
 
 const Features = () => {
@@ -97,6 +111,7 @@ const Features = () => {
               key={feature.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.02, y: -4 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.07 }}
               className="glass-card p-6 hover:border-primary/30 transition-all duration-300 group"
@@ -106,6 +121,29 @@ const Features = () => {
               </div>
               <h3 className="text-xl font-semibold font-display mb-2">{feature.title}</h3>
               <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+              {feature.title === "Social Sharing" && (
+                <div className="mt-4">
+                  <button
+                    onClick={async () => {
+                      const shareText = `I'm using Superoutine — ${feature.title}: ${feature.description}`;
+                      try {
+                        if (navigator.share) {
+                          await navigator.share({ title: 'Superoutine', text: shareText });
+                        } else {
+                          await navigator.clipboard.writeText(shareText);
+                          // use a simple alert fallback for older browsers
+                          alert('Share text copied to clipboard');
+                        }
+                      } catch (e) {
+                        // ignore
+                      }
+                    }}
+                    className="mt-3 inline-flex items-center gap-2 px-3 py-2 rounded-md bg-primary text-primary-foreground text-sm"
+                  >
+                    Share
+                  </button>
+                </div>
+              )}
             </motion.div>
           ))}
         </div>

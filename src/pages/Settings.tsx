@@ -35,6 +35,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import SmartReminders from "@/components/gamification/SmartReminders";
 
 const Settings = () => {
   const [notifications, setNotifications] = useState({
@@ -113,6 +114,11 @@ const Settings = () => {
                 </div>
               ))}
             </div>
+          </motion.div>
+
+          {/* Smart Reminders (new) */}
+          <motion.div variants={itemVariants}>
+            <SmartReminders />
           </motion.div>
 
           {/* Appearance */}
