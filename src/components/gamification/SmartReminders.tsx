@@ -55,6 +55,15 @@ const SmartReminders = () => {
     if ('Notification' in window && Notification.permission === 'granted') {
       new Notification('Superoutine reminder', { body: `Test: scheduled for ${reminder.time}` });
     }
+
+    // Also try the service worker for background-capable notifications
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'show-notification',
+        title: 'Superoutine reminder',
+        options: { body: `Test: scheduled for ${reminder.time}`, tag: 'superoutine-test' },
+      });
+    }
   };
 
   return (

@@ -66,6 +66,24 @@ const Hero = () => {
               Sign In
             </Button>
           </Link>
+          <div className="flex items-center">
+            <button
+              onClick={async () => {
+                const shareText = `I'm using Superoutine — stop tracking, start transforming. Try it!`;
+                try {
+                  if (navigator.share) {
+                    await navigator.share({ title: 'Superoutine', text: shareText });
+                  } else {
+                    await navigator.clipboard.writeText(shareText);
+                    alert('Share text copied to clipboard');
+                  }
+                } catch (e) {}
+              }}
+              className="ml-3 inline-flex items-center gap-2 px-4 py-3 rounded-lg border border-border text-sm bg-secondary/30 hover:bg-secondary/40 transition"
+            >
+              Share
+            </button>
+          </div>
         </motion.div>
 
         {/* Trust Badges */}
