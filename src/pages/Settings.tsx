@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
@@ -17,6 +17,9 @@ import {
   Check,
   Smartphone,
   Globe,
+  Lock,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -36,8 +39,14 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import SmartReminders from "@/components/gamification/SmartReminders";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Settings = () => {
+  const { user } = useAuth();
+  const { toast } = useToast();
+
   const [notifications, setNotifications] = useState({
     dailyReminder: true,
     weeklyReport: true,
@@ -45,8 +54,68 @@ const Settings = () => {
     sound: false,
   });
   const [theme, setTheme] = useState("dark");
-  const [userName, setUserName] = useState("User");
-  const [email, setEmail] = useState("user@example.com");
+
+  // Profile state
+  const [displayName, setDisplayName] = useState("");
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+
+  // Password state
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPasswords, setShowPasswords] = useState(false);
+  const [isSavingPassword, setIsSavingPassword] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("profiles")
+      .select("display_name")
+      .eq("id", user.id)
+      .single()
+      .then(({ data }) => {
+        if (data?.display_name) setDisplayName(data.display_name);
+      });
+  }, [user]);
+
+  const handleSaveProfile = async () => {
+    if (!user) return;
+    const trimmed = displayName.trim();
+    if (!trimmed || trimmed.length > 100) {
+      toast({ title: "Invalid name", description: "Display name must be 1–100 characters.", variant: "destructive" });
+      return;
+    }
+    setIsSavingProfile(true);
+    const { error } = await supabase.from("profiles").update({ display_name: trimmed }).eq("id", user.id);
+    setIsSavingProfile(false);
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Profile updated ✅", description: "Your display name has been saved." });
+    }
+  };
+
+  const handleChangePassword = async () => {
+    if (newPassword.length < 6) {
+      toast({ title: "Password too short", description: "Must be at least 6 characters.", variant: "destructive" });
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast({ title: "Passwords don't match", description: "Please make sure both passwords match.", variant: "destructive" });
+      return;
+    }
+    setIsSavingPassword(true);
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    setIsSavingPassword(false);
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Password updated ✅", description: "Your password has been changed." });
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    }
+  };
 
   const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.08 } } };
   const itemVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } };
@@ -75,13 +144,56 @@ const Settings = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="name" className="text-xs sm:text-sm">Display Name</Label>
-                  <Input id="name" value={userName} onChange={(e) => setUserName(e.target.value)} className="bg-secondary/50" />
+                  <Input id="name" value={displayName} onChange={(e) => setDisplayName(e.target.value)} className="bg-secondary/50" maxLength={100} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-xs sm:text-sm">Email</Label>
-                  <Input id="email" value={email} onChange={(e) => setEmail(e.target.value)} className="bg-secondary/50" />
+                  <Input id="email" value={user?.email ?? ""} className="bg-secondary/50 opacity-60" disabled />
                 </div>
               </div>
+              <Button onClick={handleSaveProfile} disabled={isSavingProfile} size="sm">
+                {isSavingProfile ? "Saving..." : "Save Profile"}
+              </Button>
+            </div>
+          </motion.div>
+
+          {/* Change Password */}
+          <motion.div variants={itemVariants} className="glass-card p-4 sm:p-6">
+            <div className="flex items-center gap-3 mb-4 sm:mb-6">
+              <Lock className="w-5 h-5 text-primary" />
+              <h2 className="text-base sm:text-xl font-bold font-display">Change Password</h2>
+            </div>
+            <div className="space-y-4 max-w-sm">
+              <div className="space-y-2">
+                <Label htmlFor="new-password" className="text-xs sm:text-sm">New Password</Label>
+                <div className="relative">
+                  <Input
+                    id="new-password"
+                    type={showPasswords ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="bg-secondary/50 pr-10"
+                  />
+                  <button type="button" onClick={() => setShowPasswords(!showPasswords)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                    {showPasswords ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="confirm-password" className="text-xs sm:text-sm">Confirm New Password</Label>
+                <Input
+                  id="confirm-password"
+                  type={showPasswords ? "text" : "password"}
+                  placeholder="••••••••"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="bg-secondary/50"
+                />
+              </div>
+              <Button onClick={handleChangePassword} disabled={isSavingPassword} size="sm">
+                {isSavingPassword ? "Updating..." : "Update Password"}
+              </Button>
             </div>
           </motion.div>
 
@@ -116,7 +228,7 @@ const Settings = () => {
             </div>
           </motion.div>
 
-          {/* Smart Reminders (new) */}
+          {/* Smart Reminders */}
           <motion.div variants={itemVariants}>
             <SmartReminders />
           </motion.div>
