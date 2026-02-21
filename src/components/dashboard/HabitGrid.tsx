@@ -78,7 +78,7 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
 
   const handleAddHabit = () => {
     if (newHabitName.trim()) {
-      onAddHabit(newHabitName, parseInt(newHabitGoal) || 30, linkedHabit || undefined);
+      onAddHabit(newHabitName, parseInt(newHabitGoal) || 30, linkedHabit && linkedHabit !== "none" ? linkedHabit : undefined);
       setNewHabitName("");
       setNewHabitGoal("30");
       setLinkedHabit("");
@@ -146,7 +146,7 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
                         <SelectValue placeholder="I will do this after..." />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">No linking</SelectItem>
+                        <SelectItem value="none">No linking</SelectItem>
                         {habits.map((habit) => (
                           <SelectItem key={habit.id} value={habit.id}>
                             After: {habit.name}
