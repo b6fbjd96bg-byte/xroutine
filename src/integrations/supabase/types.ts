@@ -14,7 +14,128 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      habits: {
+        Row: {
+          completed_days: number[]
+          created_at: string
+          goal: number
+          id: string
+          linked_to: string | null
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_days?: number[]
+          created_at?: string
+          goal?: number
+          id?: string
+          linked_to?: string | null
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_days?: number[]
+          created_at?: string
+          goal?: number
+          id?: string
+          linked_to?: string | null
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "habits_linked_to_fkey"
+            columns: ["linked_to"]
+            isOneToOne: false
+            referencedRelation: "habits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_gamification: {
+        Row: {
+          created_at: string
+          emergency_skips_remaining: number
+          emergency_skips_used: number
+          id: string
+          total_xp: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          emergency_skips_remaining?: number
+          emergency_skips_used?: number
+          id?: string
+          total_xp?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          emergency_skips_remaining?: number
+          emergency_skips_used?: number
+          id?: string
+          total_xp?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      weekly_habits: {
+        Row: {
+          completed_weeks: number[]
+          created_at: string
+          goal: number
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_weeks?: number[]
+          created_at?: string
+          goal?: number
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_weeks?: number[]
+          created_at?: string
+          goal?: number
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

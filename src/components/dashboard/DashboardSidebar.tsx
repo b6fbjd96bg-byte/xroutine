@@ -1,10 +1,11 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CheckCircle, LayoutDashboard, Calendar, BarChart3, Settings, LogOut, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
@@ -15,6 +16,14 @@ const navItems = [
 
 const SidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+    onNavigate?.();
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -42,14 +51,13 @@ const SidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => {
         ))}
       </nav>
 
-      <Link
-        to="/"
-        onClick={onNavigate}
+      <button
+        onClick={handleSignOut}
         className="flex items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200"
       >
         <LogOut className="w-5 h-5" />
         <span className="font-medium">Sign Out</span>
-      </Link>
+      </button>
     </div>
   );
 };
