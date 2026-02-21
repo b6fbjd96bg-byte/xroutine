@@ -10,6 +10,10 @@ import AIMotivationAgent from "@/components/dashboard/AIMotivationAgent";
 import TodaysFocus from "@/components/dashboard/TodaysFocus";
 import QuickStats from "@/components/dashboard/QuickStats";
 import TopHabits from "@/components/dashboard/TopHabits";
+import MomentumMeter from "@/components/dashboard/MomentumMeter";
+import AchievementBadges from "@/components/dashboard/AchievementBadges";
+import MoodCheckin from "@/components/dashboard/MoodCheckin";
+import ComebackScore from "@/components/dashboard/ComebackScore";
 import XPSystem from "@/components/gamification/XPSystem";
 import FloatingXP from "@/components/gamification/FloatingXP";
 import StreakProtection from "@/components/gamification/StreakProtection";
@@ -189,6 +193,13 @@ const Dashboard = () => {
             <StreakProtection emergencySkipsRemaining={emergencySkipsRemaining} emergencySkipsUsed={emergencySkipsUsed} isStreakProtected={isStreakProtected} currentStreak={maxStreak} onUseSkip={useEmergencySkip} />
           </div>
 
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <MomentumMeter habits={habits} currentDay={currentDay} />
+            <ComebackScore habits={habits} currentDay={currentDay} />
+          </div>
+
+          <MoodCheckin completedToday={completedToday} totalHabits={habits.length} />
+
           <QuickStats totalHabits={habits.length} completedToday={completedToday} currentStreak={maxStreak} weeklyProgress={avgWeeklyProgress} monthlyProgress={monthlyProgress} bestDay={bestDay} />
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -210,6 +221,8 @@ const Dashboard = () => {
               {habitStats.length > 0 && <TopHabits habits={habitStats} />}
             </div>
           </div>
+
+          <AchievementBadges habits={habits} currentDay={currentDay} totalXP={totalXP} maxStreak={maxStreak} />
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Link to="/dashboard/calendar" className="glass-card p-4 text-center hover:scale-[1.02] transition-transform group">
