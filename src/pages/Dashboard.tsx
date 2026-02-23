@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
+import { ChevronDown } from "lucide-react";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import HabitGrid from "@/components/dashboard/HabitGrid";
 import MonthSelector from "@/components/dashboard/MonthSelector";
@@ -34,6 +35,7 @@ const Dashboard = () => {
   } = useHabits();
 
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const prevCompletedToday = useRef<number>(0);
@@ -188,20 +190,7 @@ const Dashboard = () => {
             <MonthSelector currentMonth={currentMonth} onPrevMonth={() => { setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1)); setSelectedDate(null); }} onNextMonth={() => { setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1)); setSelectedDate(null); }} />
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <XPSystem totalXP={totalXP} dailyCompleted={completedToday} weeklyCompleted={dailyCompletedForWeek} />
-            <StreakProtection emergencySkipsRemaining={emergencySkipsRemaining} emergencySkipsUsed={emergencySkipsUsed} isStreakProtected={isStreakProtected} currentStreak={maxStreak} onUseSkip={useEmergencySkip} />
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <MomentumMeter habits={habits} currentDay={currentDay} />
-            <ComebackScore habits={habits} currentDay={currentDay} />
-          </div>
-
-          <MoodCheckin completedToday={completedToday} totalHabits={habits.length} />
-
-          <QuickStats totalHabits={habits.length} completedToday={completedToday} currentStreak={maxStreak} weeklyProgress={avgWeeklyProgress} monthlyProgress={monthlyProgress} bestDay={bestDay} />
-
+          {/* Core: Today's Focus + Habit Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
             <div className="lg:col-span-1">
               <TodaysFocus habits={habits} currentDay={currentDay} onToggleDay={handleToggleDay} />
@@ -210,6 +199,8 @@ const Dashboard = () => {
               <HabitGrid habits={habits} daysInMonth={daysInMonth} currentDay={currentDay} onToggleDay={handleToggleDay} onAddHabit={addHabit} onEditHabit={editHabit} onDeleteHabit={deleteHabit} />
             </div>
           </div>
+
+          <QuickStats totalHabits={habits.length} completedToday={completedToday} currentStreak={maxStreak} weeklyProgress={avgWeeklyProgress} monthlyProgress={monthlyProgress} bestDay={bestDay} />
 
           {habits.length > 0 && <TrendLineChart data={trendData} />}
 
@@ -222,7 +213,40 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <AchievementBadges habits={habits} currentDay={currentDay} totalXP={totalXP} maxStreak={maxStreak} />
+          {/* Collapsible advanced sections */}
+          <div className="glass-card p-4 sm:p-5">
+            <button
+              onClick={() => setShowAdvanced(!showAdvanced)}
+              className="w-full flex items-center justify-between text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <span className="font-display font-semibold text-sm">More Insights & Gamification</span>
+              <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${showAdvanced ? "rotate-180" : ""}`} />
+            </button>
+            <AnimatePresence>
+              {showAdvanced && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden"
+                >
+                  <div className="pt-4 space-y-4">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      <XPSystem totalXP={totalXP} dailyCompleted={completedToday} weeklyCompleted={dailyCompletedForWeek} />
+                      <StreakProtection emergencySkipsRemaining={emergencySkipsRemaining} emergencySkipsUsed={emergencySkipsUsed} isStreakProtected={isStreakProtected} currentStreak={maxStreak} onUseSkip={useEmergencySkip} />
+                    </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      <MomentumMeter habits={habits} currentDay={currentDay} />
+                      <ComebackScore habits={habits} currentDay={currentDay} />
+                    </div>
+                    <MoodCheckin completedToday={completedToday} totalHabits={habits.length} />
+                    <AchievementBadges habits={habits} currentDay={currentDay} totalXP={totalXP} maxStreak={maxStreak} />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Link to="/dashboard/calendar" className="glass-card p-4 text-center hover:scale-[1.02] transition-transform group">
