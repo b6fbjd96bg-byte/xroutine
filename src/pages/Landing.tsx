@@ -5,18 +5,22 @@ import Features from "@/components/landing/Features";
 import HowItWorks from "@/components/landing/HowItWorks";
 import Testimonials from "@/components/landing/Testimonials";
 import CTASection from "@/components/landing/CTASection";
+import FAQ from "@/components/landing/FAQ";
 import Footer from "@/components/landing/Footer";
 
 const Landing = () => {
   return (
     <div className="min-h-screen">
       <Navbar />
-      <Hero />
-      <Stats />
-      <Features />
-      <HowItWorks />
-      <Testimonials />
-      <CTASection />
+      <main>
+        <Hero />
+        <Stats />
+        <Features />
+        <HowItWorks />
+        <Testimonials />
+        <FAQ />
+        <CTASection />
+      </main>
       <Footer />
     </div>
   );
