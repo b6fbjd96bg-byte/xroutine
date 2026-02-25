@@ -1,4 +1,4 @@
-import { Crown, Sparkles, Zap, Shield, BarChart3, Mail, X } from "lucide-react";
+import { Crown, Sparkles, Zap, Shield, BarChart3, Mail, X, Loader2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -7,6 +7,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { useState, useEffect } from "react";
 
 interface UpgradePromptProps {
   open: boolean;
@@ -24,8 +27,39 @@ const benefits = [
 
 const UpgradePrompt = ({ open, onOpenChange, feature }: UpgradePromptProps) => {
   const { toast } = useToast();
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [alreadyJoined, setAlreadyJoined] = useState(false);
 
-  const handleJoinWaitlist = () => {
+  useEffect(() => {
+    if (open && user) {
+      supabase
+        .from("premium_waitlist")
+        .select("id")
+        .eq("user_id", user.id)
+        .maybeSingle()
+        .then(({ data }) => setAlreadyJoined(!!data));
+    }
+  }, [open, user]);
+
+  const handleJoinWaitlist = async () => {
+    if (!user || alreadyJoined) return;
+    setLoading(true);
+    const { error } = await supabase
+      .from("premium_waitlist")
+      .insert({ user_id: user.id });
+    setLoading(false);
+
+    if (error) {
+      if (error.code === "23505") {
+        setAlreadyJoined(true);
+      } else {
+        toast({ title: "Something went wrong", description: error.message, variant: "destructive" });
+        return;
+      }
+    }
+
+    setAlreadyJoined(true);
     toast({
       title: "You're on the list! 🎉",
       description: "We'll notify you when Premium launches.",
@@ -68,9 +102,10 @@ const UpgradePrompt = ({ open, onOpenChange, feature }: UpgradePromptProps) => {
             size="lg"
             className="w-full gap-2"
             onClick={handleJoinWaitlist}
+            disabled={loading || alreadyJoined}
           >
-            <Crown className="w-5 h-5" />
-            Join Waitlist — Coming Soon
+            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : alreadyJoined ? <Check className="w-5 h-5" /> : <Crown className="w-5 h-5" />}
+            {alreadyJoined ? "You're on the Waitlist!" : "Join Waitlist — Coming Soon"}
           </Button>
           <p className="text-xs text-center text-muted-foreground">
             Premium pricing will be announced soon. No charge today.
