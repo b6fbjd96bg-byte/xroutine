@@ -123,6 +123,42 @@ Deno.serve(async (req) => {
         });
       }
 
+      case "waitlist": {
+        const { data: waitlistEntries, error: wlError } = await adminClient
+          .from("premium_waitlist")
+          .select("id, user_id, created_at")
+          .order("created_at", { ascending: false });
+
+        if (wlError) throw wlError;
+
+        // Get emails and names for waitlist users
+        const wlUserIds = (waitlistEntries || []).map(w => w.user_id);
+        let wlUsers: { id: string; email: string; display_name: string; created_at: string }[] = [];
+
+        if (wlUserIds.length > 0) {
+          const { data: allUsers } = await adminClient.auth.admin.listUsers({ page: 1, perPage: 1000 });
+          const { data: wlProfiles } = await adminClient
+            .from("profiles")
+            .select("id, display_name")
+            .in("id", wlUserIds);
+
+          wlUsers = (waitlistEntries || []).map(w => {
+            const authUser = allUsers?.users?.find(u => u.id === w.user_id);
+            const profile = wlProfiles?.find(p => p.id === w.user_id);
+            return {
+              id: w.id,
+              email: authUser?.email || "Unknown",
+              display_name: profile?.display_name || "User",
+              created_at: w.created_at,
+            };
+          });
+        }
+
+        return new Response(JSON.stringify({ waitlist: wlUsers, total: wlUsers.length }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
       case "stats": {
         // Get total users
         const { data: allUsers } = await adminClient.auth.admin.listUsers({ page: 1, perPage: 1000 });

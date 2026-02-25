@@ -20,6 +20,7 @@ import {
   Eye,
   Globe,
   MousePointer,
+  Crown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -66,16 +67,19 @@ const AdminDashboard = () => {
     users,
     stats,
     traffic,
+    waitlist,
     usersLoading,
     statsLoading,
     trafficLoading,
+    waitlistLoading,
     fetchUsers,
     fetchStats,
     fetchTraffic,
+    fetchWaitlist,
     deleteUser,
   } = useAdmin();
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState<"overview" | "users" | "traffic">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "users" | "traffic" | "waitlist">("overview");
 
   useEffect(() => {
     if (!loading && !isAdmin) {
@@ -88,6 +92,7 @@ const AdminDashboard = () => {
       fetchStats();
       fetchUsers();
       fetchTraffic();
+      fetchWaitlist();
     }
   }, [isAdmin]);
 
@@ -188,6 +193,7 @@ const AdminDashboard = () => {
                 fetchStats();
                 fetchUsers();
                 fetchTraffic();
+                fetchWaitlist();
               }}
             >
               <RefreshCw className="w-4 h-4" />
@@ -203,7 +209,7 @@ const AdminDashboard = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
         {/* Tab Navigation */}
         <div className="flex gap-1 p-1 rounded-lg bg-secondary/50 w-fit">
-          {(["overview", "users", "traffic"] as const).map((tab) => (
+          {(["overview", "users", "traffic", "waitlist"] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -213,7 +219,7 @@ const AdminDashboard = () => {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {tab === "overview" ? "📊 Overview" : tab === "users" ? "👥 Users" : "🌐 Traffic"}
+              {tab === "overview" ? "📊 Overview" : tab === "users" ? "👥 Users" : tab === "traffic" ? "🌐 Traffic" : "👑 Waitlist"}
             </button>
           ))}
         </div>
@@ -565,6 +571,56 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
           </>
+        )}
+
+        {activeTab === "waitlist" && (
+          <Card className="border-border/50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base font-display">
+                <Crown className="w-4 h-4 text-chart-yellow" />
+                Premium Waitlist ({waitlist.length})
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {waitlistLoading ? (
+                <div className="py-12 text-center text-muted-foreground">
+                  Loading waitlist...
+                </div>
+              ) : waitlist.length === 0 ? (
+                <div className="py-12 text-center text-muted-foreground">
+                  No waitlist signups yet.
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>#</TableHead>
+                        <TableHead>User</TableHead>
+                        <TableHead>Signed Up</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {waitlist.map((entry, i) => (
+                        <TableRow key={entry.id}>
+                          <TableCell className="text-sm text-muted-foreground">{i + 1}</TableCell>
+                          <TableCell>
+                            <div>
+                              <div className="font-medium text-sm">{entry.display_name}</div>
+                              <div className="text-xs text-muted-foreground">{entry.email}</div>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground">
+                            {new Date(entry.created_at).toLocaleString()}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         )}
       </main>
     </div>

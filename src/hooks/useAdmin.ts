@@ -31,6 +31,13 @@ interface TrafficData {
   uniqueVisitors: number;
 }
 
+interface WaitlistEntry {
+  id: string;
+  email: string;
+  display_name: string;
+  created_at: string;
+}
+
 export const useAdmin = () => {
   const { user } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
@@ -38,9 +45,11 @@ export const useAdmin = () => {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [traffic, setTraffic] = useState<TrafficData | null>(null);
+  const [waitlist, setWaitlist] = useState<WaitlistEntry[]>([]);
   const [usersLoading, setUsersLoading] = useState(false);
   const [statsLoading, setStatsLoading] = useState(false);
   const [trafficLoading, setTrafficLoading] = useState(false);
+  const [waitlistLoading, setWaitlistLoading] = useState(false);
 
   useEffect(() => {
     const checkAdmin = async () => {
@@ -170,6 +179,29 @@ export const useAdmin = () => {
     }
   };
 
+  const fetchWaitlist = async () => {
+    setWaitlistLoading(true);
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-api?action=waitlist`,
+        {
+          headers: {
+            Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+            "Content-Type": "application/json",
+            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          },
+        }
+      );
+      const result = await response.json();
+      if (result.error) throw new Error(result.error);
+      setWaitlist(result.waitlist || []);
+    } catch (err) {
+      console.error("Failed to fetch waitlist:", err);
+    } finally {
+      setWaitlistLoading(false);
+    }
+  };
+
   const deleteUser = async (userId: string) => {
     try {
       const response = await fetch(
@@ -200,12 +232,15 @@ export const useAdmin = () => {
     users,
     stats,
     traffic,
+    waitlist,
     usersLoading,
     statsLoading,
     trafficLoading,
+    waitlistLoading,
     fetchUsers,
     fetchStats,
     fetchTraffic,
+    fetchWaitlist,
     deleteUser,
   };
 };
