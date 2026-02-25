@@ -1,108 +1,102 @@
 
+# Dual-Path Monetization System (Feature Gating, No Payments Yet)
 
-# User Retention System: Never Lose a User
+## Overview
+Build a free vs. premium tier system with feature gating throughout the app. Users choose "Start Free" or "Get Serious" during onboarding. Premium features are locked behind an upgrade prompt (no actual payment -- just a "coming soon" or waitlist approach for now). This sets the foundation to plug in a payment provider (Razorpay, Stripe, etc.) later.
 
-## The Problem
-Users who see payment options early bounce immediately. The goal is to make the app so sticky that users never want to leave, and only introduce payment when they're deeply invested.
+## Tier Definitions
 
-## Strategy: 7 Retention Features (Zero Payment Mentions)
+| Feature | Free | Premium |
+|---|---|---|
+| Daily habits | Up to 5 | Unlimited |
+| Weekly habits | Up to 3 | Unlimited |
+| AI Motivation Agent | Limited | Full access |
+| Analytics page | Basic stats only | Full deep analytics |
+| Focus Timer | Available | Available |
+| Streak Protection (Life Happens) | 1/month | 3/month |
+| Weekly Email Reports | No | Yes |
+| Mood Check-in | Available | Available |
+| Daily Journal | Available | Available |
+| Priority badge on profile | No | Yes |
+| Custom habit emojis | No | Yes |
 
-Instead of building a payment system now, we'll add **7 powerful retention hooks** that keep users coming back daily. No payment screens, no "Pro" badges, no upgrade prompts. Pure value.
+## Implementation Steps
 
----
+### 1. Database Migration
+Create a `user_subscriptions` table to track each user's tier:
 
-### 1. Daily Login Reward System
-A "daily check-in bonus" that gives users bonus XP just for opening the app each day. Consecutive daily logins multiply the reward (Day 1: +5 XP, Day 2: +10 XP, ... Day 7: +50 XP). Missing a day resets the multiplier. This creates a strong psychological pull to return daily.
+```text
+user_subscriptions
+  - id (uuid, PK)
+  - user_id (uuid, unique, NOT NULL)
+  - tier (text, default 'free') -- 'free' or 'premium'
+  - started_at (timestamptz, default now())
+  - updated_at (timestamptz, default now())
+```
 
-- A small animated card at the top of the dashboard: "Day 4 Login Streak! +20 XP claimed"
-- Store login streak data in a new `daily_logins` database table
+- RLS: users can SELECT/UPDATE their own row only
+- Update `handle_new_user()` trigger to also insert a default `free` tier row
+- Backfill existing users with `free` tier
 
-### 2. Weekly Progress Email/Report Card
-An in-app "Weekly Report Card" that appears every Monday showing:
-- Habits completed vs missed
-- XP earned this week
-- Streak status
-- A personalized grade (A+, B, C...) with encouraging message
-- "Share your grade" button (social proof + virality)
+### 2. React Hook: `useSubscription`
+Create `src/hooks/useSubscription.ts`:
+- Fetches the user's tier from `user_subscriptions`
+- Exposes: `tier`, `isPremium`, `loading`
+- Provides a helper `canAccess(feature: string)` that checks feature gates
+- Provides `limits` object (e.g., `maxHabits: 5` for free, `Infinity` for premium)
 
-This gives users a reason to come back on Mondays and creates a sense of accountability.
+### 3. Upgrade Prompt Component
+Create `src/components/premium/UpgradePrompt.tsx`:
+- A reusable modal/card that shows when a user tries to access a premium feature
+- Shows benefits of upgrading
+- "Join Waitlist" / "Coming Soon" button (stores interest in DB or just shows a toast)
+- Can be used as a wrapper: `<PremiumGate feature="unlimited_habits">...</PremiumGate>`
 
-### 3. Social Accountability: Public Commitment Wall
-A "My Commitment" feature where users can write a one-line public pledge (e.g., "I will meditate every day for 30 days"). This is stored and displayed to the user as a reminder. Creates psychological commitment bias -- once you publicly state a goal, you're far less likely to quit.
+### 4. Premium Gate Wrapper
+Create `src/components/premium/PremiumGate.tsx`:
+- Wraps any component that should be gated
+- If user has access, renders children normally
+- If not, renders a locked overlay with upgrade prompt
 
-- Simple card on the dashboard with their commitment
-- Option to share commitment via link
+### 5. Onboarding Dual-Path
+Modify `OnboardingWizard.tsx` to add a new step (between current step 2 and step 3):
+- **"Choose Your Path"** screen with two cards:
+  - **Start Free**: "5 habits, basic analytics, 1 streak protection/month"
+  - **Get Serious** (Premium): "Unlimited everything, deep analytics, priority support" -- with a "Coming Soon / Join Waitlist" badge
+- Free path continues normally
+- Premium path shows a "We'll notify you when premium launches" message and continues with free tier
 
-### 4. Milestone Celebrations with Shareable Cards
-When users hit milestones (7-day streak, 30-day streak, 100 habits completed, Level 5, etc.), generate a beautiful shareable achievement card they can post on social media. This serves dual purpose:
-- Keeps users engaged by giving them goals to chase
-- Free marketing when they share
+### 6. Apply Feature Gates
+- **HabitGrid / useHabits**: Limit adding habits beyond 5 (free) -- show UpgradePrompt
+- **WeeklyHabits**: Limit to 3 weekly habits for free users
+- **Analytics page**: Show a locked overlay on advanced charts for free users
+- **Weekly Email Reports toggle**: Show premium badge, disable for free users
+- **Streak Protection**: Cap at 1/month for free (already the case), 3/month for premium
+- **Settings page**: Add a "Subscription" section showing current tier and upgrade option
 
-### 5. "Don't Break the Chain" Visual Calendar
-A prominent visual calendar (like GitHub's contribution graph) on the main dashboard showing green squares for active days and gray for missed days. The longer the chain of green, the more painful it feels to break. This is one of the most effective retention mechanics known.
-
-- Already have HabitStreaksCalendar but it's hidden in the collapsible section
-- Move it to be prominently visible on the main dashboard
-
-### 6. Push Notification / Browser Reminder Opt-in
-Add a gentle prompt (after 3 days of usage) to enable browser push notifications. These bring users back even when they forget. Notifications would be:
-- "You haven't checked in today -- your 5-day streak is at risk!"
-- "Your habits miss you! Come back and earn today's XP"
-
-Uses the existing service worker (`public/sw.js`) for browser notifications.
-
-### 7. Personalized "Come Back" Messages
-When a user returns after being away (1+ days without login), show a warm, personalized welcome-back screen instead of just the dashboard:
-- "Welcome back! You were away for 3 days. Your streak is waiting to be rebuilt."
-- Show what they missed (potential XP they could have earned)
-- One-tap "Jump back in" button
-- Uses the existing growth-framing philosophy (opportunity, not failure)
-
----
+### 7. Settings Subscription Section
+Add a new card in Settings showing:
+- Current plan (Free / Premium)
+- Feature comparison
+- Upgrade button (links to waitlist/coming soon)
 
 ## Technical Details
 
+### Files to Create
+- `src/hooks/useSubscription.ts` -- subscription hook
+- `src/components/premium/UpgradePrompt.tsx` -- upgrade modal
+- `src/components/premium/PremiumGate.tsx` -- gate wrapper component
+
+### Files to Modify
+- `src/components/onboarding/OnboardingWizard.tsx` -- add tier selection step
+- `src/pages/Dashboard.tsx` -- pass subscription context
+- `src/pages/Settings.tsx` -- add subscription section
+- `src/pages/Analytics.tsx` -- gate advanced features
+- `src/hooks/useHabits.ts` -- enforce habit limits
+- `src/hooks/useGameification.ts` -- adjust streak protection limits
+
 ### Database Changes
-```text
-daily_logins table:
-  - id (uuid, PK)
-  - user_id (uuid, not null)
-  - login_date (date, not null)
-  - streak_count (integer, default 1)
-  - xp_claimed (integer, default 0)
-  - created_at (timestamptz)
-  - UNIQUE(user_id, login_date)
-
-user_commitments table:
-  - id (uuid, PK)
-  - user_id (uuid, not null)
-  - commitment_text (text, not null)
-  - created_at (timestamptz)
-  - is_active (boolean, default true)
-
-RLS: Users can only read/write their own rows.
-```
-
-### New Files
-- `src/hooks/useDailyLogin.ts` -- tracks daily login streaks, claims XP bonus
-- `src/components/dashboard/DailyLoginReward.tsx` -- animated login streak card
-- `src/components/dashboard/WeeklyReportCard.tsx` -- weekly grade/summary card
-- `src/components/dashboard/CommitmentCard.tsx` -- public pledge card
-- `src/components/dashboard/MilestoneShare.tsx` -- shareable milestone achievement cards
-- `src/components/dashboard/WelcomeBack.tsx` -- personalized return screen for inactive users
-- `src/hooks/usePushNotifications.ts` -- browser push notification logic
-
-### Modified Files
-- `src/pages/Dashboard.tsx` -- add DailyLoginReward, move HabitStreaksCalendar up, add WelcomeBack screen, add WeeklyReportCard, add CommitmentCard
-- `src/hooks/useGameification.ts` -- integrate daily login XP into total XP system
-- `public/sw.js` -- add push notification handling
-
-### Implementation Order
-1. Create database tables (daily_logins, user_commitments) with RLS
-2. Build daily login reward system (hook + UI card)
-3. Move streak calendar to prominent dashboard position
-4. Build weekly report card component
-5. Build commitment card feature
-6. Build milestone shareable cards
-7. Build welcome-back screen for returning users
-8. Add browser push notification opt-in
+- New table: `user_subscriptions`
+- Updated trigger: `handle_new_user()` to insert default subscription
+- Backfill migration for existing users
+- RLS policies for the new table
