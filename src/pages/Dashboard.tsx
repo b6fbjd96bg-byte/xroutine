@@ -15,6 +15,10 @@ import MomentumMeter from "@/components/dashboard/MomentumMeter";
 import AchievementBadges from "@/components/dashboard/AchievementBadges";
 import MoodCheckin from "@/components/dashboard/MoodCheckin";
 import ComebackScore from "@/components/dashboard/ComebackScore";
+import DailyPlanner from "@/components/dashboard/DailyPlanner";
+import DailyJournal from "@/components/dashboard/DailyJournal";
+import HabitStreaksCalendar from "@/components/dashboard/HabitStreaksCalendar";
+import DashboardFocusTimer from "@/components/dashboard/DashboardFocusTimer";
 import XPSystem from "@/components/gamification/XPSystem";
 import FloatingXP from "@/components/gamification/FloatingXP";
 import StreakProtection from "@/components/gamification/StreakProtection";
@@ -201,6 +205,15 @@ const Dashboard = () => {
           </div>
 
           <QuickStats totalHabits={habits.length} completedToday={completedToday} currentStreak={maxStreak} weeklyProgress={avgWeeklyProgress} monthlyProgress={monthlyProgress} bestDay={bestDay} />
+
+          {/* Productivity widgets */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+            <DailyPlanner />
+            <DailyJournal />
+            <DashboardFocusTimer habits={habits} />
+          </div>
+
+          {habits.length > 0 && <HabitStreaksCalendar habits={habits} currentDay={currentDay} />}
 
           {habits.length > 0 && <TrendLineChart data={trendData} />}
 
