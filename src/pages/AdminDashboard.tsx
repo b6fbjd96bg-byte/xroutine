@@ -17,6 +17,9 @@ import {
   LogOut,
   RefreshCw,
   AlertTriangle,
+  Eye,
+  Globe,
+  MousePointer,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -62,14 +65,17 @@ const AdminDashboard = () => {
     loading,
     users,
     stats,
+    traffic,
     usersLoading,
     statsLoading,
+    trafficLoading,
     fetchUsers,
     fetchStats,
+    fetchTraffic,
     deleteUser,
   } = useAdmin();
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState<"overview" | "users">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "users" | "traffic">("overview");
 
   useEffect(() => {
     if (!loading && !isAdmin) {
@@ -81,6 +87,7 @@ const AdminDashboard = () => {
     if (isAdmin) {
       fetchStats();
       fetchUsers();
+      fetchTraffic();
     }
   }, [isAdmin]);
 
@@ -180,6 +187,7 @@ const AdminDashboard = () => {
               onClick={() => {
                 fetchStats();
                 fetchUsers();
+                fetchTraffic();
               }}
             >
               <RefreshCw className="w-4 h-4" />
@@ -195,7 +203,7 @@ const AdminDashboard = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
         {/* Tab Navigation */}
         <div className="flex gap-1 p-1 rounded-lg bg-secondary/50 w-fit">
-          {(["overview", "users"] as const).map((tab) => (
+          {(["overview", "users", "traffic"] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -205,7 +213,7 @@ const AdminDashboard = () => {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {tab === "overview" ? "📊 Overview" : "👥 Users"}
+              {tab === "overview" ? "📊 Overview" : tab === "users" ? "👥 Users" : "🌐 Traffic"}
             </button>
           ))}
         </div>
@@ -467,6 +475,96 @@ const AdminDashboard = () => {
               )}
             </CardContent>
           </Card>
+        )}
+
+        {activeTab === "traffic" && (
+          <>
+            {/* Traffic Stat Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {[
+                { title: "Total Page Views", value: traffic?.totalViews || 0, icon: Eye, color: "text-chart-blue", bg: "bg-chart-blue/10" },
+                { title: "Today's Views", value: traffic?.todayViews || 0, icon: MousePointer, color: "text-primary", bg: "bg-primary/10" },
+                { title: "Unique Visitors (30d)", value: traffic?.uniqueVisitors || 0, icon: Globe, color: "text-chart-purple", bg: "bg-chart-purple/10" },
+              ].map((stat, i) => (
+                <motion.div key={stat.title} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+                  <Card className="border-border/50">
+                    <CardContent className="p-4">
+                      <div className={`w-8 h-8 rounded-lg ${stat.bg} flex items-center justify-center mb-3`}>
+                        <stat.icon className={`w-4 h-4 ${stat.color}`} />
+                      </div>
+                      <div className="text-2xl font-bold font-display">{trafficLoading ? "..." : stat.value}</div>
+                      <div className="text-xs text-muted-foreground mt-1">{stat.title}</div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Traffic Chart */}
+            <Card className="border-border/50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base font-display">
+                  <Eye className="w-4 h-4 text-chart-blue" />
+                  Page Views — Last 30 Days
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {trafficLoading ? (
+                  <div className="h-64 flex items-center justify-center text-muted-foreground">Loading chart...</div>
+                ) : (
+                  <ResponsiveContainer width="100%" height={280}>
+                    <AreaChart data={traffic?.viewsByDay || []}>
+                      <defs>
+                        <linearGradient id="viewsGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="hsl(200, 55%, 52%)" stopOpacity={0.3} />
+                          <stop offset="95%" stopColor="hsl(200, 55%, 52%)" stopOpacity={0} />
+                        </linearGradient>
+                        <linearGradient id="uniqueGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="hsl(265, 40%, 58%)" stopOpacity={0.3} />
+                          <stop offset="95%" stopColor="hsl(265, 40%, 58%)" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(225, 15%, 22%)" />
+                      <XAxis dataKey="date" tick={{ fill: "hsl(220, 12%, 55%)", fontSize: 11 }} tickFormatter={(v) => v.slice(5)} />
+                      <YAxis tick={{ fill: "hsl(220, 12%, 55%)", fontSize: 11 }} />
+                      <Tooltip contentStyle={{ background: "hsl(225, 20%, 15%)", border: "1px solid hsl(225, 15%, 22%)", borderRadius: "8px", color: "hsl(220, 20%, 90%)" }} />
+                      <Area type="monotone" dataKey="views" name="Views" stroke="hsl(200, 55%, 52%)" fill="url(#viewsGradient)" strokeWidth={2} />
+                      <Area type="monotone" dataKey="unique" name="Unique" stroke="hsl(265, 40%, 58%)" fill="url(#uniqueGradient)" strokeWidth={2} />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Top Pages */}
+            <Card className="border-border/50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base font-display">
+                  <Globe className="w-4 h-4 text-primary" />
+                  Top Pages
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {trafficLoading ? (
+                  <div className="py-8 text-center text-muted-foreground">Loading...</div>
+                ) : (traffic?.topPages?.length || 0) === 0 ? (
+                  <div className="py-8 text-center text-muted-foreground">No traffic data yet. Views will appear as users visit your site.</div>
+                ) : (
+                  <div className="space-y-3">
+                    {traffic?.topPages.map((page, i) => (
+                      <div key={page.path} className="flex items-center justify-between p-3 rounded-lg bg-secondary/30">
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs text-muted-foreground w-5">{i + 1}.</span>
+                          <span className="text-sm font-medium">{page.path}</span>
+                        </div>
+                        <Badge variant="secondary" className="text-xs">{page.views} views</Badge>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </>
         )}
       </main>
     </div>

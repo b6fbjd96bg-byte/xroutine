@@ -23,14 +23,24 @@ interface AdminStats {
   signupsByDay: { date: string; count: number }[];
 }
 
+interface TrafficData {
+  viewsByDay: { date: string; views: number; unique: number }[];
+  topPages: { path: string; views: number }[];
+  totalViews: number;
+  todayViews: number;
+  uniqueVisitors: number;
+}
+
 export const useAdmin = () => {
   const { user } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [stats, setStats] = useState<AdminStats | null>(null);
+  const [traffic, setTraffic] = useState<TrafficData | null>(null);
   const [usersLoading, setUsersLoading] = useState(false);
   const [statsLoading, setStatsLoading] = useState(false);
+  const [trafficLoading, setTrafficLoading] = useState(false);
 
   useEffect(() => {
     const checkAdmin = async () => {
@@ -55,11 +65,6 @@ export const useAdmin = () => {
   const fetchUsers = async (page = 1) => {
     setUsersLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke("admin-api", {
-        body: null,
-        method: "GET",
-      });
-      // Use query params via headers workaround - invoke with body
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-api?action=list-users&page=${page}`,
         {
@@ -103,6 +108,68 @@ export const useAdmin = () => {
     }
   };
 
+  const fetchTraffic = async () => {
+    setTrafficLoading(true);
+    try {
+      const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+      const today = new Date().toISOString().split("T")[0];
+
+      const { data: views, error } = await supabase
+        .from("page_views")
+        .select("path, session_id, created_at")
+        .gte("created_at", thirtyDaysAgo)
+        .order("created_at", { ascending: true });
+
+      if (error) throw error;
+
+      // Views by day
+      const byDay: Record<string, { views: number; sessions: Set<string> }> = {};
+      for (let i = 0; i < 30; i++) {
+        const d = new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+        byDay[d] = { views: 0, sessions: new Set() };
+      }
+
+      const allSessions = new Set<string>();
+      let todayCount = 0;
+
+      (views || []).forEach((v) => {
+        const day = new Date(v.created_at).toISOString().split("T")[0];
+        if (byDay[day]) {
+          byDay[day].views++;
+          if (v.session_id) byDay[day].sessions.add(v.session_id);
+        }
+        if (v.session_id) allSessions.add(v.session_id);
+        if (day === today) todayCount++;
+      });
+
+      const viewsByDay = Object.entries(byDay)
+        .map(([date, d]) => ({ date, views: d.views, unique: d.sessions.size }))
+        .sort((a, b) => a.date.localeCompare(b.date));
+
+      // Top pages
+      const pageCounts: Record<string, number> = {};
+      (views || []).forEach((v) => {
+        pageCounts[v.path] = (pageCounts[v.path] || 0) + 1;
+      });
+      const topPages = Object.entries(pageCounts)
+        .map(([path, views]) => ({ path, views }))
+        .sort((a, b) => b.views - a.views)
+        .slice(0, 10);
+
+      setTraffic({
+        viewsByDay,
+        topPages,
+        totalViews: views?.length || 0,
+        todayViews: todayCount,
+        uniqueVisitors: allSessions.size,
+      });
+    } catch (err) {
+      console.error("Failed to fetch traffic:", err);
+    } finally {
+      setTrafficLoading(false);
+    }
+  };
+
   const deleteUser = async (userId: string) => {
     try {
       const response = await fetch(
@@ -132,10 +199,13 @@ export const useAdmin = () => {
     loading,
     users,
     stats,
+    traffic,
     usersLoading,
     statsLoading,
+    trafficLoading,
     fetchUsers,
     fetchStats,
+    fetchTraffic,
     deleteUser,
   };
 };
