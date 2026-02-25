@@ -195,20 +195,22 @@ const Dashboard = () => {
             <MonthSelector currentMonth={currentMonth} onPrevMonth={() => { setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1)); setSelectedDate(null); }} onNextMonth={() => { setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1)); setSelectedDate(null); }} />
           </motion.div>
 
-          {/* Core: Today's Focus then Habit Grid */}
-          <TodaysFocus habits={habits} currentDay={currentDay} onToggleDay={handleToggleDay} />
+          {/* Row 1: Today's Focus + Daily Planner + Focus Timer */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <TodaysFocus habits={habits} currentDay={currentDay} onToggleDay={handleToggleDay} />
+            <DailyPlanner />
+            <div className="space-y-4">
+              <DashboardFocusTimer habits={habits} />
+              <DailyJournal />
+            </div>
+          </div>
+
+          {/* Row 2: Habit Grid */}
           <HabitGrid habits={habits} daysInMonth={daysInMonth} currentDay={currentDay} onToggleDay={handleToggleDay} onAddHabit={addHabit} onEditHabit={editHabit} onDeleteHabit={deleteHabit} />
 
+          {/* Row 3: Quote + Quick Stats */}
           <DailyQuote />
-
           <QuickStats totalHabits={habits.length} completedToday={completedToday} currentStreak={maxStreak} weeklyProgress={avgWeeklyProgress} monthlyProgress={monthlyProgress} bestDay={bestDay} />
-
-          {/* Productivity widgets */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-            <DailyPlanner />
-            <DailyJournal />
-            <DashboardFocusTimer habits={habits} />
-          </div>
 
           {habits.length > 0 && <HabitStreaksCalendar habits={habits} currentDay={currentDay} />}
 
