@@ -20,6 +20,7 @@ import {
   Lock,
   Eye,
   EyeOff,
+  Crown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -42,10 +43,14 @@ import SmartReminders from "@/components/gamification/SmartReminders";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useSubscription } from "@/hooks/useSubscription";
+import UpgradePrompt from "@/components/premium/UpgradePrompt";
 
 const Settings = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { tier, isPremium, limits } = useSubscription();
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   const [notifications, setNotifications] = useState({
     dailyReminder: true,
@@ -310,6 +315,44 @@ const Settings = () => {
             </div>
           </motion.div>
 
+          {/* Subscription */}
+          <motion.div variants={itemVariants} className="glass-card p-4 sm:p-6">
+            <div className="flex items-center gap-3 mb-4 sm:mb-6">
+              <Crown className="w-5 h-5 text-chart-yellow" />
+              <h2 className="text-base sm:text-xl font-bold font-display">Subscription</h2>
+            </div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className={cn(
+                "px-3 py-1 rounded-full text-xs font-bold",
+                isPremium ? "bg-chart-yellow/20 text-chart-yellow" : "bg-secondary text-muted-foreground"
+              )}>
+                {isPremium ? "👑 PREMIUM" : "FREE PLAN"}
+              </div>
+            </div>
+            <div className="space-y-2 mb-4">
+              {[
+                { label: "Daily habits", free: `Up to ${limits.maxDailyHabits}`, premium: "Unlimited" },
+                { label: "Weekly habits", free: `Up to ${limits.maxWeeklyHabits}`, premium: "Unlimited" },
+                { label: "Streak protections", free: "1/month", premium: "3/month" },
+                { label: "Deep analytics", free: "✗", premium: "✓" },
+                { label: "Weekly email reports", free: "✗", premium: "✓" },
+              ].map((row) => (
+                <div key={row.label} className="flex items-center justify-between py-1.5 text-xs sm:text-sm border-b border-border/20 last:border-0">
+                  <span className="text-muted-foreground">{row.label}</span>
+                  <span className={isPremium ? "text-chart-yellow font-medium" : "text-foreground"}>
+                    {isPremium ? row.premium : row.free}
+                  </span>
+                </div>
+              ))}
+            </div>
+            {!isPremium && (
+              <Button variant="outline" className="w-full gap-2 border-chart-yellow/30 text-chart-yellow hover:bg-chart-yellow/10" onClick={() => setShowUpgrade(true)}>
+                <Crown className="w-4 h-4" />
+                Upgrade to Premium
+              </Button>
+            )}
+          </motion.div>
+
           {/* Data & Privacy */}
           <motion.div variants={itemVariants} className="glass-card p-4 sm:p-6">
             <div className="flex items-center gap-3 mb-4 sm:mb-6">
@@ -378,6 +421,7 @@ const Settings = () => {
           </motion.p>
         </motion.div>
       </main>
+      <UpgradePrompt open={showUpgrade} onOpenChange={setShowUpgrade} />
     </div>
   );
 };

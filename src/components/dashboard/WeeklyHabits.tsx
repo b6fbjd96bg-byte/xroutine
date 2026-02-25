@@ -13,6 +13,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import HabitActions from "./HabitActions";
+import { useSubscription } from "@/hooks/useSubscription";
+import UpgradePrompt from "@/components/premium/UpgradePrompt";
 
 interface WeeklyHabit {
   id: string;
@@ -51,10 +53,18 @@ const WeeklyHabits = ({ habits, numberOfWeeks, onToggleWeek, onAddHabit, onEditH
   const [newHabitGoal, setNewHabitGoal] = useState("5");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
+  const { limits } = useSubscription();
+  const [showUpgrade, setShowUpgrade] = useState(false);
+  const atLimit = habits.length >= limits.maxWeeklyHabits;
 
   const weeks = Array.from({ length: numberOfWeeks }, (_, i) => i + 1);
 
   const handleAddHabit = () => {
+    if (atLimit) {
+      setIsDialogOpen(false);
+      setShowUpgrade(true);
+      return;
+    }
     if (newHabitName.trim()) {
       onAddHabit(newHabitName, parseInt(newHabitGoal) || 5);
       setNewHabitName("");
@@ -90,10 +100,17 @@ const WeeklyHabits = ({ habits, numberOfWeeks, onToggleWeek, onAddHabit, onEditH
         </div>
         <div className="flex items-center gap-3">
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild onClick={(e) => e.stopPropagation()}>
+            <DialogTrigger asChild onClick={(e) => {
+              e.stopPropagation();
+              if (atLimit) {
+                e.preventDefault();
+                setShowUpgrade(true);
+              }
+            }}>
               <Button variant="default" size="sm">
                 <Plus className="w-4 h-4" />
                 Add Weekly Habit
+                {atLimit && <span className="ml-1 text-chart-yellow text-[10px]">👑</span>}
               </Button>
             </DialogTrigger>
             <DialogContent className="bg-card border-border">
@@ -267,6 +284,11 @@ const WeeklyHabits = ({ habits, numberOfWeeks, onToggleWeek, onAddHabit, onEditH
           </motion.div>
         )}
       </AnimatePresence>
+      <UpgradePrompt
+        open={showUpgrade}
+        onOpenChange={setShowUpgrade}
+        feature={`You've reached the free limit of ${limits.maxWeeklyHabits} weekly habits. Upgrade for unlimited habits.`}
+      />
     </motion.div>
   );
 };
