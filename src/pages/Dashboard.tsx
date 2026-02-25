@@ -25,8 +25,16 @@ import FloatingXP from "@/components/gamification/FloatingXP";
 import StreakProtection from "@/components/gamification/StreakProtection";
 import ConfettiCelebration from "@/components/gamification/ConfettiCelebration";
 import OnboardingWizard from "@/components/onboarding/OnboardingWizard";
+import DailyLoginReward from "@/components/dashboard/DailyLoginReward";
+import WelcomeBack from "@/components/dashboard/WelcomeBack";
+import WeeklyReportCard from "@/components/dashboard/WeeklyReportCard";
+import CommitmentCard from "@/components/dashboard/CommitmentCard";
+import MilestoneShare from "@/components/dashboard/MilestoneShare";
+import PushNotificationPrompt from "@/components/dashboard/PushNotificationPrompt";
 import { useGameification } from "@/hooks/useGameification";
 import { useHabits } from "@/hooks/useHabits";
+import { useDailyLogin } from "@/hooks/useDailyLogin";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
@@ -51,6 +59,13 @@ const Dashboard = () => {
     addDailyXP, addWeeklyXP, removeXPNotification, useEmergencySkip,
     triggerConfetti, resetConfetti,
   } = useGameification();
+
+  const {
+    streakCount, xpClaimed, isNewLogin, daysAway,
+    dismissNewLogin, dismissWelcomeBack,
+  } = useDailyLogin();
+
+  const { canPrompt, requestPermission, dismissPrompt } = usePushNotifications();
 
   // Show onboarding for new users (no habits and not loading)
   useEffect(() => {
@@ -160,6 +175,11 @@ const Dashboard = () => {
     return <OnboardingWizard onComplete={handleOnboardingComplete} />;
   }
 
+  // Show welcome back screen for returning users
+  if (daysAway >= 2) {
+    return <WelcomeBack daysAway={daysAway} onDismiss={dismissWelcomeBack} />;
+  }
+
   const userName = user?.user_metadata?.display_name || "there";
 
   const handleToggleDay = async (habitId: string, day: number, event?: React.MouseEvent) => {
@@ -184,6 +204,14 @@ const Dashboard = () => {
 
       <main className="md:ml-64 p-4 sm:p-6 lg:p-8">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="max-w-[1400px] mx-auto space-y-4 sm:space-y-6">
+          {/* Daily Login Reward */}
+          <DailyLoginReward
+            streakCount={streakCount}
+            xpClaimed={xpClaimed}
+            isNewLogin={isNewLogin}
+            onDismiss={dismissNewLogin}
+          />
+
           {/* Header */}
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
@@ -194,6 +222,9 @@ const Dashboard = () => {
             </div>
             <MonthSelector currentMonth={currentMonth} onPrevMonth={() => { setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1)); setSelectedDate(null); }} onNextMonth={() => { setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1)); setSelectedDate(null); }} />
           </motion.div>
+
+          {/* Push Notification Prompt */}
+          <PushNotificationPrompt canPrompt={canPrompt} onAccept={requestPermission} onDismiss={dismissPrompt} />
 
           {/* Row 1: Today's Focus + Daily Planner + Focus Timer */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -212,7 +243,17 @@ const Dashboard = () => {
           <DailyQuote />
           <QuickStats totalHabits={habits.length} completedToday={completedToday} currentStreak={maxStreak} weeklyProgress={avgWeeklyProgress} monthlyProgress={monthlyProgress} bestDay={bestDay} />
 
+          {/* Prominent Habit Streaks Calendar */}
           {habits.length > 0 && <HabitStreaksCalendar habits={habits} currentDay={currentDay} />}
+
+          {/* Milestone Celebrations */}
+          <MilestoneShare habits={habits} totalXP={totalXP} maxStreak={maxStreak} currentDay={currentDay} />
+
+          {/* Commitment + Weekly Report */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+            <CommitmentCard />
+            <WeeklyReportCard habits={habits} totalXP={totalXP} currentDay={currentDay} maxStreak={maxStreak} />
+          </div>
 
           {habits.length > 0 && <TrendLineChart data={trendData} />}
 

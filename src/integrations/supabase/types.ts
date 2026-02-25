@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      daily_logins: {
+        Row: {
+          created_at: string
+          id: string
+          login_date: string
+          streak_count: number
+          user_id: string
+          xp_claimed: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          login_date?: string
+          streak_count?: number
+          user_id: string
+          xp_claimed?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          login_date?: string
+          streak_count?: number
+          user_id?: string
+          xp_claimed?: number
+        }
+        Relationships: []
+      }
       habits: {
         Row: {
           completed_days: number[]
@@ -189,6 +216,30 @@ export type Database = {
           priority?: string
           title?: string
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_commitments: {
+        Row: {
+          commitment_text: string
+          created_at: string
+          id: string
+          is_active: boolean
+          user_id: string
+        }
+        Insert: {
+          commitment_text: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          user_id: string
+        }
+        Update: {
+          commitment_text?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
           user_id?: string
         }
         Relationships: []
