@@ -2,7 +2,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CheckCircle, ArrowRight, Sparkles, Target, Zap, Trophy } from "lucide-react";
+import { CheckCircle, ArrowRight, Sparkles, Target, Zap, Trophy, Crown, Rocket } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface OnboardingWizardProps {
   onComplete: (habits: { name: string; goal: number }[]) => void;
@@ -23,10 +24,12 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
   const [step, setStep] = useState(0);
   const [selectedHabits, setSelectedHabits] = useState<Set<number>>(new Set());
   const [customHabit, setCustomHabit] = useState("");
+  const { toast } = useToast();
 
   const steps = [
     { icon: Sparkles, title: "Welcome to Superoutine!", subtitle: "Let's set up your habit tracker in 30 seconds" },
     { icon: Target, title: "Pick Your Habits", subtitle: "Choose habits you want to build (you can always add more later)" },
+    { icon: Crown, title: "Choose Your Path", subtitle: "Start free or go all-in" },
     { icon: Zap, title: "How It Works", subtitle: "Quick tour of your superpowers" },
     { icon: Trophy, title: "You're All Set!", subtitle: "Let's start your journey" },
   ];
@@ -170,8 +173,73 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
               </div>
             )}
 
-            {/* Step 2: How it works */}
+            {/* Step 2: Choose Your Path */}
             {step === 2 && (
+              <div className="glass-card p-8">
+                <div className="text-center mb-6">
+                  <h2 className="text-2xl font-bold font-display mb-2">Choose Your Path</h2>
+                  <p className="text-muted-foreground text-sm">Pick the plan that fits your commitment level</p>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                  {/* Free */}
+                  <motion.button
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => setStep(3)}
+                    className="p-5 rounded-2xl text-left border-2 border-border/50 bg-secondary/20 hover:border-primary/40 transition-all group"
+                  >
+                    <Rocket className="w-8 h-8 text-primary mb-3" />
+                    <div className="text-lg font-bold font-display mb-1">Start Free</div>
+                    <ul className="space-y-1.5 text-xs text-muted-foreground">
+                      <li>✓ Up to 5 daily habits</li>
+                      <li>✓ Up to 3 weekly habits</li>
+                      <li>✓ Basic analytics</li>
+                      <li>✓ 1 streak protection/month</li>
+                      <li>✓ Focus timer & journal</li>
+                    </ul>
+                    <div className="mt-3 text-sm font-semibold text-primary group-hover:underline">
+                      Continue Free →
+                    </div>
+                  </motion.button>
+
+                  {/* Premium */}
+                  <motion.button
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => {
+                      toast({
+                        title: "You're on the waitlist! 🎉",
+                        description: "We'll notify you when Premium launches. Starting you on Free for now.",
+                      });
+                      setStep(3);
+                    }}
+                    className="p-5 rounded-2xl text-left border-2 border-chart-yellow/40 bg-chart-yellow/5 hover:border-chart-yellow/70 transition-all relative overflow-hidden group"
+                  >
+                    <div className="absolute top-3 right-3 text-[10px] font-bold bg-chart-yellow/20 text-chart-yellow px-2 py-0.5 rounded-full">
+                      COMING SOON
+                    </div>
+                    <Crown className="w-8 h-8 text-chart-yellow mb-3" />
+                    <div className="text-lg font-bold font-display mb-1">Get Serious</div>
+                    <ul className="space-y-1.5 text-xs text-muted-foreground">
+                      <li>✓ Unlimited habits</li>
+                      <li>✓ Deep analytics & insights</li>
+                      <li>✓ 3 streak protections/month</li>
+                      <li>✓ Weekly email reports</li>
+                      <li>✓ Full AI motivation</li>
+                    </ul>
+                    <div className="mt-3 text-sm font-semibold text-chart-yellow group-hover:underline">
+                      Join Waitlist →
+                    </div>
+                  </motion.button>
+                </div>
+                <div className="flex gap-3">
+                  <Button variant="ghost" onClick={() => setStep(1)} className="flex-1">
+                    Back
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Step 3: How it works */}
+            {step === 3 && (
               <div className="glass-card p-8">
                 <div className="text-center mb-6">
                   <h2 className="text-2xl font-bold font-display mb-2">Your Superpowers</h2>
@@ -180,7 +248,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
                 <div className="space-y-4 mb-8">
                   {[
                     { icon: "⚡", title: "XP & Levels", desc: "Every habit completed earns XP. Daily = +10 XP, Weekly = +50 XP. Level up as you grow!" },
-                    { icon: "🛡️", title: "Life Happens Pass", desc: "1 emergency skip per month protects your streak. Because everyone has bad days." },
+                    { icon: "🛡️", title: "Life Happens Pass", desc: "Emergency skips protect your streak. Because everyone has bad days." },
                     { icon: "🔥", title: "Streak Fire", desc: "Build consecutive day streaks. Watch your flame grow and never want to break it." },
                     { icon: "🎯", title: "Focus Timer", desc: "Built-in deep work timer for habits like meditation and reading." },
                   ].map((item) => (
@@ -199,10 +267,10 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
                   ))}
                 </div>
                 <div className="flex gap-3">
-                  <Button variant="ghost" onClick={() => setStep(1)} className="flex-1">
+                  <Button variant="ghost" onClick={() => setStep(2)} className="flex-1">
                     Back
                   </Button>
-                  <Button variant="hero" className="flex-1 group" onClick={() => setStep(3)}>
+                  <Button variant="hero" className="flex-1 group" onClick={() => setStep(4)}>
                     Almost Done
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
@@ -211,7 +279,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
             )}
 
             {/* Step 3: Ready */}
-            {step === 3 && (
+            {step === 4 && (
               <div className="glass-card p-8 text-center">
                 <motion.div
                   initial={{ scale: 0, rotate: -180 }}
@@ -245,7 +313,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <Button variant="ghost" onClick={() => setStep(2)} className="flex-1">
+                  <Button variant="ghost" onClick={() => setStep(3)} className="flex-1">
                     Back
                   </Button>
                   <Button variant="hero" size="lg" className="flex-1 group" onClick={handleFinish}>
