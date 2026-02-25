@@ -195,15 +195,9 @@ const Dashboard = () => {
             <MonthSelector currentMonth={currentMonth} onPrevMonth={() => { setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1)); setSelectedDate(null); }} onNextMonth={() => { setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1)); setSelectedDate(null); }} />
           </motion.div>
 
-          {/* Core: Today's Focus + Habit Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-            <div className="lg:col-span-1">
-              <TodaysFocus habits={habits} currentDay={currentDay} onToggleDay={handleToggleDay} />
-            </div>
-            <div className="lg:col-span-2 space-y-4 sm:space-y-6">
-              <HabitGrid habits={habits} daysInMonth={daysInMonth} currentDay={currentDay} onToggleDay={handleToggleDay} onAddHabit={addHabit} onEditHabit={editHabit} onDeleteHabit={deleteHabit} />
-            </div>
-          </div>
+          {/* Core: Today's Focus then Habit Grid */}
+          <TodaysFocus habits={habits} currentDay={currentDay} onToggleDay={handleToggleDay} />
+          <HabitGrid habits={habits} daysInMonth={daysInMonth} currentDay={currentDay} onToggleDay={handleToggleDay} onAddHabit={addHabit} onEditHabit={editHabit} onDeleteHabit={deleteHabit} />
 
           <DailyQuote />
 
