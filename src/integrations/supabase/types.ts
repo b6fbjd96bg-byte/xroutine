@@ -319,6 +319,30 @@ export type Database = {
         }
         Relationships: []
       }
+      user_subscriptions: {
+        Row: {
+          id: string
+          started_at: string
+          tier: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          started_at?: string
+          tier?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          started_at?: string
+          tier?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       weekly_habits: {
         Row: {
           completed_weeks: number[]
