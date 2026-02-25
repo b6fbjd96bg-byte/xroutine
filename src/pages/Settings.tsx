@@ -53,6 +53,8 @@ const Settings = () => {
     achievements: true,
     sound: false,
   });
+  const [weeklyEmailEnabled, setWeeklyEmailEnabled] = useState(true);
+  const [emailPrefLoaded, setEmailPrefLoaded] = useState(false);
   const [theme, setTheme] = useState("dark");
 
   // Profile state
@@ -76,7 +78,36 @@ const Settings = () => {
       .then(({ data }) => {
         if (data?.display_name) setDisplayName(data.display_name);
       });
+
+    // Load email preferences
+    supabase
+      .from("email_preferences")
+      .select("weekly_report_enabled")
+      .eq("user_id", user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) setWeeklyEmailEnabled(data.weekly_report_enabled);
+        setEmailPrefLoaded(true);
+      });
   }, [user]);
+
+  const toggleWeeklyEmail = async () => {
+    if (!user) return;
+    const newVal = !weeklyEmailEnabled;
+    setWeeklyEmailEnabled(newVal);
+
+    // Upsert preference
+    const { error } = await supabase
+      .from("email_preferences")
+      .upsert({ user_id: user.id, weekly_report_enabled: newVal }, { onConflict: "user_id" });
+
+    if (error) {
+      setWeeklyEmailEnabled(!newVal);
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: newVal ? "Weekly emails enabled ✅" : "Weekly emails disabled" });
+    }
+  };
 
   const handleSaveProfile = async () => {
     if (!user) return;
@@ -204,6 +235,22 @@ const Settings = () => {
               <h2 className="text-base sm:text-xl font-bold font-display">Notifications</h2>
             </div>
             <div className="space-y-1">
+              {/* Email Weekly Report toggle */}
+              <div className="flex items-center justify-between py-3 border-b border-border/30">
+                <div className="flex items-center gap-3 min-w-0">
+                  <Mail className="w-4 h-4 text-muted-foreground shrink-0 hidden sm:block" />
+                  <div className="min-w-0">
+                    <p className="text-xs sm:text-sm font-medium">Weekly Email Report</p>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground truncate">Receive your report card via email every Monday</p>
+                  </div>
+                </div>
+                <Switch
+                  checked={weeklyEmailEnabled}
+                  onCheckedChange={toggleWeeklyEmail}
+                  disabled={!emailPrefLoaded}
+                  className="shrink-0 ml-3"
+                />
+              </div>
               {[
                 { key: "dailyReminder" as const, label: "Daily Reminders", desc: "Get reminded to complete your habits", icon: Smartphone },
                 { key: "weeklyReport" as const, label: "Weekly Reports", desc: "Receive weekly progress summaries", icon: Globe },
