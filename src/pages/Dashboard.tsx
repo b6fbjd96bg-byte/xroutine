@@ -19,6 +19,7 @@ import DailyPlanner from "@/components/dashboard/DailyPlanner";
 import DailyJournal from "@/components/dashboard/DailyJournal";
 import HabitStreaksCalendar from "@/components/dashboard/HabitStreaksCalendar";
 import DashboardFocusTimer from "@/components/dashboard/DashboardFocusTimer";
+import DailyQuote from "@/components/gamification/DailyQuote";
 import XPSystem from "@/components/gamification/XPSystem";
 import FloatingXP from "@/components/gamification/FloatingXP";
 import StreakProtection from "@/components/gamification/StreakProtection";
@@ -203,6 +204,8 @@ const Dashboard = () => {
               <HabitGrid habits={habits} daysInMonth={daysInMonth} currentDay={currentDay} onToggleDay={handleToggleDay} onAddHabit={addHabit} onEditHabit={editHabit} onDeleteHabit={deleteHabit} />
             </div>
           </div>
+
+          <DailyQuote />
 
           <QuickStats totalHabits={habits.length} completedToday={completedToday} currentStreak={maxStreak} weeklyProgress={avgWeeklyProgress} monthlyProgress={monthlyProgress} bestDay={bestDay} />
 
