@@ -21,6 +21,8 @@ import {
   Globe,
   MousePointer,
   Crown,
+  Star,
+  ClipboardList,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,15 +49,13 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import {
-  BarChart,
-  Bar,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  AreaChart,
-  Area,
 } from "recharts";
 
 const AdminDashboard = () => {
@@ -77,6 +77,8 @@ const AdminDashboard = () => {
     fetchTraffic,
     fetchWaitlist,
     deleteUser,
+    promoteUser,
+    demoteUser,
   } = useAdmin();
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<"overview" | "users" | "traffic" | "waitlist">("overview");
@@ -105,6 +107,24 @@ const AdminDashboard = () => {
     }
   };
 
+  const handlePromote = async (userId: string, email: string) => {
+    const success = await promoteUser(userId);
+    if (success) {
+      toast.success(`${email} promoted to Premium`);
+    } else {
+      toast.error("Failed to promote user");
+    }
+  };
+
+  const handleDemote = async (userId: string, email: string) => {
+    const success = await demoteUser(userId);
+    if (success) {
+      toast.success(`${email} demoted to Free`);
+    } else {
+      toast.error("Failed to demote user");
+    }
+  };
+
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
@@ -127,48 +147,14 @@ const AdminDashboard = () => {
   if (!isAdmin) return null;
 
   const statCards = [
-    {
-      title: "Total Users",
-      value: stats?.totalUsers || 0,
-      icon: Users,
-      color: "text-primary",
-      bg: "bg-primary/10",
-    },
-    {
-      title: "New This Week",
-      value: stats?.newUsersThisWeek || 0,
-      icon: TrendingUp,
-      color: "text-chart-green",
-      bg: "bg-chart-green/10",
-    },
-    {
-      title: "Active Users (7d)",
-      value: stats?.activeUsers || 0,
-      icon: Activity,
-      color: "text-chart-blue",
-      bg: "bg-chart-blue/10",
-    },
-    {
-      title: "Total Habits",
-      value: stats?.totalHabits || 0,
-      icon: BarChart3,
-      color: "text-chart-purple",
-      bg: "bg-chart-purple/10",
-    },
-    {
-      title: "Journal Entries",
-      value: stats?.totalJournals || 0,
-      icon: BookOpen,
-      color: "text-chart-yellow",
-      bg: "bg-chart-yellow/10",
-    },
-    {
-      title: "Total XP Earned",
-      value: stats?.totalXP?.toLocaleString() || "0",
-      icon: Zap,
-      color: "text-chart-pink",
-      bg: "bg-chart-pink/10",
-    },
+    { title: "Total Users", value: stats?.totalUsers || 0, icon: Users, color: "text-primary", bg: "bg-primary/10" },
+    { title: "New This Week", value: stats?.newUsersThisWeek || 0, icon: TrendingUp, color: "text-chart-green", bg: "bg-chart-green/10" },
+    { title: "Active Users (7d)", value: stats?.activeUsers || 0, icon: Activity, color: "text-chart-blue", bg: "bg-chart-blue/10" },
+    { title: "Premium Users", value: stats?.premiumUsers || 0, icon: Crown, color: "text-chart-yellow", bg: "bg-chart-yellow/10" },
+    { title: "Waitlist", value: stats?.waitlistCount || 0, icon: ClipboardList, color: "text-chart-pink", bg: "bg-chart-pink/10" },
+    { title: "Total Habits", value: stats?.totalHabits || 0, icon: BarChart3, color: "text-chart-purple", bg: "bg-chart-purple/10" },
+    { title: "Journal Entries", value: stats?.totalJournals || 0, icon: BookOpen, color: "text-primary", bg: "bg-primary/10" },
+    { title: "Total XP", value: stats?.totalXP?.toLocaleString() || "0", icon: Zap, color: "text-chart-green", bg: "bg-chart-green/10" },
   ];
 
   return (
@@ -226,8 +212,7 @@ const AdminDashboard = () => {
 
         {activeTab === "overview" && (
           <>
-            {/* Stat Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
               {statCards.map((stat, i) => (
                 <motion.div
                   key={stat.title}
@@ -243,9 +228,7 @@ const AdminDashboard = () => {
                       <div className="text-2xl font-bold font-display">
                         {statsLoading ? "..." : stat.value}
                       </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        {stat.title}
-                      </div>
+                      <div className="text-xs text-muted-foreground mt-1">{stat.title}</div>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -262,9 +245,7 @@ const AdminDashboard = () => {
               </CardHeader>
               <CardContent>
                 {statsLoading ? (
-                  <div className="h-64 flex items-center justify-center text-muted-foreground">
-                    Loading chart...
-                  </div>
+                  <div className="h-64 flex items-center justify-center text-muted-foreground">Loading chart...</div>
                 ) : (
                   <ResponsiveContainer width="100%" height={280}>
                     <AreaChart data={stats?.signupsByDay || []}>
@@ -275,27 +256,10 @@ const AdminDashboard = () => {
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(225, 15%, 22%)" />
-                      <XAxis
-                        dataKey="date"
-                        tick={{ fill: "hsl(220, 12%, 55%)", fontSize: 11 }}
-                        tickFormatter={(v) => v.slice(5)}
-                      />
+                      <XAxis dataKey="date" tick={{ fill: "hsl(220, 12%, 55%)", fontSize: 11 }} tickFormatter={(v) => v.slice(5)} />
                       <YAxis tick={{ fill: "hsl(220, 12%, 55%)", fontSize: 11 }} />
-                      <Tooltip
-                        contentStyle={{
-                          background: "hsl(225, 20%, 15%)",
-                          border: "1px solid hsl(225, 15%, 22%)",
-                          borderRadius: "8px",
-                          color: "hsl(220, 20%, 90%)",
-                        }}
-                      />
-                      <Area
-                        type="monotone"
-                        dataKey="count"
-                        stroke="hsl(158, 45%, 50%)"
-                        fill="url(#signupGradient)"
-                        strokeWidth={2}
-                      />
+                      <Tooltip contentStyle={{ background: "hsl(225, 20%, 15%)", border: "1px solid hsl(225, 15%, 22%)", borderRadius: "8px", color: "hsl(220, 20%, 90%)" }} />
+                      <Area type="monotone" dataKey="count" stroke="hsl(158, 45%, 50%)" fill="url(#signupGradient)" strokeWidth={2} />
                     </AreaChart>
                   </ResponsiveContainer>
                 )}
@@ -316,6 +280,7 @@ const AdminDashboard = () => {
                     <TableRow>
                       <TableHead>User</TableHead>
                       <TableHead>Joined</TableHead>
+                      <TableHead>Tier</TableHead>
                       <TableHead>XP</TableHead>
                       <TableHead>Status</TableHead>
                     </TableRow>
@@ -333,15 +298,16 @@ const AdminDashboard = () => {
                           {new Date(u.created_at).toLocaleDateString()}
                         </TableCell>
                         <TableCell>
-                          <Badge variant="secondary" className="text-xs">
-                            {u.total_xp} XP
+                          <Badge variant={u.tier === "premium" ? "default" : "secondary"} className="text-xs">
+                            {u.tier === "premium" && <Crown className="w-3 h-3 mr-1" />}
+                            {u.tier === "premium" ? "Premium" : "Free"}
                           </Badge>
                         </TableCell>
                         <TableCell>
-                          <Badge
-                            variant={u.email_confirmed ? "default" : "destructive"}
-                            className="text-xs"
-                          >
+                          <Badge variant="secondary" className="text-xs">{u.total_xp} XP</Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={u.email_confirmed ? "default" : "destructive"} className="text-xs">
                             {u.email_confirmed ? "Verified" : "Unverified"}
                           </Badge>
                         </TableCell>
@@ -375,9 +341,7 @@ const AdminDashboard = () => {
             </CardHeader>
             <CardContent>
               {usersLoading ? (
-                <div className="py-12 text-center text-muted-foreground">
-                  Loading users...
-                </div>
+                <div className="py-12 text-center text-muted-foreground">Loading users...</div>
               ) : (
                 <div className="overflow-x-auto">
                   <Table>
@@ -386,6 +350,7 @@ const AdminDashboard = () => {
                         <TableHead>User</TableHead>
                         <TableHead>Joined</TableHead>
                         <TableHead>Last Active</TableHead>
+                        <TableHead>Tier</TableHead>
                         <TableHead>Habits</TableHead>
                         <TableHead>XP</TableHead>
                         <TableHead>Status</TableHead>
@@ -397,80 +362,113 @@ const AdminDashboard = () => {
                         <TableRow key={u.id}>
                           <TableCell>
                             <div>
-                              <div className="font-medium text-sm">
-                                {u.display_name}
-                              </div>
-                              <div className="text-xs text-muted-foreground">
-                                {u.email}
-                              </div>
+                              <div className="font-medium text-sm">{u.display_name}</div>
+                              <div className="text-xs text-muted-foreground">{u.email}</div>
                             </div>
                           </TableCell>
                           <TableCell className="text-sm text-muted-foreground">
                             {new Date(u.created_at).toLocaleDateString()}
                           </TableCell>
                           <TableCell className="text-sm text-muted-foreground">
-                            {u.last_sign_in_at
-                              ? new Date(u.last_sign_in_at).toLocaleDateString()
-                              : "Never"}
+                            {u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleDateString() : "Never"}
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant={u.tier === "premium" ? "default" : "secondary"} className="text-xs">
+                              {u.tier === "premium" && <Crown className="w-3 h-3 mr-1" />}
+                              {u.tier === "premium" ? "Premium" : "Free"}
+                            </Badge>
                           </TableCell>
                           <TableCell className="text-sm">{u.habit_count}</TableCell>
                           <TableCell>
-                            <Badge variant="secondary" className="text-xs">
-                              {u.total_xp} XP
-                            </Badge>
+                            <Badge variant="secondary" className="text-xs">{u.total_xp} XP</Badge>
                           </TableCell>
                           <TableCell>
-                            <Badge
-                              variant={u.email_confirmed ? "default" : "destructive"}
-                              className="text-xs"
-                            >
+                            <Badge variant={u.email_confirmed ? "default" : "destructive"} className="text-xs">
                               {u.email_confirmed ? "Verified" : "Unverified"}
                             </Badge>
                           </TableCell>
                           <TableCell className="text-right">
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle className="flex items-center gap-2">
-                                    <AlertTriangle className="w-5 h-5 text-destructive" />
-                                    Delete User
-                                  </AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    Are you sure you want to permanently delete{" "}
-                                    <strong>{u.email}</strong>? This action cannot
-                                    be undone. All their data (habits, journals,
-                                    XP) will be removed.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction
-                                    onClick={() => handleDelete(u.id, u.email)}
-                                    className="bg-destructive hover:bg-destructive/90"
+                            <div className="flex items-center justify-end gap-1">
+                              {/* Promote/Demote */}
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className={`h-8 w-8 ${u.tier === "premium" ? "text-chart-yellow hover:text-chart-yellow" : "text-muted-foreground hover:text-chart-yellow"} hover:bg-chart-yellow/10`}
+                                    title={u.tier === "premium" ? "Demote to Free" : "Promote to Premium"}
                                   >
-                                    Delete User
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
+                                    <Crown className="w-4 h-4" />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle className="flex items-center gap-2">
+                                      <Crown className="w-5 h-5 text-chart-yellow" />
+                                      {u.tier === "premium" ? "Demote User" : "Promote User"}
+                                    </AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      {u.tier === "premium"
+                                        ? <>Are you sure you want to demote <strong>{u.email}</strong> from Premium to Free?</>
+                                        : <>Promote <strong>{u.email}</strong> to Premium? They will get unlimited habits, streak protections, and more.</>
+                                      }
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() =>
+                                        u.tier === "premium"
+                                          ? handleDemote(u.id, u.email)
+                                          : handlePromote(u.id, u.email)
+                                      }
+                                    >
+                                      {u.tier === "premium" ? "Demote to Free" : "Promote to Premium"}
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+
+                              {/* Delete */}
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle className="flex items-center gap-2">
+                                      <AlertTriangle className="w-5 h-5 text-destructive" />
+                                      Delete User
+                                    </AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      Are you sure you want to permanently delete{" "}
+                                      <strong>{u.email}</strong>? This action cannot be undone.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() => handleDelete(u.id, u.email)}
+                                      className="bg-destructive hover:bg-destructive/90"
+                                    >
+                                      Delete User
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))}
                       {filteredUsers.length === 0 && (
                         <TableRow>
-                          <TableCell
-                            colSpan={7}
-                            className="text-center py-8 text-muted-foreground"
-                          >
+                          <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                             No users found
                           </TableCell>
                         </TableRow>
@@ -485,7 +483,6 @@ const AdminDashboard = () => {
 
         {activeTab === "traffic" && (
           <>
-            {/* Traffic Stat Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
                 { title: "Total Page Views", value: traffic?.totalViews || 0, icon: Eye, color: "text-chart-blue", bg: "bg-chart-blue/10" },
@@ -506,7 +503,6 @@ const AdminDashboard = () => {
               ))}
             </div>
 
-            {/* Traffic Chart */}
             <Card className="border-border/50">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base font-display">
@@ -542,7 +538,6 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
 
-            {/* Top Pages */}
             <Card className="border-border/50">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base font-display">
@@ -554,7 +549,7 @@ const AdminDashboard = () => {
                 {trafficLoading ? (
                   <div className="py-8 text-center text-muted-foreground">Loading...</div>
                 ) : (traffic?.topPages?.length || 0) === 0 ? (
-                  <div className="py-8 text-center text-muted-foreground">No traffic data yet. Views will appear as users visit your site.</div>
+                  <div className="py-8 text-center text-muted-foreground">No traffic data yet.</div>
                 ) : (
                   <div className="space-y-3">
                     {traffic?.topPages.map((page, i) => (
@@ -583,13 +578,9 @@ const AdminDashboard = () => {
             </CardHeader>
             <CardContent>
               {waitlistLoading ? (
-                <div className="py-12 text-center text-muted-foreground">
-                  Loading waitlist...
-                </div>
+                <div className="py-12 text-center text-muted-foreground">Loading waitlist...</div>
               ) : waitlist.length === 0 ? (
-                <div className="py-12 text-center text-muted-foreground">
-                  No waitlist signups yet.
-                </div>
+                <div className="py-12 text-center text-muted-foreground">No waitlist signups yet.</div>
               ) : (
                 <div className="overflow-x-auto">
                   <Table>
@@ -598,6 +589,7 @@ const AdminDashboard = () => {
                         <TableHead>#</TableHead>
                         <TableHead>User</TableHead>
                         <TableHead>Signed Up</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -612,6 +604,33 @@ const AdminDashboard = () => {
                           </TableCell>
                           <TableCell className="text-sm text-muted-foreground">
                             {new Date(entry.created_at).toLocaleString()}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button variant="outline" size="sm" className="text-xs">
+                                  <Crown className="w-3 h-3 mr-1" />
+                                  Promote
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle className="flex items-center gap-2">
+                                    <Crown className="w-5 h-5 text-chart-yellow" />
+                                    Promote to Premium
+                                  </AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Promote <strong>{entry.email}</strong> from the waitlist to Premium?
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction onClick={() => handlePromote(entry.user_id, entry.email)}>
+                                    Promote to Premium
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
                           </TableCell>
                         </TableRow>
                       ))}
