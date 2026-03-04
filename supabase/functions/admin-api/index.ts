@@ -15,7 +15,6 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     
-    // Verify the requesting user is admin
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -36,7 +35,6 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Check admin role using service role client
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
     
     const { data: roleData } = await adminClient
@@ -66,7 +64,6 @@ Deno.serve(async (req) => {
         });
         if (error) throw error;
         
-        // Get habit counts and gamification data for each user
         const userIds = data.users.map(u => u.id);
         
         const { data: habits } = await adminClient
@@ -84,10 +81,16 @@ Deno.serve(async (req) => {
           .select("id, display_name")
           .in("id", userIds);
 
+        const { data: subscriptions } = await adminClient
+          .from("user_subscriptions")
+          .select("user_id, tier")
+          .in("user_id", userIds);
+
         const enrichedUsers = data.users.map(u => {
           const habitCount = habits?.filter(h => h.user_id === u.id).length || 0;
           const xp = gamification?.find(g => g.user_id === u.id)?.total_xp || 0;
           const profile = profiles?.find(p => p.id === u.id);
+          const sub = subscriptions?.find(s => s.user_id === u.id);
           return {
             id: u.id,
             email: u.email,
@@ -97,6 +100,7 @@ Deno.serve(async (req) => {
             habit_count: habitCount,
             total_xp: xp,
             email_confirmed: !!u.email_confirmed_at,
+            tier: sub?.tier || "free",
           };
         });
 
@@ -123,6 +127,38 @@ Deno.serve(async (req) => {
         });
       }
 
+      case "promote-user": {
+        const body = await req.json();
+        const userId = body.userId;
+        if (!userId) throw new Error("userId required");
+
+        const { error } = await adminClient
+          .from("user_subscriptions")
+          .update({ tier: "premium" })
+          .eq("user_id", userId);
+        if (error) throw error;
+
+        return new Response(JSON.stringify({ success: true }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      case "demote-user": {
+        const body = await req.json();
+        const userId = body.userId;
+        if (!userId) throw new Error("userId required");
+
+        const { error } = await adminClient
+          .from("user_subscriptions")
+          .update({ tier: "free" })
+          .eq("user_id", userId);
+        if (error) throw error;
+
+        return new Response(JSON.stringify({ success: true }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
       case "waitlist": {
         const { data: waitlistEntries, error: wlError } = await adminClient
           .from("premium_waitlist")
@@ -131,9 +167,8 @@ Deno.serve(async (req) => {
 
         if (wlError) throw wlError;
 
-        // Get emails and names for waitlist users
         const wlUserIds = (waitlistEntries || []).map(w => w.user_id);
-        let wlUsers: { id: string; email: string; display_name: string; created_at: string }[] = [];
+        let wlUsers: { id: string; user_id: string; email: string; display_name: string; created_at: string }[] = [];
 
         if (wlUserIds.length > 0) {
           const { data: allUsers } = await adminClient.auth.admin.listUsers({ page: 1, perPage: 1000 });
@@ -147,6 +182,7 @@ Deno.serve(async (req) => {
             const profile = wlProfiles?.find(p => p.id === w.user_id);
             return {
               id: w.id,
+              user_id: w.user_id,
               email: authUser?.email || "Unknown",
               display_name: profile?.display_name || "User",
               created_at: w.created_at,
@@ -160,22 +196,18 @@ Deno.serve(async (req) => {
       }
 
       case "stats": {
-        // Get total users
         const { data: allUsers } = await adminClient.auth.admin.listUsers({ page: 1, perPage: 1000 });
         const totalUsers = allUsers?.users?.length || 0;
         
-        // Users in last 7 days
         const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
         const newUsersThisWeek = allUsers?.users?.filter(
           u => new Date(u.created_at) > new Date(sevenDaysAgo)
         ).length || 0;
         
-        // Active users (signed in last 7 days)
         const activeUsers = allUsers?.users?.filter(
           u => u.last_sign_in_at && new Date(u.last_sign_in_at) > new Date(sevenDaysAgo)
         ).length || 0;
 
-        // Total habits
         const { count: totalHabits } = await adminClient
           .from("habits")
           .select("*", { count: "exact", head: true });
@@ -184,18 +216,26 @@ Deno.serve(async (req) => {
           .from("weekly_habits")
           .select("*", { count: "exact", head: true });
 
-        // Total journal entries
         const { count: totalJournals } = await adminClient
           .from("journal_entries")
           .select("*", { count: "exact", head: true });
 
-        // Total XP across all users
         const { data: xpData } = await adminClient
           .from("user_gamification")
           .select("total_xp");
         const totalXP = xpData?.reduce((sum, g) => sum + g.total_xp, 0) || 0;
 
-        // Signups by day (last 30 days)
+        // Premium users count
+        const { count: premiumUsers } = await adminClient
+          .from("user_subscriptions")
+          .select("*", { count: "exact", head: true })
+          .eq("tier", "premium");
+
+        // Waitlist count
+        const { count: waitlistCount } = await adminClient
+          .from("premium_waitlist")
+          .select("*", { count: "exact", head: true });
+
         const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
         const signupsByDay: Record<string, number> = {};
         for (let i = 0; i < 30; i++) {
@@ -214,6 +254,8 @@ Deno.serve(async (req) => {
           totalHabits: (totalHabits || 0) + (totalWeeklyHabits || 0),
           totalJournals: totalJournals || 0,
           totalXP,
+          premiumUsers: premiumUsers || 0,
+          waitlistCount: waitlistCount || 0,
           signupsByDay: Object.entries(signupsByDay)
             .map(([date, count]) => ({ date, count }))
             .sort((a, b) => a.date.localeCompare(b.date)),

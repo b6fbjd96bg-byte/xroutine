@@ -11,6 +11,7 @@ interface AdminUser {
   habit_count: number;
   total_xp: number;
   email_confirmed: boolean;
+  tier: string;
 }
 
 interface AdminStats {
@@ -20,6 +21,8 @@ interface AdminStats {
   totalHabits: number;
   totalJournals: number;
   totalXP: number;
+  premiumUsers: number;
+  waitlistCount: number;
   signupsByDay: { date: string; count: number }[];
 }
 
@@ -33,6 +36,7 @@ interface TrafficData {
 
 interface WaitlistEntry {
   id: string;
+  user_id: string;
   email: string;
   display_name: string;
   created_at: string;
@@ -71,18 +75,18 @@ export const useAdmin = () => {
     checkAdmin();
   }, [user]);
 
+  const getHeaders = async () => ({
+    Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+    "Content-Type": "application/json",
+    apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+  });
+
   const fetchUsers = async (page = 1) => {
     setUsersLoading(true);
     try {
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-api?action=list-users&page=${page}`,
-        {
-          headers: {
-            Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
-            "Content-Type": "application/json",
-            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          },
-        }
+        { headers: await getHeaders() }
       );
       const result = await response.json();
       if (result.error) throw new Error(result.error);
@@ -99,13 +103,7 @@ export const useAdmin = () => {
     try {
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-api?action=stats`,
-        {
-          headers: {
-            Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
-            "Content-Type": "application/json",
-            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          },
-        }
+        { headers: await getHeaders() }
       );
       const result = await response.json();
       if (result.error) throw new Error(result.error);
@@ -131,7 +129,6 @@ export const useAdmin = () => {
 
       if (error) throw error;
 
-      // Views by day
       const byDay: Record<string, { views: number; sessions: Set<string> }> = {};
       for (let i = 0; i < 30; i++) {
         const d = new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
@@ -155,7 +152,6 @@ export const useAdmin = () => {
         .map(([date, d]) => ({ date, views: d.views, unique: d.sessions.size }))
         .sort((a, b) => a.date.localeCompare(b.date));
 
-      // Top pages
       const pageCounts: Record<string, number> = {};
       (views || []).forEach((v) => {
         pageCounts[v.path] = (pageCounts[v.path] || 0) + 1;
@@ -184,13 +180,7 @@ export const useAdmin = () => {
     try {
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-api?action=waitlist`,
-        {
-          headers: {
-            Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
-            "Content-Type": "application/json",
-            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          },
-        }
+        { headers: await getHeaders() }
       );
       const result = await response.json();
       if (result.error) throw new Error(result.error);
@@ -208,11 +198,7 @@ export const useAdmin = () => {
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-api?action=delete-user`,
         {
           method: "POST",
-          headers: {
-            Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
-            "Content-Type": "application/json",
-            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          },
+          headers: await getHeaders(),
           body: JSON.stringify({ userId }),
         }
       );
@@ -222,6 +208,46 @@ export const useAdmin = () => {
       return true;
     } catch (err) {
       console.error("Failed to delete user:", err);
+      return false;
+    }
+  };
+
+  const promoteUser = async (userId: string) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-api?action=promote-user`,
+        {
+          method: "POST",
+          headers: await getHeaders(),
+          body: JSON.stringify({ userId }),
+        }
+      );
+      const result = await response.json();
+      if (result.error) throw new Error(result.error);
+      setUsers(prev => prev.map(u => u.id === userId ? { ...u, tier: "premium" } : u));
+      return true;
+    } catch (err) {
+      console.error("Failed to promote user:", err);
+      return false;
+    }
+  };
+
+  const demoteUser = async (userId: string) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-api?action=demote-user`,
+        {
+          method: "POST",
+          headers: await getHeaders(),
+          body: JSON.stringify({ userId }),
+        }
+      );
+      const result = await response.json();
+      if (result.error) throw new Error(result.error);
+      setUsers(prev => prev.map(u => u.id === userId ? { ...u, tier: "free" } : u));
+      return true;
+    } catch (err) {
+      console.error("Failed to demote user:", err);
       return false;
     }
   };
@@ -242,5 +268,7 @@ export const useAdmin = () => {
     fetchTraffic,
     fetchWaitlist,
     deleteUser,
+    promoteUser,
+    demoteUser,
   };
 };
