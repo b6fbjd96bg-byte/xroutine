@@ -93,9 +93,9 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 200, damping: 15 }}
-                  className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary/10 mb-6"
+                  className="inline-flex items-center justify-center mb-6"
                 >
-                  <CheckCircle className="w-10 h-10 text-primary" />
+                  <img src="/logo.png" alt="Superoutine" className="w-20 h-20 rounded-2xl" />
                 </motion.div>
                 <h1 className="text-3xl font-bold font-display mb-3">
                   Welcome to <span className="text-gradient">Superoutine</span>

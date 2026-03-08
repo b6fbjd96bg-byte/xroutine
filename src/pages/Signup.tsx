@@ -67,9 +67,7 @@ const Signup = () => {
 
         <div className="glass-card p-8">
           <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-              <CheckCircle className="w-6 h-6 text-primary-foreground" />
-            </div>
+            <img src="/logo.png" alt="Superoutine" className="w-10 h-10 rounded-xl" />
             <span className="text-2xl font-bold font-display">Superoutine</span>
           </div>
 
