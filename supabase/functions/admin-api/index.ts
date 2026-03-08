@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
     switch (action) {
       case "list-users": {
         const page = parseInt(url.searchParams.get("page") || "1");
-        const perPage = 20;
+        const perPage = 1000;
         const { data, error } = await adminClient.auth.admin.listUsers({
           page,
           perPage,
