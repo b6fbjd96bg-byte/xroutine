@@ -26,13 +26,14 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Legal */}
+          {/* Company */}
           <div>
             <h4 className="font-display font-semibold mb-4 text-sm">Company</h4>
             <ul className="space-y-2">
+              <li><Link to="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">About / Creator</Link></li>
+              <li><Link to="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Contact & Support</Link></li>
               <li><span className="text-sm text-muted-foreground">Privacy Policy</span></li>
               <li><span className="text-sm text-muted-foreground">Terms of Service</span></li>
-              <li><span className="text-sm text-muted-foreground">Contact</span></li>
             </ul>
           </div>
         </div>
@@ -42,7 +43,7 @@ const Footer = () => {
             © {new Date().getFullYear()} Superoutine. All rights reserved.
           </p>
           <p className="text-sm text-muted-foreground">
-            Built with 💚 for habit builders everywhere
+            Made with 💚 by <Link to="/about" className="text-primary hover:underline">Jatin Kumar</Link>
           </p>
         </div>
       </div>
