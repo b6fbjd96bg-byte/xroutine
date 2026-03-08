@@ -43,7 +43,7 @@ const Footer = () => {
             © {new Date().getFullYear()} Superoutine. All rights reserved.
           </p>
           <p className="text-sm text-muted-foreground">
-            Built with 💚 for habit builders everywhere
+            Made with 💚 by <Link to="/about" className="text-primary hover:underline">Jatin Kumar</Link>
           </p>
         </div>
       </div>
