@@ -118,9 +118,10 @@ vi.mock("@/integrations/supabase/client", () => ({
 }));
 
 // ---------- Mock auth + toast ----------
+const mockUser = { id: currentUserId, email: currentEmail };
 vi.mock("@/contexts/AuthContext", () => ({
   useAuth: () => ({
-    user: { id: currentUserId, email: currentEmail },
+    user: mockUser,
     loading: false,
   }),
 }));
