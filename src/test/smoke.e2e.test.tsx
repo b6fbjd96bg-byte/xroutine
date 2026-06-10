@@ -10,8 +10,22 @@
  *   5. Free vs premium subscription gating (useSubscription)
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { renderHook, act, waitFor } from "@testing-library/react";
+import { renderHook, act } from "@testing-library/react";
 import React from "react";
+
+const waitFor = async (cb: () => void, timeout = 1000) => {
+  const start = Date.now();
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    try {
+      cb();
+      return;
+    } catch (e) {
+      if (Date.now() - start > timeout) throw e;
+      await new Promise((r) => setTimeout(r, 10));
+    }
+  }
+};
 
 // ---------- Mock supabase client ----------
 type Row = Record<string, any>;
