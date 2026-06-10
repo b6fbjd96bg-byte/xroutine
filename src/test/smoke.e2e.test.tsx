@@ -162,22 +162,20 @@ describe("E2E smoke: full user journey", () => {
     expect(result.current.habits).toHaveLength(2);
 
     const id = result.current.habits[0].id;
-    await act(async () => {
-      await result.current.toggleDay(id, 1);
-      await result.current.toggleDay(id, 2);
-      await result.current.toggleDay(id, 5);
-    });
+    await act(async () => { await result.current.toggleDay(id, 1); });
+    await act(async () => { await result.current.toggleDay(id, 2); });
+    await act(async () => { await result.current.toggleDay(id, 5); });
     expect(result.current.habits[0].completedDays).toEqual([1, 2, 5]);
 
     // Untoggle
-    await act(async () => {
-      await result.current.toggleDay(id, 2);
-    });
+    await act(async () => { await result.current.toggleDay(id, 2); });
     expect(result.current.habits[0].completedDays).toEqual([1, 5]);
 
     // Edit + delete
     await act(async () => {
       await result.current.editHabit(id, "Drink 2L water", 30);
+    });
+    await act(async () => {
       await result.current.deleteHabit(result.current.habits[1].id);
     });
     expect(result.current.habits).toHaveLength(1);
@@ -188,16 +186,12 @@ describe("E2E smoke: full user journey", () => {
     const { result } = renderHook(() => useHabits());
     await waitFor(() => expect(result.current.loading).toBe(false));
 
-    await act(async () => {
-      await result.current.addWeeklyHabit("Laundry", 4);
-      await result.current.addWeeklyHabit("Grocery run", 4);
-    });
+    await act(async () => { await result.current.addWeeklyHabit("Laundry", 4); });
+    await act(async () => { await result.current.addWeeklyHabit("Grocery run", 4); });
     const [a, b] = result.current.weeklyHabits;
-    await act(async () => {
-      await result.current.toggleWeek(a.id, 1);
-      await result.current.toggleWeek(a.id, 2);
-      await result.current.toggleWeek(b.id, 1);
-    });
+    await act(async () => { await result.current.toggleWeek(a.id, 1); });
+    await act(async () => { await result.current.toggleWeek(a.id, 2); });
+    await act(async () => { await result.current.toggleWeek(b.id, 1); });
 
     // Aggregation: how many habits completed each week
     const weeks = [1, 2, 3, 4, 5];
