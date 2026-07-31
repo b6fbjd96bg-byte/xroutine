@@ -22,6 +22,7 @@ const suggestedHabits = [
 
 const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
   const [step, setStep] = useState(0);
+  const [habitOptions, setHabitOptions] = useState(suggestedHabits);
   const [selectedHabits, setSelectedHabits] = useState<Set<number>>(new Set());
   const [customHabit, setCustomHabit] = useState("");
   const { toast } = useToast();
@@ -43,11 +44,15 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
 
   const addCustom = () => {
     if (customHabit.trim()) {
-      suggestedHabits.push({ name: customHabit.trim(), goal: 20, emoji: "⭐" });
-      setSelectedHabits(new Set([...selectedHabits, suggestedHabits.length - 1]));
+      setHabitOptions((prev) => {
+        const next = [...prev, { name: customHabit.trim(), goal: 20, emoji: "⭐" }];
+        setSelectedHabits((sel) => new Set([...sel, next.length - 1]));
+        return next;
+      });
       setCustomHabit("");
     }
   };
+
 
   const handleFinish = () => {
     const habits = Array.from(selectedHabits).map((i) => ({
