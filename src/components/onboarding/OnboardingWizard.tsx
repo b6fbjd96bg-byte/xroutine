@@ -89,7 +89,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
           >
             {/* Step 0: Welcome */}
             {step === 0 && (
-              <div className="glass-card p-8 text-center">
+              <div className="glass-card p-6 sm:p-8 text-center">
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -125,7 +125,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
 
             {/* Step 1: Pick Habits */}
             {step === 1 && (
-              <div className="glass-card p-8">
+              <div className="glass-card p-6 sm:p-8">
                 <div className="text-center mb-6">
                   <h2 className="text-2xl font-bold font-display mb-2">Pick Your Habits</h2>
                   <p className="text-muted-foreground text-sm">Select the habits you want to build. You can customize later.</p>
@@ -176,7 +176,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
 
             {/* Step 2: Choose Your Path */}
             {step === 2 && (
-              <div className="glass-card p-8">
+              <div className="glass-card p-6 sm:p-8">
                 <div className="text-center mb-6">
                   <h2 className="text-2xl font-bold font-display mb-2">Choose Your Path</h2>
                   <p className="text-muted-foreground text-sm">Pick the plan that fits your commitment level</p>
@@ -241,7 +241,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
 
             {/* Step 3: How it works */}
             {step === 3 && (
-              <div className="glass-card p-8">
+              <div className="glass-card p-6 sm:p-8">
                 <div className="text-center mb-6">
                   <h2 className="text-2xl font-bold font-display mb-2">Your Superpowers</h2>
                   <p className="text-muted-foreground text-sm">Here's what makes Superoutine different</p>
@@ -281,7 +281,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
 
             {/* Step 3: Ready */}
             {step === 4 && (
-              <div className="glass-card p-8 text-center">
+              <div className="glass-card p-6 sm:p-8 text-center">
                 <motion.div
                   initial={{ scale: 0, rotate: -180 }}
                   animate={{ scale: 1, rotate: 0 }}
