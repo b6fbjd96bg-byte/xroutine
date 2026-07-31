@@ -22,6 +22,7 @@ const suggestedHabits = [
 
 const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
   const [step, setStep] = useState(0);
+  const [habitOptions, setHabitOptions] = useState(suggestedHabits);
   const [selectedHabits, setSelectedHabits] = useState<Set<number>>(new Set());
   const [customHabit, setCustomHabit] = useState("");
   const { toast } = useToast();
@@ -43,29 +44,34 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
 
   const addCustom = () => {
     if (customHabit.trim()) {
-      suggestedHabits.push({ name: customHabit.trim(), goal: 20, emoji: "⭐" });
-      setSelectedHabits(new Set([...selectedHabits, suggestedHabits.length - 1]));
+      setHabitOptions((prev) => {
+        const next = [...prev, { name: customHabit.trim(), goal: 20, emoji: "⭐" }];
+        setSelectedHabits((sel) => new Set([...sel, next.length - 1]));
+        return next;
+      });
       setCustomHabit("");
     }
   };
 
+
   const handleFinish = () => {
     const habits = Array.from(selectedHabits).map((i) => ({
-      name: suggestedHabits[i].name,
-      goal: suggestedHabits[i].goal,
+      name: habitOptions[i].name,
+      goal: habitOptions[i].goal,
     }));
     onComplete(habits.length > 0 ? habits : [{ name: "Drink 2L of Water", goal: 25 }]);
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-background flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 bg-background overflow-y-auto overscroll-contain">
       {/* Background effects */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-float" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-chart-purple/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
       </div>
 
-      <div className="relative z-10 w-full max-w-lg">
+      <div className="relative z-10 w-full max-w-lg mx-auto min-h-full flex flex-col justify-center px-4 py-8">
+
         {/* Progress dots */}
         <div className="flex justify-center gap-2 mb-8">
           {steps.map((_, i) => (
@@ -88,7 +94,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
           >
             {/* Step 0: Welcome */}
             {step === 0 && (
-              <div className="glass-card p-8 text-center">
+              <div className="glass-card p-6 sm:p-8 text-center">
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -124,13 +130,13 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
 
             {/* Step 1: Pick Habits */}
             {step === 1 && (
-              <div className="glass-card p-8">
+              <div className="glass-card p-6 sm:p-8">
                 <div className="text-center mb-6">
                   <h2 className="text-2xl font-bold font-display mb-2">Pick Your Habits</h2>
                   <p className="text-muted-foreground text-sm">Select the habits you want to build. You can customize later.</p>
                 </div>
                 <div className="grid grid-cols-2 gap-3 mb-6">
-                  {suggestedHabits.map((habit, i) => (
+                  {habitOptions.map((habit, i) => (
                     <motion.button
                       key={i}
                       whileTap={{ scale: 0.95 }}
@@ -175,7 +181,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
 
             {/* Step 2: Choose Your Path */}
             {step === 2 && (
-              <div className="glass-card p-8">
+              <div className="glass-card p-6 sm:p-8">
                 <div className="text-center mb-6">
                   <h2 className="text-2xl font-bold font-display mb-2">Choose Your Path</h2>
                   <p className="text-muted-foreground text-sm">Pick the plan that fits your commitment level</p>
@@ -240,7 +246,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
 
             {/* Step 3: How it works */}
             {step === 3 && (
-              <div className="glass-card p-8">
+              <div className="glass-card p-6 sm:p-8">
                 <div className="text-center mb-6">
                   <h2 className="text-2xl font-bold font-display mb-2">Your Superpowers</h2>
                   <p className="text-muted-foreground text-sm">Here's what makes Superoutine different</p>
@@ -280,7 +286,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
 
             {/* Step 3: Ready */}
             {step === 4 && (
-              <div className="glass-card p-8 text-center">
+              <div className="glass-card p-6 sm:p-8 text-center">
                 <motion.div
                   initial={{ scale: 0, rotate: -180 }}
                   animate={{ scale: 1, rotate: 0 }}
