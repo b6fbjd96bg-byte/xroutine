@@ -56,8 +56,8 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
 
   const handleFinish = () => {
     const habits = Array.from(selectedHabits).map((i) => ({
-      name: suggestedHabits[i].name,
-      goal: suggestedHabits[i].goal,
+      name: habitOptions[i].name,
+      goal: habitOptions[i].goal,
     }));
     onComplete(habits.length > 0 ? habits : [{ name: "Drink 2L of Water", goal: 25 }]);
   };
@@ -136,7 +136,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
                   <p className="text-muted-foreground text-sm">Select the habits you want to build. You can customize later.</p>
                 </div>
                 <div className="grid grid-cols-2 gap-3 mb-6">
-                  {suggestedHabits.map((habit, i) => (
+                  {habitOptions.map((habit, i) => (
                     <motion.button
                       key={i}
                       whileTap={{ scale: 0.95 }}
