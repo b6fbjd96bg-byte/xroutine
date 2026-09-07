@@ -124,7 +124,7 @@ const DailyPlanner = ({ onStatsChange, onTaskCompleted }: DailyPlannerProps) => 
               exit={{ opacity: 0, x: 10 }}
               className="flex items-center gap-2 group py-1"
             >
-              <button onClick={() => toggleTodo(todo.id)} className="shrink-0">
+              <button onClick={(e) => toggleTodo(todo.id, e)} className="shrink-0">
                 {todo.completed ? (
                   <CheckCircle2 className="w-4 h-4 text-primary" />
                 ) : (
