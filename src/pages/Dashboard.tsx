@@ -228,8 +228,8 @@ const Dashboard = () => {
 
           {/* Row 1: Today's Focus + Daily Planner + Focus Timer */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            <TodaysFocus habits={habits} currentDay={currentDay} onToggleDay={handleToggleDay} />
-            <DailyPlanner />
+            <TodaysFocus habits={habits} currentDay={currentDay} onToggleDay={handleToggleDay} tasksCompleted={taskStats.completed} tasksTotal={taskStats.total} />
+            <DailyPlanner onStatsChange={handleTaskStats} onTaskCompleted={addDailyXP} />
             <div className="space-y-4">
               <DashboardFocusTimer habits={habits} />
               <DailyJournal />
