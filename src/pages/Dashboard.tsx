@@ -52,6 +52,10 @@ const Dashboard = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const prevCompletedToday = useRef<number>(0);
+  const [taskStats, setTaskStats] = useState({ completed: 0, total: 0 });
+  const handleTaskStats = useCallback((completed: number, total: number) => {
+    setTaskStats(prev => (prev.completed === completed && prev.total === total ? prev : { completed, total }));
+  }, []);
 
   const {
     totalXP, emergencySkipsRemaining, emergencySkipsUsed, isStreakProtected,
