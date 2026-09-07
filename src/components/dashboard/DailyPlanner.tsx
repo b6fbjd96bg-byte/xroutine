@@ -59,12 +59,13 @@ const DailyPlanner = ({ onStatsChange, onTaskCompleted }: DailyPlannerProps) => 
     }
   };
 
-  const toggleTodo = async (id: string) => {
+  const toggleTodo = async (id: string, event?: React.MouseEvent) => {
     const todo = todos.find(t => t.id === id);
     if (!todo) return;
     const newCompleted = !todo.completed;
     setTodos(prev => prev.map(t => t.id === id ? { ...t, completed: newCompleted } : t));
     await supabase.from("todos").update({ completed: newCompleted }).eq("id", id);
+    if (newCompleted) onTaskCompleted?.(event);
   };
 
   const deleteTodo = async (id: string) => {
@@ -73,6 +74,11 @@ const DailyPlanner = ({ onStatsChange, onTaskCompleted }: DailyPlannerProps) => 
   };
 
   const completedCount = todos.filter(t => t.completed).length;
+
+  useEffect(() => {
+    onStatsChange?.(completedCount, todos.length);
+  }, [completedCount, todos.length, onStatsChange]);
+
 
   return (
     <div className="glass-card p-4 sm:p-5">
