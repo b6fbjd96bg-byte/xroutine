@@ -99,7 +99,7 @@ const TodaysFocus = ({ habits, currentDay, onToggleDay, tasksCompleted = 0, task
 
           <div className="text-right shrink-0">
             <span className="text-sm font-medium text-muted-foreground">
-              {completedToday.length}/{habits.length}
+              {doneItems}/{totalItems}
             </span>
             <p className="text-xs text-muted-foreground">{getMotivationalMessage()}</p>
           </div>
