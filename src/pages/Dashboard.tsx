@@ -52,6 +52,10 @@ const Dashboard = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const prevCompletedToday = useRef<number>(0);
+  const [taskStats, setTaskStats] = useState({ completed: 0, total: 0 });
+  const handleTaskStats = useCallback((completed: number, total: number) => {
+    setTaskStats(prev => (prev.completed === completed && prev.total === total ? prev : { completed, total }));
+  }, []);
 
   const {
     totalXP, emergencySkipsRemaining, emergencySkipsUsed, isStreakProtected,
@@ -228,8 +232,8 @@ const Dashboard = () => {
 
           {/* Row 1: Today's Focus + Daily Planner + Focus Timer */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            <TodaysFocus habits={habits} currentDay={currentDay} onToggleDay={handleToggleDay} />
-            <DailyPlanner />
+            <TodaysFocus habits={habits} currentDay={currentDay} onToggleDay={handleToggleDay} tasksCompleted={taskStats.completed} tasksTotal={taskStats.total} />
+            <DailyPlanner onStatsChange={handleTaskStats} onTaskCompleted={addDailyXP} />
             <div className="space-y-4">
               <DashboardFocusTimer habits={habits} />
               <DailyJournal />

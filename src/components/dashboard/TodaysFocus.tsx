@@ -16,17 +16,22 @@ interface TodaysFocusProps {
   habits: Habit[];
   currentDay: number;
   onToggleDay: (habitId: string, day: number, event?: React.MouseEvent) => void;
+  tasksCompleted?: number;
+  tasksTotal?: number;
 }
 
 const focusTimerHabits = ["meditation", "reading", "study", "work", "focus", "deep work", "writing"];
 
-const TodaysFocus = ({ habits, currentDay, onToggleDay }: TodaysFocusProps) => {
+const TodaysFocus = ({ habits, currentDay, onToggleDay, tasksCompleted = 0, tasksTotal = 0 }: TodaysFocusProps) => {
   const [focusTimerHabit, setFocusTimerHabit] = useState<Habit | null>(null);
 
   const completedToday = habits.filter(h => h.completedDays.includes(currentDay));
   const pendingToday = habits.filter(h => !h.completedDays.includes(currentDay));
-  const completionPercentage = habits.length > 0
-    ? Math.round((completedToday.length / habits.length) * 100)
+
+  const totalItems = habits.length + tasksTotal;
+  const doneItems = completedToday.length + tasksCompleted;
+  const completionPercentage = totalItems > 0
+    ? Math.round((doneItems / totalItems) * 100)
     : 0;
 
   const canHaveFocusTimer = (name: string) =>
@@ -94,7 +99,7 @@ const TodaysFocus = ({ habits, currentDay, onToggleDay }: TodaysFocusProps) => {
 
           <div className="text-right shrink-0">
             <span className="text-sm font-medium text-muted-foreground">
-              {completedToday.length}/{habits.length}
+              {doneItems}/{totalItems}
             </span>
             <p className="text-xs text-muted-foreground">{getMotivationalMessage()}</p>
           </div>

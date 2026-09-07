@@ -14,7 +14,12 @@ interface Todo {
   priority: string;
 }
 
-const DailyPlanner = () => {
+interface DailyPlannerProps {
+  onStatsChange?: (completed: number, total: number) => void;
+  onTaskCompleted?: (event?: React.MouseEvent) => void;
+}
+
+const DailyPlanner = ({ onStatsChange, onTaskCompleted }: DailyPlannerProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -54,12 +59,13 @@ const DailyPlanner = () => {
     }
   };
 
-  const toggleTodo = async (id: string) => {
+  const toggleTodo = async (id: string, event?: React.MouseEvent) => {
     const todo = todos.find(t => t.id === id);
     if (!todo) return;
     const newCompleted = !todo.completed;
     setTodos(prev => prev.map(t => t.id === id ? { ...t, completed: newCompleted } : t));
     await supabase.from("todos").update({ completed: newCompleted }).eq("id", id);
+    if (newCompleted) onTaskCompleted?.(event);
   };
 
   const deleteTodo = async (id: string) => {
@@ -68,6 +74,11 @@ const DailyPlanner = () => {
   };
 
   const completedCount = todos.filter(t => t.completed).length;
+
+  useEffect(() => {
+    onStatsChange?.(completedCount, todos.length);
+  }, [completedCount, todos.length, onStatsChange]);
+
 
   return (
     <div className="glass-card p-4 sm:p-5">
@@ -113,7 +124,7 @@ const DailyPlanner = () => {
               exit={{ opacity: 0, x: 10 }}
               className="flex items-center gap-2 group py-1"
             >
-              <button onClick={() => toggleTodo(todo.id)} className="shrink-0">
+              <button onClick={(e) => toggleTodo(todo.id, e)} className="shrink-0">
                 {todo.completed ? (
                   <CheckCircle2 className="w-4 h-4 text-primary" />
                 ) : (
