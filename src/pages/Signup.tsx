@@ -41,10 +41,10 @@ const Signup = () => {
     }
 
     toast({
-      title: "Check your email! 📧",
-      description: "We've sent you a confirmation link. Please verify your email to sign in.",
+      title: "Account created! 🎉",
+      description: "Welcome aboard — loading your dashboard...",
     });
-    navigate("/login");
+    navigate("/dashboard");
   };
 
   return (
