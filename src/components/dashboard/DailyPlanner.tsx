@@ -14,7 +14,12 @@ interface Todo {
   priority: string;
 }
 
-const DailyPlanner = () => {
+interface DailyPlannerProps {
+  onStatsChange?: (completed: number, total: number) => void;
+  onTaskCompleted?: (event?: React.MouseEvent) => void;
+}
+
+const DailyPlanner = ({ onStatsChange, onTaskCompleted }: DailyPlannerProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [todos, setTodos] = useState<Todo[]>([]);
