@@ -230,7 +230,36 @@ const Dashboard = () => {
           {/* Push Notification Prompt */}
           <PushNotificationPrompt canPrompt={canPrompt} onAccept={requestPermission} onDismiss={dismissPrompt} />
 
-          {/* Row 1: Today's Focus + Daily Planner + Focus Timer */}
+          <div className="rounded-2xl p-[2px] bg-gradient-to-r from-chart-pink via-chart-purple to-chart-cyan">
+            <div className="rounded-2xl bg-background">
+              <DailyQuote />
+            </div>
+          </div>
+
+          <SectionTitle emoji="📊" title="Your Stats" colorClass="from-chart-cyan to-chart-blue" />
+          <QuickStats totalHabits={habits.length} completedToday={completedToday} currentStreak={maxStreak} weeklyProgress={avgWeeklyProgress} monthlyProgress={monthlyProgress} bestDay={bestDay} />
+
+          <SectionTitle emoji="✅" title="Daily Habits" colorClass="from-primary to-chart-cyan" />
+          <HabitGrid habits={habits} daysInMonth={daysInMonth} currentDay={currentDay} onToggleDay={handleToggleDay} onAddHabit={addHabit} onEditHabit={editHabit} onDeleteHabit={deleteHabit} />
+
+          {habits.length > 0 && (
+            <>
+              <SectionTitle emoji="📈" title="Daily Completion Trend" colorClass="from-chart-purple to-chart-pink" />
+              <TrendLineChart data={trendData} />
+            </>
+          )}
+
+          <SectionTitle emoji="🗓️" title="Weekly Habits" colorClass="from-chart-yellow to-chart-pink" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+            <div className="lg:col-span-2">
+              <WeeklyHabits habits={weeklyHabits} numberOfWeeks={numberOfWeeks} onToggleWeek={handleToggleWeek} onAddHabit={addWeeklyHabit} onEditHabit={editWeeklyHabit} onDeleteHabit={deleteWeeklyHabit} />
+            </div>
+            <div className="lg:col-span-1">
+              {habitStats.length > 0 && <TopHabits habits={habitStats} />}
+            </div>
+          </div>
+
+          <SectionTitle emoji="🎯" title="Today's Plan & Focus" colorClass="from-chart-blue to-primary" />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             <TodaysFocus habits={habits} currentDay={currentDay} onToggleDay={handleToggleDay} tasksCompleted={taskStats.completed} tasksTotal={taskStats.total} />
             <DailyPlanner onStatsChange={handleTaskStats} onTaskCompleted={addDailyXP} />
@@ -240,34 +269,12 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Row 2: Habit Grid */}
-          <HabitGrid habits={habits} daysInMonth={daysInMonth} currentDay={currentDay} onToggleDay={handleToggleDay} onAddHabit={addHabit} onEditHabit={editHabit} onDeleteHabit={deleteHabit} />
-
-          {/* Row 3: Quote + Quick Stats */}
-          <DailyQuote />
-          <QuickStats totalHabits={habits.length} completedToday={completedToday} currentStreak={maxStreak} weeklyProgress={avgWeeklyProgress} monthlyProgress={monthlyProgress} bestDay={bestDay} />
-
-          {/* Prominent Habit Streaks Calendar */}
+          <SectionTitle emoji="🔥" title="Streaks & Milestones" colorClass="from-chart-pink to-chart-yellow" />
           {habits.length > 0 && <HabitStreaksCalendar habits={habits} currentDay={currentDay} />}
-
-          {/* Milestone Celebrations */}
           <MilestoneShare habits={habits} totalXP={totalXP} maxStreak={maxStreak} currentDay={currentDay} />
-
-          {/* Commitment + Weekly Report */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             <CommitmentCard />
             <WeeklyReportCard habits={habits} totalXP={totalXP} currentDay={currentDay} maxStreak={maxStreak} />
-          </div>
-
-          {habits.length > 0 && <TrendLineChart data={trendData} />}
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-            <div className="lg:col-span-2">
-              <WeeklyHabits habits={weeklyHabits} numberOfWeeks={numberOfWeeks} onToggleWeek={handleToggleWeek} onAddHabit={addWeeklyHabit} onEditHabit={editWeeklyHabit} onDeleteHabit={deleteWeeklyHabit} />
-            </div>
-            <div className="lg:col-span-1">
-              {habitStats.length > 0 && <TopHabits habits={habitStats} />}
-            </div>
           </div>
 
           {/* Collapsible advanced sections */}
@@ -329,5 +336,13 @@ const Dashboard = () => {
     </div>
   );
 };
+
+const SectionTitle = ({ emoji, title, colorClass }: { emoji: string; title: string; colorClass: string }) => (
+  <div className="flex items-center gap-3 pt-2">
+    <span className={`w-9 h-9 rounded-xl bg-gradient-to-br ${colorClass} flex items-center justify-center text-lg shadow-lg`}>{emoji}</span>
+    <h2 className={`text-lg sm:text-xl font-bold font-display bg-gradient-to-r ${colorClass} bg-clip-text text-transparent`}>{title}</h2>
+    <div className={`flex-1 h-[2px] rounded-full bg-gradient-to-r ${colorClass} opacity-40`} />
+  </div>
+);
 
 export default Dashboard;
