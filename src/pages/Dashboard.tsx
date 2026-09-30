@@ -207,8 +207,8 @@ const Dashboard = () => {
       <ConfettiCelebration trigger={showConfetti} onComplete={resetConfetti} />
       <DashboardSidebar />
 
-      <main className="md:ml-64 p-4 sm:p-6 lg:p-8">
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="max-w-[1400px] mx-auto space-y-4 sm:space-y-6">
+      <main className="md:ml-64 p-4 sm:p-6 lg:p-10 relative bg-[radial-gradient(60%_40%_at_70%_0%,hsl(var(--primary)/0.08),transparent),radial-gradient(40%_30%_at_10%_20%,hsl(var(--chart-purple)/0.06),transparent)]">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="max-w-[1400px] mx-auto space-y-5 sm:space-y-8">
           {/* Daily Login Reward */}
           <DailyLoginReward
             streakCount={streakCount}
@@ -339,9 +339,9 @@ const Dashboard = () => {
 };
 
 const SectionTitle = ({ icon: Icon, title, colorClass }: { icon: LucideIcon; title: string; colorClass: string }) => (
-  <div className="flex items-center gap-3 pt-2">
-    <span className={`w-9 h-9 rounded-xl bg-gradient-to-br ${colorClass} flex items-center justify-center text-lg shadow-lg`}><Icon className="w-5 h-5 text-background" strokeWidth={2.5} /></span>
-    <h2 className={`text-lg sm:text-xl font-bold font-display bg-gradient-to-r ${colorClass} bg-clip-text text-transparent`}>{title}</h2>
+  <div className="flex items-center gap-3 pt-4">
+    <span className={`w-10 h-10 rounded-xl bg-gradient-to-br ${colorClass} flex items-center justify-center shadow-lg ring-1 ring-foreground/10`}><Icon className="w-5 h-5 text-background" strokeWidth={2.5} /></span>
+    <h2 className={`text-lg sm:text-2xl font-bold font-display tracking-tight bg-gradient-to-r ${colorClass} bg-clip-text text-transparent`}>{title}</h2>
     <div className={`flex-1 h-[2px] rounded-full bg-gradient-to-r ${colorClass} opacity-40`} />
   </div>
 );
