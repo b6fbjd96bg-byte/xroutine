@@ -1,3 +1,4 @@
+import { BarChart3, CheckCircle2, TrendingUp, CalendarDays, Target, Flame, type LucideIcon } from "lucide-react";
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -236,20 +237,20 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <SectionTitle emoji="📊" title="Your Stats" colorClass="from-chart-cyan to-chart-blue" />
+          <SectionTitle icon={BarChart3} title="Your Stats" colorClass="from-chart-cyan to-chart-blue" />
           <QuickStats totalHabits={habits.length} completedToday={completedToday} currentStreak={maxStreak} weeklyProgress={avgWeeklyProgress} monthlyProgress={monthlyProgress} bestDay={bestDay} />
 
-          <SectionTitle emoji="✅" title="Daily Habits" colorClass="from-primary to-chart-cyan" />
+          <SectionTitle icon={CheckCircle2} title="Daily Habits" colorClass="from-primary to-chart-cyan" />
           <HabitGrid habits={habits} daysInMonth={daysInMonth} currentDay={currentDay} onToggleDay={handleToggleDay} onAddHabit={addHabit} onEditHabit={editHabit} onDeleteHabit={deleteHabit} />
 
           {habits.length > 0 && (
             <>
-              <SectionTitle emoji="📈" title="Daily Completion Trend" colorClass="from-chart-purple to-chart-pink" />
+              <SectionTitle icon={TrendingUp} title="Daily Completion Trend" colorClass="from-chart-purple to-chart-pink" />
               <TrendLineChart data={trendData} />
             </>
           )}
 
-          <SectionTitle emoji="🗓️" title="Weekly Habits" colorClass="from-chart-yellow to-chart-pink" />
+          <SectionTitle icon={CalendarDays} title="Weekly Habits" colorClass="from-chart-yellow to-chart-pink" />
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
             <div className="lg:col-span-2">
               <WeeklyHabits habits={weeklyHabits} numberOfWeeks={numberOfWeeks} onToggleWeek={handleToggleWeek} onAddHabit={addWeeklyHabit} onEditHabit={editWeeklyHabit} onDeleteHabit={deleteWeeklyHabit} />
@@ -259,7 +260,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <SectionTitle emoji="🎯" title="Today's Plan & Focus" colorClass="from-chart-blue to-primary" />
+          <SectionTitle icon={Target} title="Today's Plan & Focus" colorClass="from-chart-blue to-primary" />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             <TodaysFocus habits={habits} currentDay={currentDay} onToggleDay={handleToggleDay} tasksCompleted={taskStats.completed} tasksTotal={taskStats.total} />
             <DailyPlanner onStatsChange={handleTaskStats} onTaskCompleted={addDailyXP} />
@@ -269,7 +270,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <SectionTitle emoji="🔥" title="Streaks & Milestones" colorClass="from-chart-pink to-chart-yellow" />
+          <SectionTitle icon={Flame} title="Streaks & Milestones" colorClass="from-chart-pink to-chart-yellow" />
           {habits.length > 0 && <HabitStreaksCalendar habits={habits} currentDay={currentDay} />}
           <MilestoneShare habits={habits} totalXP={totalXP} maxStreak={maxStreak} currentDay={currentDay} />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
@@ -337,9 +338,9 @@ const Dashboard = () => {
   );
 };
 
-const SectionTitle = ({ emoji, title, colorClass }: { emoji: string; title: string; colorClass: string }) => (
+const SectionTitle = ({ icon: Icon, title, colorClass }: { icon: LucideIcon; title: string; colorClass: string }) => (
   <div className="flex items-center gap-3 pt-2">
-    <span className={`w-9 h-9 rounded-xl bg-gradient-to-br ${colorClass} flex items-center justify-center text-lg shadow-lg`}>{emoji}</span>
+    <span className={`w-9 h-9 rounded-xl bg-gradient-to-br ${colorClass} flex items-center justify-center text-lg shadow-lg`}><Icon className="w-5 h-5 text-background" strokeWidth={2.5} /></span>
     <h2 className={`text-lg sm:text-xl font-bold font-display bg-gradient-to-r ${colorClass} bg-clip-text text-transparent`}>{title}</h2>
     <div className={`flex-1 h-[2px] rounded-full bg-gradient-to-r ${colorClass} opacity-40`} />
   </div>
