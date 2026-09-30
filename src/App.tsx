@@ -19,6 +19,7 @@ import ResetPassword from "./pages/ResetPassword";
 import AdminDashboard from "./pages/AdminDashboard";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import { Terms, Privacy, Shipping, Refunds } from "./pages/Legal";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,10 @@ const App = () => (
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/shipping" element={<Shipping />} />
+            <Route path="/refunds" element={<Refunds />} />
             <Route path="/RajputAdMin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/dashboard/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
