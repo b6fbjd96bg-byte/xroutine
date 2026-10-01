@@ -5,4 +5,4 @@
 - [x] PDF: full website structure & how it works
 - [x] Refer & Earn: invite friends, commission on their paid plan, wallet balance, payout requests (tested)
 - [x] Admin panel: all users, charges, plans, referrals, balances, payout requests, live overview
-- [ ] Real online checkout (Razorpay) so commissions come from real payments
+- [x] Real online checkout (Razorpay) — ₹49 for 1 month of Pro, verified on server
