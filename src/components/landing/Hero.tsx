@@ -5,6 +5,7 @@ const WORDS = ["Transforming.", "Growing.", "Winning.", "Leveling Up."];
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check, Sparkles, TrendingUp, Zap, Shield, BarChart3 } from "lucide-react";
 import { Link } from "react-router-dom";
+import LiveDashboardDemo from "./LiveDashboardDemo";
 
 const Hero = () => {
   const [w, setW] = useState(0);
@@ -126,70 +127,7 @@ const Hero = () => {
           <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         >
           <div className="glass-card p-4 md:p-6 rounded-2xl">
-            <div className="bg-card rounded-xl p-6 border border-border/50">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full bg-chart-pink" />
-                  <div className="w-3 h-3 rounded-full bg-chart-purple" />
-                  <div className="w-3 h-3 rounded-full bg-chart-blue" />
-                </div>
-                <span className="text-xs text-muted-foreground">Live Dashboard Preview</span>
-              </div>
-              
-              {/* XP Bar Preview */}
-              <div className="mb-6 p-3 rounded-xl bg-secondary/50 border border-border/30">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-display font-semibold">Level 7 — Habit Master</span>
-                  <span className="text-xs text-primary">4,350 / 5,000 XP</span>
-                </div>
-                <div className="w-full h-3 bg-secondary rounded-full overflow-hidden">
-                  <motion.div 
-                    className="h-full rounded-full bg-gradient-to-r from-primary to-chart-cyan"
-                    initial={{ width: "0%" }}
-                    animate={{ width: ["0%", "87%", "87%"] }}
-                    transition={{ duration: 4, delay: 1, repeat: Infinity, repeatDelay: 2, ease: "easeOut" }}
-                  />
-                </div>
-              </div>
-
-              {/* Mini Chart Preview */}
-              <div className="hidden sm:grid grid-cols-7 gap-2 mb-6">
-                {[40, 60, 80, 45, 90, 70, 55].map((height, i) => (
-                  <motion.div 
-                    key={i} 
-                    className="flex flex-col items-center gap-2"
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    transition={{ duration: 0.5, delay: 0.8 + i * 0.1 }}
-                  >
-                    <motion.div
-                      className="w-full rounded-t-sm bg-gradient-to-t from-primary/80 to-primary"
-                      animate={{ height: [height, Math.max(20, 110 - height), height] }}
-                      transition={{ duration: 3, repeat: Infinity, delay: i * 0.2, ease: "easeInOut" }}
-                    />
-                    <span className="text-xs text-muted-foreground">
-                      {['M', 'T', 'W', 'T', 'F', 'S', 'S'][i]}
-                    </span>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Stats Row */}
-              <div className="grid grid-cols-3 gap-3 sm:gap-4">
-                <div className="bg-secondary/50 rounded-lg p-4 text-center">
-                  <div className="text-lg sm:text-2xl font-bold text-primary">87%</div>
-                  <div className="text-[10px] sm:text-xs text-muted-foreground">Completion</div>
-                </div>
-                <div className="bg-secondary/50 rounded-lg p-4 text-center">
-                  <div className="text-lg sm:text-2xl font-bold text-chart-purple">14</div>
-                  <div className="text-[10px] sm:text-xs text-muted-foreground">Day Streak 🔥</div>
-                </div>
-                <div className="bg-secondary/50 rounded-lg p-4 text-center flex items-center justify-center gap-2">
-                  <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-chart-green" />
-                  <div className="text-lg sm:text-2xl font-bold text-chart-green">+12%</div>
-                </div>
-              </div>
-            </div>
+            <LiveDashboardDemo />
           </div>
           
           </motion.div>
