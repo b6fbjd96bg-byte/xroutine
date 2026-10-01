@@ -31,7 +31,8 @@ import WelcomeBack from "@/components/dashboard/WelcomeBack";
 import WeeklyReportCard from "@/components/dashboard/WeeklyReportCard";
 import CommitmentCard from "@/components/dashboard/CommitmentCard";
 import MilestoneShare from "@/components/dashboard/MilestoneShare";
-import GettingStarted from "@/components/dashboard/GettingStarted";
+import DashboardTour from "@/components/dashboard/DashboardTour";
+import MotivationPopup from "@/components/dashboard/MotivationPopup";
 import PushNotificationPrompt from "@/components/dashboard/PushNotificationPrompt";
 import { useGameification } from "@/hooks/useGameification";
 import { useHabits } from "@/hooks/useHabits";
@@ -240,33 +241,24 @@ const Dashboard = () => {
           {/* Push Notification Prompt */}
           {engaged && <PushNotificationPrompt canPrompt={canPrompt} onAccept={requestPermission} onDismiss={dismissPrompt} />}
 
-          <GettingStarted habitCount={habits.length} everCompleted={engaged} completedToday={completedToday} />
-
-          <div className="rounded-2xl p-[2px] bg-gradient-to-r from-chart-pink via-chart-purple to-chart-cyan">
-            <div className="rounded-2xl bg-background">
-              <DailyQuote />
-            </div>
-          </div>
 
           {engaged && <>
           <SectionTitle icon={BarChart3} title="Your Stats" colorClass="from-chart-cyan to-chart-blue" />
           <QuickStats totalHabits={habits.length} completedToday={completedToday} currentStreak={maxStreak} weeklyProgress={avgWeeklyProgress} monthlyProgress={monthlyProgress} bestDay={bestDay} />
           </>}
 
-          <div id="daily-habits" className="scroll-mt-20" />
+          <div id="tour-daily" className="space-y-5 sm:space-y-8">
           <SectionTitle icon={CheckCircle2} title="Daily Habits" colorClass="from-primary to-chart-cyan" />
           <HabitGrid habits={habits} daysInMonth={daysInMonth} currentDay={currentDay} onToggleDay={handleToggleDay} onAddHabit={addHabit} onEditHabit={editHabit} onDeleteHabit={deleteHabit} />
+          </div>
 
-          {engaged && <>
-          {habits.length > 0 && (
-            <>
-              <SectionTitle icon={TrendingUp} title="Daily Completion Trend" colorClass="from-chart-purple to-chart-pink" />
-              <TrendLineChart data={trendData} />
-            </>
-          )}
+          <div id="tour-trend" className="space-y-5 sm:space-y-8">
+            <SectionTitle icon={TrendingUp} title="Daily Completion Trend" colorClass="from-chart-purple to-chart-pink" />
+            <TrendLineChart data={trendData} />
+          </div>
 
           <SectionTitle icon={CalendarDays} title="Weekly Habits" colorClass="from-chart-yellow to-chart-pink" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div id="tour-weekly" className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
             <div className="lg:col-span-2">
               <WeeklyHabits habits={weeklyHabits} numberOfWeeks={numberOfWeeks} onToggleWeek={handleToggleWeek} onAddHabit={addWeeklyHabit} onEditHabit={editWeeklyHabit} onDeleteHabit={deleteWeeklyHabit} />
             </div>
@@ -275,6 +267,7 @@ const Dashboard = () => {
             </div>
           </div>
 
+          {engaged && <>
           <SectionTitle icon={Target} title="Today's Plan & Focus" colorClass="from-chart-blue to-primary" />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             <TodaysFocus habits={habits} currentDay={currentDay} onToggleDay={handleToggleDay} tasksCompleted={taskStats.completed} tasksTotal={taskStats.total} />
@@ -349,6 +342,8 @@ const Dashboard = () => {
         </motion.div>
       </main>
 
+      <MotivationPopup />
+      <DashboardTour userId={user?.id} />
       <AIMotivationAgent completedToday={completedToday} totalHabits={habits.length} currentStreak={maxStreak} weeklyProgress={avgWeeklyProgress} />
     </div>
   );
@@ -356,9 +351,9 @@ const Dashboard = () => {
 
 const SectionTitle = ({ icon: Icon, title, colorClass }: { icon: LucideIcon; title: string; colorClass: string }) => (
   <div className="flex items-center gap-3 pt-4">
-    <span className={`w-10 h-10 rounded-xl bg-gradient-to-br ${colorClass} flex items-center justify-center shadow-lg ring-1 ring-foreground/10`}><Icon className="w-5 h-5 text-background" strokeWidth={2.5} /></span>
-    <h2 className={`text-lg sm:text-2xl font-bold font-display tracking-tight bg-gradient-to-r ${colorClass} bg-clip-text text-transparent`}>{title}</h2>
-    <div className={`flex-1 h-[2px] rounded-full bg-gradient-to-r ${colorClass} opacity-40`} />
+    <span className="w-9 h-9 rounded-lg bg-primary/15 border border-primary/30 flex items-center justify-center"><Icon className="w-5 h-5 text-primary" strokeWidth={2.25} /></span>
+    <h2 className="text-lg sm:text-xl font-semibold font-display tracking-tight text-foreground">{title}</h2>
+    <div className="flex-1 h-px bg-border" />
   </div>
 );
 
