@@ -163,7 +163,7 @@ Deno.serve(async (req) => {
         const plan = typeof body.plan === "string" ? body.plan.slice(0, 50) : "premium";
         const { error: pe } = await adminClient.from("payments").insert({ user_id: userId, amount, plan, note: typeof body.note === "string" ? body.note.slice(0, 200) : null });
         if (pe) throw pe;
-        await adminClient.from("user_subscriptions").update({ tier: "premium", premium_until: null }).eq("user_id", userId);
+        await adminClient.from("user_subscriptions").update({ tier: "premium", premium_until: new Date(Date.now() + 30 * 86400000).toISOString() }).eq("user_id", userId);
         return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 

@@ -1,16 +1,10 @@
-import { Crown, Sparkles, Zap, Shield, BarChart3, Mail, X, Loader2, Check } from "lucide-react";
+import { Crown, Sparkles, Zap, Shield, BarChart3, Mail, Loader2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { PRO_PRICE_MONTHLY } from "@/hooks/useSubscription";
+import { payForPro } from "@/lib/razorpay";
 
 interface UpgradePromptProps {
   open: boolean;
@@ -28,44 +22,23 @@ const benefits = [
 
 const UpgradePrompt = ({ open, onOpenChange, feature }: UpgradePromptProps) => {
   const { toast } = useToast();
-  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [alreadyJoined, setAlreadyJoined] = useState(false);
+  const [paid, setPaid] = useState(false);
 
-  useEffect(() => {
-    if (open && user) {
-      supabase
-        .from("premium_waitlist")
-        .select("id")
-        .eq("user_id", user.id)
-        .maybeSingle()
-        .then(({ data }) => setAlreadyJoined(!!data));
-    }
-  }, [open, user]);
-
-  const handleJoinWaitlist = async () => {
-    if (!user || alreadyJoined) return;
+  const handlePay = async () => {
     setLoading(true);
-    const { error } = await supabase
-      .from("premium_waitlist")
-      .insert({ user_id: user.id });
-    setLoading(false);
-
-    if (error) {
-      if (error.code === "23505") {
-        setAlreadyJoined(true);
-      } else {
-        toast({ title: "Something went wrong", description: error.message, variant: "destructive" });
-        return;
+    try {
+      const res = await payForPro();
+      if (res === "paid") {
+        setPaid(true);
+        toast({ title: "Welcome to Pro! 👑", description: "Your Pro plan is active for 1 month." });
+        setTimeout(() => window.location.reload(), 1200);
       }
+    } catch (e: any) {
+      toast({ title: "Payment not completed", description: e.message, variant: "destructive" });
+    } finally {
+      setLoading(false);
     }
-
-    setAlreadyJoined(true);
-    toast({
-      title: "You're on the list! 🎉",
-      description: "We'll notify you when Premium launches.",
-    });
-    onOpenChange(false);
   };
 
   return (
@@ -74,13 +47,13 @@ const UpgradePrompt = ({ open, onOpenChange, feature }: UpgradePromptProps) => {
         <DialogHeader>
           <DialogTitle className="font-display flex items-center gap-2 text-xl">
             <Crown className="w-6 h-6 text-chart-yellow" />
-            Upgrade to Premium
+            Upgrade to Pro
           </DialogTitle>
         </DialogHeader>
 
         {feature && (
           <div className="rounded-xl bg-chart-yellow/10 border border-chart-yellow/20 p-3 text-sm">
-            <span className="font-medium text-chart-yellow">🔒 Premium Feature:</span>{" "}
+            <span className="font-medium text-chart-yellow">🔒 Pro Feature:</span>{" "}
             <span className="text-muted-foreground">{feature}</span>
           </div>
         )}
@@ -103,18 +76,12 @@ const UpgradePrompt = ({ open, onOpenChange, feature }: UpgradePromptProps) => {
         </div>
 
         <div className="space-y-2 pt-2">
-          <Button
-            variant="hero"
-            size="lg"
-            className="w-full gap-2"
-            onClick={handleJoinWaitlist}
-            disabled={loading || alreadyJoined}
-          >
-            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : alreadyJoined ? <Check className="w-5 h-5" /> : <Crown className="w-5 h-5" />}
-            {alreadyJoined ? "You're on the Waitlist!" : `Lock in ₹${PRO_PRICE_MONTHLY}/month — Join Waitlist`}
+          <Button variant="hero" size="lg" className="w-full gap-2" onClick={handlePay} disabled={loading || paid}>
+            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : paid ? <Check className="w-5 h-5" /> : <Crown className="w-5 h-5" />}
+            {paid ? "You're Pro!" : `Pay ₹${PRO_PRICE_MONTHLY} — Get Pro`}
           </Button>
           <p className="text-xs text-center text-muted-foreground">
-            Online payment is coming soon. Join now to lock in ₹{PRO_PRICE_MONTHLY}/month. No charge today.
+            Secure payment by Razorpay · UPI, cards, netbanking. 1 month of Pro, no auto-renewal.
           </p>
         </div>
       </DialogContent>
