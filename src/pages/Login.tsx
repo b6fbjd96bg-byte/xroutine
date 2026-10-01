@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { CheckCircle, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import GoogleButton, { OrDivider } from "@/components/auth/GoogleButton";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,7 +31,8 @@ const Login = () => {
     setIsLoading(false);
 
     if (error) {
-      toast({ title: "Sign in failed", description: error.message, variant: "destructive" });
+      const unverified = /not confirmed/i.test(error.message);
+      toast({ title: unverified ? "Verify your email first" : "Sign in failed", description: unverified ? "Open the verification link we emailed you, then sign in." : error.message, variant: "destructive" });
       return;
     }
 
@@ -66,6 +68,8 @@ const Login = () => {
           <h1 className="text-2xl font-bold font-display mb-2">Welcome back</h1>
           <p className="text-muted-foreground mb-8">Sign in to continue tracking your habits</p>
 
+          <GoogleButton />
+          <OrDivider />
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
