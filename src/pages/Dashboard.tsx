@@ -31,6 +31,7 @@ import WelcomeBack from "@/components/dashboard/WelcomeBack";
 import WeeklyReportCard from "@/components/dashboard/WeeklyReportCard";
 import CommitmentCard from "@/components/dashboard/CommitmentCard";
 import MilestoneShare from "@/components/dashboard/MilestoneShare";
+import GettingStarted from "@/components/dashboard/GettingStarted";
 import PushNotificationPrompt from "@/components/dashboard/PushNotificationPrompt";
 import { useGameification } from "@/hooks/useGameification";
 import { useHabits } from "@/hooks/useHabits";
@@ -71,6 +72,13 @@ const Dashboard = () => {
   } = useDailyLogin();
 
   const { canPrompt, requestPermission, dismissPrompt } = usePushNotifications();
+
+  // Always start at the top of the dashboard
+  useEffect(() => {
+    if ("scrollRestoration" in window.history) window.history.scrollRestoration = "manual";
+    window.scrollTo(0, 0);
+  }, []);
+  useEffect(() => { if (!loading) requestAnimationFrame(() => window.scrollTo(0, 0)); }, [loading]);
 
   // Show onboarding for new users (no habits and not loading)
   useEffect(() => {
@@ -185,6 +193,7 @@ const Dashboard = () => {
     return <WelcomeBack daysAway={daysAway} onDismiss={dismissWelcomeBack} />;
   }
 
+  const engaged = monthlyCompleted > 0 || weeklyHabits.some(h => h.completedWeeks.length > 0);
   const userName = user?.user_metadata?.display_name || "there";
 
   const handleToggleDay = async (habitId: string, day: number, event?: React.MouseEvent) => {
@@ -207,7 +216,7 @@ const Dashboard = () => {
       <ConfettiCelebration trigger={showConfetti} onComplete={resetConfetti} />
       <DashboardSidebar />
 
-      <main className="md:ml-64 p-4 sm:p-6 lg:p-10 relative bg-[radial-gradient(60%_40%_at_70%_0%,hsl(var(--primary)/0.08),transparent),radial-gradient(40%_30%_at_10%_20%,hsl(var(--chart-purple)/0.06),transparent)]">
+      <main className="md:ml-20 p-4 sm:p-6 lg:p-10 relative bg-[radial-gradient(60%_40%_at_70%_0%,hsl(var(--primary)/0.08),transparent),radial-gradient(40%_30%_at_10%_20%,hsl(var(--chart-purple)/0.06),transparent)]">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="max-w-[1400px] mx-auto space-y-5 sm:space-y-8">
           {/* Daily Login Reward */}
           <DailyLoginReward
@@ -229,7 +238,9 @@ const Dashboard = () => {
           </motion.div>
 
           {/* Push Notification Prompt */}
-          <PushNotificationPrompt canPrompt={canPrompt} onAccept={requestPermission} onDismiss={dismissPrompt} />
+          {engaged && <PushNotificationPrompt canPrompt={canPrompt} onAccept={requestPermission} onDismiss={dismissPrompt} />}
+
+          <GettingStarted habitCount={habits.length} everCompleted={engaged} completedToday={completedToday} />
 
           <div className="rounded-2xl p-[2px] bg-gradient-to-r from-chart-pink via-chart-purple to-chart-cyan">
             <div className="rounded-2xl bg-background">
@@ -237,12 +248,16 @@ const Dashboard = () => {
             </div>
           </div>
 
+          {engaged && <>
           <SectionTitle icon={BarChart3} title="Your Stats" colorClass="from-chart-cyan to-chart-blue" />
           <QuickStats totalHabits={habits.length} completedToday={completedToday} currentStreak={maxStreak} weeklyProgress={avgWeeklyProgress} monthlyProgress={monthlyProgress} bestDay={bestDay} />
+          </>}
 
+          <div id="daily-habits" className="scroll-mt-20" />
           <SectionTitle icon={CheckCircle2} title="Daily Habits" colorClass="from-primary to-chart-cyan" />
           <HabitGrid habits={habits} daysInMonth={daysInMonth} currentDay={currentDay} onToggleDay={handleToggleDay} onAddHabit={addHabit} onEditHabit={editHabit} onDeleteHabit={deleteHabit} />
 
+          {engaged && <>
           {habits.length > 0 && (
             <>
               <SectionTitle icon={TrendingUp} title="Daily Completion Trend" colorClass="from-chart-purple to-chart-pink" />
@@ -330,6 +345,7 @@ const Dashboard = () => {
               <p className="text-sm text-muted-foreground">Customize app</p>
             </Link>
           </motion.div>
+          </>}
         </motion.div>
       </main>
 

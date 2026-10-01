@@ -1,9 +1,14 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+
+const WORDS = ["Transforming.", "Growing.", "Winning.", "Leveling Up."];
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check, Sparkles, TrendingUp, Zap, Shield, BarChart3 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Hero = () => {
+  const [w, setW] = useState(0);
+  useEffect(() => { const t = setInterval(() => setW((i) => (i + 1) % WORDS.length), 2200); return () => clearInterval(t); }, []);
   return (
     <section aria-label="Hero" className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 py-20">
       {/* Background Effects */}
@@ -12,6 +17,14 @@ const Hero = () => {
         <div className="absolute bottom-1/4 right-1/4 w-40 sm:w-80 h-40 sm:h-80 bg-chart-purple/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-gradient-radial from-primary/5 to-transparent rounded-full" />
         <div className="hidden sm:block absolute top-10 right-10 w-64 h-64 bg-chart-blue/8 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }} />
+      </div>
+
+      {/* Floating particles */}
+      <div className="absolute inset-0 pointer-events-none">
+        {Array.from({ length: 18 }).map((_, i) => (
+          <motion.span key={i} className="absolute w-1.5 h-1.5 rounded-full bg-primary/60" style={{ left: `${(i * 53) % 100}%`, bottom: -10 }}
+            animate={{ y: [0, -900], opacity: [0, 1, 0] }} transition={{ duration: 8 + (i % 5), repeat: Infinity, delay: i * 0.6, ease: "linear" }} />
+        ))}
       </div>
 
       {/* Grid Pattern */}
@@ -25,7 +38,13 @@ const Hero = () => {
           className="text-3xl sm:text-5xl md:text-7xl font-bold font-display mb-4 sm:mb-6 leading-tight"
         >
           Stop Tracking. Start{" "}
-          <span className="text-gradient">Transforming.</span>
+          <span className="relative inline-block min-w-[6ch] align-bottom">
+            <AnimatePresence mode="wait">
+              <motion.span key={WORDS[w]} className="text-gradient inline-block" initial={{ opacity: 0, y: 30, rotateX: -60 }} animate={{ opacity: 1, y: 0, rotateX: 0 }} exit={{ opacity: 0, y: -30, rotateX: 60 }} transition={{ duration: 0.45 }}>
+                {WORDS[w]}
+              </motion.span>
+            </AnimatePresence>
+          </span>
         </motion.h1>
 
         <motion.p
@@ -104,6 +123,8 @@ const Hero = () => {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="mt-4 relative"
         >
+          <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        >
           <div className="glass-card p-4 md:p-6 rounded-2xl">
             <div className="bg-card rounded-xl p-6 border border-border/50">
               <div className="flex items-center justify-between mb-6">
@@ -125,8 +146,8 @@ const Hero = () => {
                   <motion.div 
                     className="h-full rounded-full bg-gradient-to-r from-primary to-chart-cyan"
                     initial={{ width: "0%" }}
-                    animate={{ width: "87%" }}
-                    transition={{ duration: 2, delay: 1, ease: "easeOut" }}
+                    animate={{ width: ["0%", "87%", "87%"] }}
+                    transition={{ duration: 4, delay: 1, repeat: Infinity, repeatDelay: 2, ease: "easeOut" }}
                   />
                 </div>
               </div>
@@ -141,9 +162,10 @@ const Hero = () => {
                     animate={{ height: "auto", opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.8 + i * 0.1 }}
                   >
-                    <div 
+                    <motion.div
                       className="w-full rounded-t-sm bg-gradient-to-t from-primary/80 to-primary"
-                      style={{ height: `${height}px` }}
+                      animate={{ height: [height, Math.max(20, 110 - height), height] }}
+                      transition={{ duration: 3, repeat: Infinity, delay: i * 0.2, ease: "easeInOut" }}
                     />
                     <span className="text-xs text-muted-foreground">
                       {['M', 'T', 'W', 'T', 'F', 'S', 'S'][i]}
@@ -170,6 +192,7 @@ const Hero = () => {
             </div>
           </div>
           
+          </motion.div>
           {/* Glow Effect */}
           <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/20 via-transparent to-transparent blur-3xl" />
         </motion.div>
