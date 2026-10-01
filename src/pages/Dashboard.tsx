@@ -259,21 +259,12 @@ const Dashboard = () => {
           <div id="tour-daily" className="space-y-5 sm:space-y-8">
           <SectionTitle icon={CheckCircle2} title="Daily Habits" colorClass="from-primary to-chart-cyan" />
           <HabitGrid habits={habits} daysInMonth={daysInMonth} currentDay={currentDay} onToggleDay={handleToggleDay} onAddHabit={addHabit} onEditHabit={editHabit} onDeleteHabit={deleteHabit} />
+          {habitStats.length > 0 && <TopHabits habits={habitStats} />}
           </div>
 
           <div id="tour-trend" className="space-y-5 sm:space-y-8">
             <SectionTitle icon={TrendingUp} title="Daily Completion Trend" colorClass="from-chart-purple to-chart-pink" />
             <TrendLineChart data={trendData} />
-          </div>
-
-          <SectionTitle icon={CalendarDays} title="Weekly Habits" colorClass="from-chart-yellow to-chart-pink" />
-          <div id="tour-weekly" className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-            <div className="lg:col-span-2">
-              <WeeklyHabits habits={weeklyHabits} numberOfWeeks={numberOfWeeks} onToggleWeek={handleToggleWeek} onAddHabit={addWeeklyHabit} onEditHabit={editWeeklyHabit} onDeleteHabit={deleteWeeklyHabit} />
-            </div>
-            <div className="lg:col-span-1">
-              {habitStats.length > 0 && <TopHabits habits={habitStats} />}
-            </div>
           </div>
 
           {engaged && <>
@@ -286,14 +277,23 @@ const Dashboard = () => {
               <DailyJournal />
             </div>
           </div>
+          </>}
 
-          <SectionTitle icon={Flame} title="Streaks & Milestones" colorClass="from-chart-pink to-chart-yellow" />
+          <SectionTitle icon={CalendarDays} title="Weekly Plans & Habits" colorClass="from-chart-yellow to-chart-pink" />
+          <div id="tour-weekly" className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+            <div className="lg:col-span-2">
+              <WeeklyHabits habits={weeklyHabits} numberOfWeeks={numberOfWeeks} onToggleWeek={handleToggleWeek} onAddHabit={addWeeklyHabit} onEditHabit={editWeeklyHabit} onDeleteHabit={deleteWeeklyHabit} />
+            </div>
+            <div className="lg:col-span-1 space-y-4">
+              <CommitmentCard />
+              {engaged && <WeeklyReportCard habits={habits} totalXP={totalXP} currentDay={currentDay} maxStreak={maxStreak} />}
+            </div>
+          </div>
+
+          {engaged && <>
+          <StreakDivider />
           {habits.length > 0 && <HabitStreaksCalendar habits={habits} currentDay={currentDay} />}
           <MilestoneShare habits={habits} totalXP={totalXP} maxStreak={maxStreak} currentDay={currentDay} />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-            <CommitmentCard />
-            <WeeklyReportCard habits={habits} totalXP={totalXP} currentDay={currentDay} maxStreak={maxStreak} />
-          </div>
 
           {/* Collapsible advanced sections */}
           <div className="glass-card p-4 sm:p-5">
@@ -363,6 +363,13 @@ const SectionTitle = ({ icon: Icon, title, colorClass }: { icon: LucideIcon; tit
     <span className="w-9 h-9 rounded-lg bg-primary/15 border border-primary/30 flex items-center justify-center"><Icon className="w-5 h-5 text-primary" strokeWidth={2.25} /></span>
     <h2 className="text-lg sm:text-xl font-semibold font-display tracking-tight text-foreground">{title}</h2>
     <div className="flex-1 h-px bg-border" />
+  </div>
+);
+
+const StreakDivider = () => (
+  <div className="flex items-center gap-3 pt-6">
+    <span className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">Streak</span>
+    <div className="flex-1 border-t-2 border-dotted border-primary/40" />
   </div>
 );
 
