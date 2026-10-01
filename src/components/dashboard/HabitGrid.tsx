@@ -308,6 +308,39 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
               })}
               </TooltipProvider>
 
+              {habits.length > 0 && (() => {
+                const n = daysInMonth;
+                const W = n * 36 - 4, H = 90;
+                const pct = Array.from({ length: n }, (_, i) => Math.round((habits.filter(h => h.completedDays.includes(i + 1)).length / habits.length) * 100));
+                const pts = pct.map((v, i) => [i * 36 + 16, H - 8 - (v / 100) * (H - 16)] as const);
+                const line = pts.map(([x, y], i) => `${i ? "L" : "M"}${x},${y}`).join(" ");
+                const area = `${line} L${pts[n - 1][0]},${H} L${pts[0][0]},${H} Z`;
+                const today = pct[currentDay - 1] ?? 0;
+                return (
+                  <div className="grid gap-1 pt-3 mt-1 border-t border-border/30" style={{ gridTemplateColumns: `150px 60px ${W}px` }}>
+                    <div className="flex flex-col justify-center">
+                      <span className="text-sm font-semibold text-foreground">Completion trend</span>
+                      <span className="text-xs text-muted-foreground">Updates as you tick</span>
+                    </div>
+                    <div className="flex items-center justify-center text-sm font-bold text-primary tabular-nums">{today}%</div>
+                    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="overflow-visible">
+                      <defs>
+                        <linearGradient id="gridTrendFill" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.35" />
+                          <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
+                        </linearGradient>
+                      </defs>
+                      <motion.path initial={false} animate={{ d: area }} transition={{ duration: 0.4 }} fill="url(#gridTrendFill)" />
+                      <motion.path initial={false} animate={{ d: line }} transition={{ duration: 0.4 }} fill="none" stroke="hsl(var(--primary))" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" />
+                      {pts.map(([x, y], i) => (
+                        <motion.circle key={i} initial={false} animate={{ cy: y }} transition={{ duration: 0.4 }} cx={x} r={i + 1 === currentDay ? 5 : 3}
+                          fill={i + 1 === currentDay ? "hsl(var(--primary))" : "hsl(var(--background))"} stroke="hsl(var(--primary))" strokeWidth={2} />
+                      ))}
+                    </svg>
+                  </div>
+                );
+              })()}
+
               {habits.length === 0 && (
                 <div className="text-center py-12 text-muted-foreground border-t border-border/30">
                   <p>No habits yet. Add your first habit to get started!</p>

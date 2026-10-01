@@ -6,7 +6,6 @@ import { ChevronDown } from "lucide-react";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import HabitGrid from "@/components/dashboard/HabitGrid";
 import MonthSelector from "@/components/dashboard/MonthSelector";
-import MiniHabitTrend from "@/components/dashboard/MiniHabitTrend";
 import TrendLineChart from "@/components/dashboard/TrendLineChart";
 import WeeklyHabits from "@/components/dashboard/WeeklyHabits";
 import AIMotivationAgent from "@/components/dashboard/AIMotivationAgent";
@@ -261,7 +260,6 @@ const Dashboard = () => {
             <div id="tour-daily" className="lg:col-span-12 space-y-4">
               <SectionTitle icon={CheckCircle2} title="Daily Habits" colorClass="from-primary to-chart-cyan" />
               <HabitGrid habits={habits} daysInMonth={daysInMonth} currentDay={currentDay} onToggleDay={handleToggleDay} onAddHabit={addHabit} onEditHabit={editHabit} onDeleteHabit={deleteHabit} />
-              <MiniHabitTrend data={trendData} />
             </div>
 
             <div id="tour-trend" className="lg:col-span-12"><SectionTitle icon={TrendingUp} title="Daily Completion Trend" colorClass="from-chart-purple to-chart-pink" /></div>
