@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -18,11 +18,19 @@ export interface WeeklyHabit {
   completedWeeks: number[];
 }
 
-export const useHabits = () => {
+const monthKey = (d: Date) => d.getFullYear() * 100 + d.getMonth() + 1; // e.g. 202610
+// Daily ticks are stored as YYYYMMDD; weekly ticks as YYYYMM*10 + week
+const daysFor = (raw: number[], mk: number) => raw.filter((v) => Math.floor(v / 100) === mk).map((v) => v % 100);
+const weeksFor = (raw: number[], mk: number) => raw.filter((v) => Math.floor(v / 10) === mk).map((v) => v % 10);
+
+export const useHabits = (viewMonth: Date = new Date()) => {
+  const mk = monthKey(viewMonth);
   const { user } = useAuth();
   const { toast } = useToast();
-  const [habits, setHabits] = useState<Habit[]>([]);
-  const [weeklyHabits, setWeeklyHabits] = useState<WeeklyHabit[]>([]);
+  const [rawHabits, setHabits] = useState<Habit[]>([]);
+  const [rawWeekly, setWeeklyHabits] = useState<WeeklyHabit[]>([]);
+  const habits = useMemo(() => rawHabits.map((h) => ({ ...h, completedDays: daysFor(h.completedDays, mk) })), [rawHabits, mk]);
+  const weeklyHabits = useMemo(() => rawWeekly.map((h) => ({ ...h, completedWeeks: weeksFor(h.completedWeeks, mk) })), [rawWeekly, mk]);
   const [loading, setLoading] = useState(true);
 
   // Fetch habits from DB
@@ -126,13 +134,13 @@ export const useHabits = () => {
   }, [toast]);
 
   const toggleDay = useCallback(async (habitId: string, day: number) => {
-    const habit = habits.find((h) => h.id === habitId);
+    const habit = rawHabits.find((h) => h.id === habitId);
     if (!habit) return;
-
-    const wasCompleted = habit.completedDays.includes(day);
+    const code = mk * 100 + day;
+    const wasCompleted = habit.completedDays.includes(code);
     const newDays = wasCompleted
-      ? habit.completedDays.filter((d) => d !== day)
-      : [...habit.completedDays, day].sort((a, b) => a - b);
+      ? habit.completedDays.filter((d) => d !== code)
+      : [...habit.completedDays, code].sort((a, b) => a - b);
 
     // Optimistic update
     setHabits((prev) =>
@@ -153,7 +161,7 @@ export const useHabits = () => {
     }
 
     return !wasCompleted; // true if newly completed
-  }, [habits, toast]);
+  }, [rawHabits, mk, toast]);
 
   // Weekly habit CRUD
   const addWeeklyHabit = useCallback(async (name: string, goal: number) => {
@@ -202,13 +210,13 @@ export const useHabits = () => {
   }, [toast]);
 
   const toggleWeek = useCallback(async (habitId: string, week: number) => {
-    const habit = weeklyHabits.find((h) => h.id === habitId);
+    const habit = rawWeekly.find((h) => h.id === habitId);
     if (!habit) return;
-
-    const wasCompleted = habit.completedWeeks.includes(week);
+    const code = mk * 10 + week;
+    const wasCompleted = habit.completedWeeks.includes(code);
     const newWeeks = wasCompleted
-      ? habit.completedWeeks.filter((w) => w !== week)
-      : [...habit.completedWeeks, week].sort((a, b) => a - b);
+      ? habit.completedWeeks.filter((w) => w !== code)
+      : [...habit.completedWeeks, code].sort((a, b) => a - b);
 
     setWeeklyHabits((prev) =>
       prev.map((h) => (h.id === habitId ? { ...h, completedWeeks: newWeeks } : h))
@@ -227,7 +235,7 @@ export const useHabits = () => {
     }
 
     return !wasCompleted;
-  }, [weeklyHabits, toast]);
+  }, [rawWeekly, mk, toast]);
 
   return {
     habits, weeklyHabits, loading,
