@@ -67,7 +67,8 @@ Deno.serve(async (req) => {
           const now = Date.now();
           const base = sub?.premium_until && new Date(sub.premium_until).getTime() > now ? new Date(sub.premium_until).getTime() : now;
           const until = new Date(base + 30 * 86400000).toISOString();
-          await admin.from("user_subscriptions").upsert({ user_id: user.id, tier: "premium", premium_until: until }, { onConflict: "user_id" });
+          if (sub) await admin.from("user_subscriptions").update({ tier: "premium", premium_until: until }).eq("user_id", user.id);
+          else await admin.from("user_subscriptions").insert({ user_id: user.id, tier: "premium", premium_until: until });
         }
       }
       return json({ success: true });
