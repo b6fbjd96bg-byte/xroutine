@@ -251,6 +251,7 @@ const Analytics = () => {
               </h1>
               <p className="text-sm text-muted-foreground">Deep insights into your habit performance</p>
             </div>
+            <MonthSelector currentMonth={month} onChange={setMonth} onPrevMonth={() => setMonth(new Date(month.getFullYear(), month.getMonth() - 1, 1))} onNextMonth={() => setMonth(new Date(month.getFullYear(), month.getMonth() + 1, 1))} />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="gap-2 self-start sm:self-auto">
