@@ -64,7 +64,7 @@ const AdminMoney = ({ users, onChanged }: { users: { id: string; email: string }
       </div>
 
       <Card className="border-border/50">
-        <CardHeader><CardTitle className="text-base">Record a payment (upgrades user to Pro, gives inviter 10%)</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">Record an offline payment (gives 1 month of Pro, inviter gets 10%). Razorpay payments appear automatically.</CardTitle></CardHeader>
         <CardContent className="flex flex-col md:flex-row gap-2">
           <select value={userId} onChange={e => setUserId(e.target.value)} className="h-10 rounded-md border border-input bg-background px-3 text-sm flex-1">
             <option value="">Select user…</option>
@@ -111,7 +111,7 @@ const AdminMoney = ({ users, onChanged }: { users: { id: string; email: string }
               <TableHeader><TableRow><TableHead>User</TableHead><TableHead>Plan</TableHead><TableHead>Amount</TableHead><TableHead>Date</TableHead></TableRow></TableHeader>
               <TableBody>
                 {data.payments.length === 0 && <TableRow><TableCell colSpan={4} className="text-center text-muted-foreground">No payments yet</TableCell></TableRow>}
-                {data.payments.map(p => <TableRow key={p.id}><TableCell className="text-sm">{p.email}</TableCell><TableCell className="text-sm">{p.plan}</TableCell><TableCell>{inr(p.amount)}</TableCell><TableCell className="text-xs text-muted-foreground">{d(p.created_at)}</TableCell></TableRow>)}
+                {data.payments.map(p => <TableRow key={p.id}><TableCell className="text-sm">{p.email}</TableCell><TableCell className="text-sm">{p.plan}{p.razorpay_payment_id && <div className="text-[10px] text-muted-foreground">Razorpay {p.razorpay_payment_id}</div>}</TableCell><TableCell>{inr(p.amount)}</TableCell><TableCell className="text-xs text-muted-foreground">{d(p.created_at)}</TableCell></TableRow>)}
               </TableBody>
             </Table>
           </CardContent>

@@ -1,1 +1,2 @@
 - Referral commissions come only from the `payments` table (DB trigger), so a real checkout later just inserts payments; why: one source of truth for commission.
+- Razorpay payments are verified server-side (signature + Razorpay API) in the razorpay edge function before inserting into payments; why: client can't fake Pro or commissions.

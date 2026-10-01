@@ -83,7 +83,7 @@ Deno.serve(async (req) => {
 
         const { data: subscriptions } = await adminClient
           .from("user_subscriptions")
-          .select("user_id, tier")
+          .select("user_id, tier, premium_until")
           .in("user_id", userIds);
 
         const { data: pays } = await adminClient.from("payments").select("user_id, amount");
@@ -106,7 +106,8 @@ Deno.serve(async (req) => {
             habit_count: habitCount,
             total_xp: xp,
             email_confirmed: !!u.email_confirmed_at,
-            tier: sub?.tier || "free",
+            tier: sub?.tier === "premium" && (!sub.premium_until || new Date(sub.premium_until) > new Date()) ? "premium" : "free",
+            premium_until: sub?.premium_until || null,
             total_paid: (pays || []).filter(p => p.user_id === u.id).reduce((a, p) => a + Number(p.amount), 0),
             referred_by: (() => { const r = (refs || []).find(r => r.referred_id === u.id); return r ? emailOf(r.referrer_id) : null; })(),
             invited_count: (refs || []).filter(r => r.referrer_id === u.id).length,
@@ -145,7 +146,7 @@ Deno.serve(async (req) => {
 
         const { error } = await adminClient
           .from("user_subscriptions")
-          .update({ tier: "premium" })
+          .update({ tier: "premium", premium_until: null })
           .eq("user_id", userId);
         if (error) throw error;
 
@@ -162,7 +163,7 @@ Deno.serve(async (req) => {
         const plan = typeof body.plan === "string" ? body.plan.slice(0, 50) : "premium";
         const { error: pe } = await adminClient.from("payments").insert({ user_id: userId, amount, plan, note: typeof body.note === "string" ? body.note.slice(0, 200) : null });
         if (pe) throw pe;
-        await adminClient.from("user_subscriptions").update({ tier: "premium" }).eq("user_id", userId);
+        await adminClient.from("user_subscriptions").update({ tier: "premium", premium_until: new Date(Date.now() + 30 * 86400000).toISOString() }).eq("user_id", userId);
         return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
@@ -201,7 +202,7 @@ Deno.serve(async (req) => {
 
         const { error } = await adminClient
           .from("user_subscriptions")
-          .update({ tier: "free" })
+          .update({ tier: "free", premium_until: null })
           .eq("user_id", userId);
         if (error) throw error;
 

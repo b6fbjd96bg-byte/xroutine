@@ -197,6 +197,8 @@ export type Database = {
           id: string
           note: string | null
           plan: string
+          razorpay_order_id: string | null
+          razorpay_payment_id: string | null
           user_id: string
         }
         Insert: {
@@ -205,6 +207,8 @@ export type Database = {
           id?: string
           note?: string | null
           plan?: string
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
           user_id: string
         }
         Update: {
@@ -213,6 +217,8 @@ export type Database = {
           id?: string
           note?: string | null
           plan?: string
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
           user_id?: string
         }
         Relationships: []
@@ -468,6 +474,7 @@ export type Database = {
       user_subscriptions: {
         Row: {
           id: string
+          premium_until: string | null
           started_at: string
           tier: string
           updated_at: string
@@ -475,6 +482,7 @@ export type Database = {
         }
         Insert: {
           id?: string
+          premium_until?: string | null
           started_at?: string
           tier?: string
           updated_at?: string
@@ -482,6 +490,7 @@ export type Database = {
         }
         Update: {
           id?: string
+          premium_until?: string | null
           started_at?: string
           tier?: string
           updated_at?: string

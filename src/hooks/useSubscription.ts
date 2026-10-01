@@ -44,6 +44,9 @@ export const useSubscription = () => {
   const { user } = useAuth();
   const [tier, setTier] = useState<Tier>("free");
   const [loading, setLoading] = useState(true);
+  const [premiumUntil, setPremiumUntil] = useState<string | null>(null);
+  const [reload, setReload] = useState(0);
+  const refresh = useCallback(() => setReload((n) => n + 1), []);
 
   useEffect(() => {
     if (!user) {
@@ -53,15 +56,17 @@ export const useSubscription = () => {
 
     supabase
       .from("user_subscriptions")
-      .select("tier")
+      .select("tier, premium_until")
       .eq("user_id", user.id)
       .maybeSingle()
       .then(({ data }) => {
-        if (data?.tier === "premium") setTier("premium");
+        const active = data?.tier === "premium" && (!data.premium_until || new Date(data.premium_until).getTime() > Date.now());
+        setPremiumUntil(data?.premium_until ?? null);
+        if (active) setTier("premium");
         else setTier("free");
         setLoading(false);
       });
-  }, [user]);
+  }, [user, reload]);
 
   const createdAt = user?.created_at ? new Date(user.created_at).getTime() : 0;
   const trialEndsAt = createdAt + TRIAL_DAYS * 86400000;
@@ -80,5 +85,5 @@ export const useSubscription = () => {
     [limits]
   );
 
-  return { tier, isPremium, isTrial, trialDaysLeft, loading, limits, canAccess };
+  return { tier, premiumUntil, refresh, isPremium, isTrial, trialDaysLeft, loading, limits, canAccess };
 };

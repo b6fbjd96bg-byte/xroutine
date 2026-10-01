@@ -51,7 +51,7 @@ const Settings = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { tier, isPremium, isTrial, trialDaysLeft, limits } = useSubscription();
+  const { tier, premiumUntil, isPremium, isTrial, trialDaysLeft, limits } = useSubscription();
   const [busy, setBusy] = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
 
@@ -379,10 +379,11 @@ const Settings = () => {
               ))}
             </div>
             {isTrial && <p className="text-xs text-muted-foreground mb-3">You have every feature unlocked for your first {TRIAL_DAYS} days. After that the free plan allows 5 daily and 3 weekly habits.</p>}
-            {tier !== "premium" && (
+            {tier === "premium" && premiumUntil && <p className="text-xs text-muted-foreground mb-3">Pro active until {new Date(premiumUntil).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}. Pay again anytime to add another month.</p>}
+            {(tier !== "premium" || !!premiumUntil) && (
               <Button variant="outline" className="w-full gap-2 border-chart-yellow/30 text-chart-yellow hover:bg-chart-yellow/10" onClick={() => setShowUpgrade(true)}>
                 <Crown className="w-4 h-4" />
-                Go Pro — ₹{PRO_PRICE_MONTHLY}/month
+                {tier === "premium" ? `Add 1 month — ₹${PRO_PRICE_MONTHLY}` : `Go Pro — ₹${PRO_PRICE_MONTHLY}/month`}
               </Button>
             )}
           </motion.div>
