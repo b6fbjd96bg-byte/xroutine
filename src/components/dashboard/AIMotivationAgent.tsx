@@ -134,7 +134,7 @@ const AIMotivationAgent = ({
     <>
       {/* Floating AI Button */}
       <motion.div
-        className="fixed bottom-6 right-6 z-50"
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 scale-75 sm:scale-100 origin-bottom-right"
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 1, type: "spring", stiffness: 200 }}
@@ -194,7 +194,7 @@ const AIMotivationAgent = ({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 100, scale: 0.9 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed bottom-6 right-6 w-[380px] max-h-[500px] z-50 glass-card overflow-hidden"
+              className="fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 sm:w-[380px] max-h-[70vh] sm:max-h-[500px] z-50 glass-card overflow-hidden"
             >
               {/* Header */}
               <div className="p-4 border-b border-border/30 flex items-center justify-between bg-gradient-to-r from-primary/10 to-chart-cyan/10">
