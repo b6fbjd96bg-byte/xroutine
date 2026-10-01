@@ -73,12 +73,19 @@ const Dashboard = () => {
 
   const { canPrompt, requestPermission, dismissPrompt } = usePushNotifications();
 
-  // Always start at the top of the dashboard
+  // Restore last scroll position on refresh (top on fresh visit)
   useEffect(() => {
     if ("scrollRestoration" in window.history) window.history.scrollRestoration = "manual";
     window.scrollTo(0, 0);
+    const save = () => sessionStorage.setItem("dash_scroll", String(window.scrollY));
+    window.addEventListener("scroll", save, { passive: true });
+    return () => window.removeEventListener("scroll", save);
   }, []);
-  useEffect(() => { if (!loading) requestAnimationFrame(() => window.scrollTo(0, 0)); }, [loading]);
+  useEffect(() => {
+    if (loading) return;
+    const y = Number(sessionStorage.getItem("dash_scroll") || 0);
+    setTimeout(() => window.scrollTo(0, y), 300);
+  }, [loading]);
 
   // Show onboarding for new users (no habits and not loading)
   useEffect(() => {
