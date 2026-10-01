@@ -26,6 +26,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import HabitActions from "./HabitActions";
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip, LabelList } from "recharts";
+
+const CHART_COLORS = ["hsl(var(--chart-pink))", "hsl(var(--chart-purple))", "hsl(var(--chart-blue))", "hsl(var(--chart-yellow))", "hsl(var(--chart-cyan))", "hsl(var(--primary))"];
 import FocusTimer from "@/components/gamification/FocusTimer";
 import { useSubscription } from "@/hooks/useSubscription";
 import UpgradePrompt from "@/components/premium/UpgradePrompt";
@@ -309,26 +312,23 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
               </TooltipProvider>
 
               {habits.length > 0 && (
-                <div className="pt-4 mt-1 border-t border-border/30">
+                <div className="pt-4 mt-1 border-t border-border/30 sticky left-0 w-[min(100%,calc(100vw-8rem))]">
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-sm font-semibold text-foreground">Habit progress this month</span>
                     <span className="text-xs text-muted-foreground">Days done out of {daysInMonth}</span>
                   </div>
-                  <div className="space-y-2">
-                    {habits.map((habit, i) => {
-                      const c = habitPalette[i % habitPalette.length];
-                      const done = habit.completedDays.filter((d) => d >= 1 && d <= daysInMonth).length;
-                      const pct = Math.round((done / daysInMonth) * 100);
-                      return (
-                        <div key={habit.id} className="grid grid-cols-[150px_1fr_70px] items-center gap-3">
-                          <span className={cn("text-sm font-semibold truncate", c.text)}>{habit.name}</span>
-                          <div className="h-4 rounded-full bg-muted overflow-hidden">
-                            <motion.div className={cn("h-full rounded-full", c.bg)} initial={false} animate={{ width: `${pct}%` }} transition={{ type: "spring", stiffness: 260, damping: 26 }} />
-                          </div>
-                          <motion.span key={done} initial={{ scale: 1.4 }} animate={{ scale: 1 }} className={cn("text-sm font-bold tabular-nums text-right", c.text)}>{done}/{daysInMonth}</motion.span>
-                        </div>
-                      );
-                    })}
+                  <div className="h-64 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={habits.map((h, i) => ({ name: h.name, done: h.completedDays.filter((d) => d >= 1 && d <= daysInMonth).length, fill: CHART_COLORS[i % CHART_COLORS.length] }))} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                        <XAxis dataKey="name" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} tickLine={false} axisLine={false} interval={0} tickFormatter={(v: string) => v.length > 12 ? v.slice(0, 11) + "…" : v} />
+                        <YAxis domain={[0, daysInMonth]} allowDecimals={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} tickLine={false} axisLine={false} />
+                        <RTooltip cursor={{ fill: "hsl(var(--muted) / 0.4)" }} contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8 }} formatter={(v: number) => [`${v}/${daysInMonth} days`, "Done"]} />
+                        <Bar dataKey="done" radius={[8, 8, 0, 0]} maxBarSize={60} isAnimationActive animationDuration={400}>
+                          <LabelList dataKey="done" position="top" fill="hsl(var(--foreground))" fontSize={12} fontWeight={700} />
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
                   </div>
                 </div>
               )}
