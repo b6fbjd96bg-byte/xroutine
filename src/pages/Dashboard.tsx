@@ -256,45 +256,40 @@ const Dashboard = () => {
           <QuickStats totalHabits={habits.length} completedToday={completedToday} currentStreak={maxStreak} weeklyProgress={avgWeeklyProgress} monthlyProgress={monthlyProgress} bestDay={bestDay} />
           </>}
 
-          <div id="tour-daily" className="space-y-5 sm:space-y-8">
-          <SectionTitle icon={CheckCircle2} title="Daily Habits" colorClass="from-primary to-chart-cyan" />
-          <HabitGrid habits={habits} daysInMonth={daysInMonth} currentDay={currentDay} onToggleDay={handleToggleDay} onAddHabit={addHabit} onEditHabit={editHabit} onDeleteHabit={deleteHabit} />
-          {habitStats.length > 0 && <TopHabits habits={habitStats} />}
-          </div>
-
-          {engaged && <>
-          <SectionTitle icon={Target} title="Today's Plan & Focus" colorClass="from-chart-blue to-primary" />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            <TodaysFocus habits={habits} currentDay={currentDay} onToggleDay={handleToggleDay} tasksCompleted={taskStats.completed} tasksTotal={taskStats.total} />
-            <DailyPlanner onStatsChange={handleTaskStats} onTaskCompleted={addDailyXP} />
-            <div className="space-y-4">
-              <DashboardFocusTimer habits={habits} />
-              <DailyJournal />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
+            <div id="tour-daily" className="lg:col-span-12 space-y-4">
+              <SectionTitle icon={CheckCircle2} title="Daily Habits" colorClass="from-primary to-chart-cyan" />
+              <HabitGrid habits={habits} daysInMonth={daysInMonth} currentDay={currentDay} onToggleDay={handleToggleDay} onAddHabit={addHabit} onEditHabit={editHabit} onDeleteHabit={deleteHabit} />
             </div>
-          </div>
-          </>}
 
-          <div id="tour-trend" className="space-y-5 sm:space-y-8">
-            <SectionTitle icon={TrendingUp} title="Daily Completion Trend" colorClass="from-chart-purple to-chart-pink" />
-            <TrendLineChart data={trendData} />
-          </div>
+            {engaged && <>
+              <div className="lg:col-span-12"><SectionTitle icon={Target} title="Today's Plan & Focus" colorClass="from-chart-blue to-primary" /></div>
+              <div className="lg:col-span-4"><TodaysFocus habits={habits} currentDay={currentDay} onToggleDay={handleToggleDay} tasksCompleted={taskStats.completed} tasksTotal={taskStats.total} /></div>
+              <div className="lg:col-span-4"><DailyPlanner onStatsChange={handleTaskStats} onTaskCompleted={addDailyXP} /></div>
+              <div className="lg:col-span-4 space-y-4"><DashboardFocusTimer habits={habits} /><DailyJournal /></div>
+            </>}
 
-          <SectionTitle icon={CalendarDays} title="Weekly Plans & Habits" colorClass="from-chart-yellow to-chart-pink" />
-          <div id="tour-weekly" className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-            <div className="lg:col-span-2">
+            <div id="tour-trend" className="lg:col-span-12"><SectionTitle icon={TrendingUp} title="Daily Completion Trend" colorClass="from-chart-purple to-chart-pink" /></div>
+            <div className={habitStats.length > 0 ? "lg:col-span-8" : "lg:col-span-12"}><TrendLineChart data={trendData} /></div>
+            {habitStats.length > 0 && <div className="lg:col-span-4"><TopHabits habits={habitStats} /></div>}
+
+            <div className="lg:col-span-12"><SectionTitle icon={CalendarDays} title="Weekly Plans & Habits" colorClass="from-chart-yellow to-chart-pink" /></div>
+            <div id="tour-weekly" className="lg:col-span-8">
               <WeeklyHabits habits={weeklyHabits} numberOfWeeks={numberOfWeeks} onToggleWeek={handleToggleWeek} onAddHabit={addWeeklyHabit} onEditHabit={editWeeklyHabit} onDeleteHabit={deleteWeeklyHabit} />
             </div>
-            <div className="lg:col-span-1 space-y-4">
+            <div className="lg:col-span-4 space-y-4">
               <CommitmentCard />
               {engaged && <WeeklyReportCard habits={habits} totalXP={totalXP} currentDay={currentDay} maxStreak={maxStreak} />}
             </div>
+
+            {engaged && <>
+              <div className="lg:col-span-12"><StreakDivider /></div>
+              {habits.length > 0 && <div className="lg:col-span-7"><HabitStreaksCalendar habits={habits} currentDay={currentDay} /></div>}
+              <div className={habits.length > 0 ? "lg:col-span-5" : "lg:col-span-12"}><MilestoneShare habits={habits} totalXP={totalXP} maxStreak={maxStreak} currentDay={currentDay} /></div>
+            </>}
           </div>
 
           {engaged && <>
-          <StreakDivider />
-          {habits.length > 0 && <HabitStreaksCalendar habits={habits} currentDay={currentDay} />}
-          <MilestoneShare habits={habits} totalXP={totalXP} maxStreak={maxStreak} currentDay={currentDay} />
-
           {/* Collapsible advanced sections */}
           <div className="glass-card p-4 sm:p-5">
             <button
