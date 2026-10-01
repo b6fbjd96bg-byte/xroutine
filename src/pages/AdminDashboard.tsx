@@ -307,6 +307,7 @@ const AdminDashboard = () => {
                             {u.tier === "premium" && <Crown className="w-3 h-3 mr-1" />}
                             {u.tier === "premium" ? "Premium" : "Free"}
                           </Badge>
+                          {u.tier === "premium" && <div className="text-[10px] text-muted-foreground mt-1">{(u as any).premium_until ? `until ${new Date((u as any).premium_until).toLocaleDateString()}` : "no expiry"}</div>}
                         </TableCell>
                         <TableCell>
                           <Badge variant="secondary" className="text-xs">{u.total_xp} XP</Badge>
