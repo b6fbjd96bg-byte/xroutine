@@ -26,7 +26,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import HabitActions from "./HabitActions";
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip, LabelList } from "recharts";
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip } from "recharts";
 
 const CHART_COLORS = ["hsl(var(--chart-pink))", "hsl(var(--chart-purple))", "hsl(var(--chart-blue))", "hsl(var(--chart-yellow))", "hsl(var(--chart-cyan))", "hsl(var(--primary))"];
 import FocusTimer from "@/components/gamification/FocusTimer";
@@ -314,20 +314,24 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
               {habits.length > 0 && (
                 <div className="pt-4 mt-1 border-t border-border/30 sticky left-0 w-[min(100%,calc(100vw-8rem))]">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-sm font-semibold text-foreground">Habit progress this month</span>
-                    <span className="text-xs text-muted-foreground">Days done out of {daysInMonth}</span>
+                    <span className="text-sm font-semibold text-foreground">Completion trend</span>
+                    <span className="text-xs text-muted-foreground">Live — updates as you tick</span>
                   </div>
                   <div className="h-64 w-full">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={habits.map((h, i) => ({ name: h.name, done: h.completedDays.filter((d) => d >= 1 && d <= daysInMonth).length, fill: CHART_COLORS[i % CHART_COLORS.length] }))} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
+                      <AreaChart data={Array.from({ length: daysInMonth }, (_, i) => ({ day: i + 1, pct: Math.round((habits.filter((h) => h.completedDays.includes(i + 1)).length / habits.length) * 100) }))} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
+                        <defs>
+                          <linearGradient id="liveTrendFill" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.45} />
+                            <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                          </linearGradient>
+                        </defs>
                         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
-                        <XAxis dataKey="name" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} tickLine={false} axisLine={false} interval={0} tickFormatter={(v: string) => v.length > 12 ? v.slice(0, 11) + "…" : v} />
-                        <YAxis domain={[0, daysInMonth]} allowDecimals={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} tickLine={false} axisLine={false} />
-                        <RTooltip cursor={{ fill: "hsl(var(--muted) / 0.4)" }} contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8 }} formatter={(v: number) => [`${v}/${daysInMonth} days`, "Done"]} />
-                        <Bar dataKey="done" radius={[8, 8, 0, 0]} maxBarSize={60} isAnimationActive animationDuration={400}>
-                          <LabelList dataKey="done" position="top" fill="hsl(var(--foreground))" fontSize={12} fontWeight={700} />
-                        </Bar>
-                      </BarChart>
+                        <XAxis dataKey="day" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} tickLine={false} axisLine={false} interval={daysInMonth > 20 ? 1 : 0} />
+                        <YAxis domain={[0, 100]} ticks={[0, 25, 50, 75, 100]} tickFormatter={(v: number) => `${v}%`} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} tickLine={false} axisLine={false} />
+                        <RTooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8 }} labelFormatter={(d) => `Day ${d}`} formatter={(v: number) => [`${v}%`, "Completed"]} />
+                        <Area type="linear" dataKey="pct" stroke="hsl(var(--primary))" strokeWidth={3} fill="url(#liveTrendFill)" dot={false} activeDot={{ r: 5 }} isAnimationActive animationDuration={400} />
+                      </AreaChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
