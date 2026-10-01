@@ -1,3 +1,4 @@
+import { useHabits } from "@/hooks/useHabits";
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -33,7 +34,7 @@ const CalendarPage = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [filterHabit, setFilterHabit] = useState<string | null>(null);
-  const habits = generateSampleData();
+  const { habits } = useHabits(currentMonth);
 
   const monthName = currentMonth.toLocaleString("default", { month: "long" });
   const year = currentMonth.getFullYear();

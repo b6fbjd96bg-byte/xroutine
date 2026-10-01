@@ -57,6 +57,15 @@ const weekColors = [
   "bg-primary",
 ];
 
+const habitPalette = [
+  { text: "text-chart-pink", bg: "bg-chart-pink", dot: "bg-chart-pink" },
+  { text: "text-chart-purple", bg: "bg-chart-purple", dot: "bg-chart-purple" },
+  { text: "text-chart-blue", bg: "bg-chart-blue", dot: "bg-chart-blue" },
+  { text: "text-chart-yellow", bg: "bg-chart-yellow", dot: "bg-chart-yellow" },
+  { text: "text-chart-cyan", bg: "bg-chart-cyan", dot: "bg-chart-cyan" },
+  { text: "text-primary", bg: "bg-primary", dot: "bg-primary" },
+];
+
 // Habits that can have focus timers
 const focusTimerHabits = ["meditation", "reading", "study", "work", "focus", "deep work", "writing"];
 
@@ -136,47 +145,11 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
                     placeholder="e.g., Meditation"
                     value={newHabitName}
                     onChange={(e) => setNewHabitName(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleAddHabit()}
+                    autoFocus
                     className="bg-secondary/50"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="habitGoal">Monthly Goal (days)</Label>
-                  <Input
-                    id="habitGoal"
-                    type="number"
-                    placeholder="30"
-                    value={newHabitGoal}
-                    onChange={(e) => setNewHabitGoal(e.target.value)}
-                    className="bg-secondary/50"
-                  />
-                </div>
-                
-                {/* Habit Bundling */}
-                {habits.length > 0 && (
-                  <div className="space-y-2">
-                    <Label className="flex items-center gap-2">
-                      <Link2 className="w-4 h-4 text-primary" />
-                      Habit Stacking (Optional)
-                    </Label>
-                    <Select value={linkedHabit} onValueChange={setLinkedHabit}>
-                      <SelectTrigger className="bg-secondary/50">
-                        <SelectValue placeholder="I will do this after..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">No linking</SelectItem>
-                        {habits.map((habit) => (
-                          <SelectItem key={habit.id} value={habit.id}>
-                            After: {habit.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <p className="text-xs text-muted-foreground">
-                      Link habits together to build stronger routines
-                    </p>
-                  </div>
-                )}
-
                 <Button onClick={handleAddHabit} className="w-full">
                   Add Habit
                 </Button>
@@ -245,6 +218,7 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
                   ? habits.find(h => h.id === habit.linkedTo)?.name 
                   : null;
                 const showFocusButton = canHaveFocusTimer(habit.name);
+                const color = habitPalette[index % habitPalette.length];
 
                 return (
                 <motion.div
@@ -257,7 +231,8 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
                   <div className="text-sm font-medium truncate flex items-center gap-1">
                     <div className="flex flex-col flex-1 min-w-0">
                       <div className="flex items-center gap-1">
-                        <span className="truncate">{habit.name}</span>
+                        <span className={cn("w-2.5 h-2.5 rounded-full shrink-0", color.dot)} />
+                        <span className={cn("truncate font-semibold", color.text)}>{habit.name}</span>
                         {showFocusButton && (
                           <Tooltip>
                             <TooltipTrigger asChild>
@@ -299,7 +274,7 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
                     const isCompleted = habit.completedDays.includes(day);
                     const isPast = day < currentDay;
                     const isToday = day === currentDay;
-                    const isFuture = day > currentDay;
+                    const isFuture = false; // every day of the month can be ticked
 
                     return (
                       <motion.button
@@ -310,8 +285,8 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
                         disabled={isFuture}
                         className={cn(
                           "w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-300",
-                          isCompleted && "bg-primary text-primary-foreground shadow-md shadow-primary/30",
-                          !isCompleted && isPast && "bg-secondary/50 hover:bg-secondary border border-border/50",
+                          isCompleted && cn(color.bg, "text-background shadow-md"),
+                          !isCompleted && (isPast || day > currentDay) && "bg-secondary/50 hover:bg-secondary border border-border/50",
                           !isCompleted && isToday && "bg-secondary ring-2 ring-primary/50 hover:bg-primary/20",
                           isFuture && "bg-secondary/20 cursor-not-allowed opacity-40"
                         )}

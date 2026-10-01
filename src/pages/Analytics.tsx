@@ -1,3 +1,5 @@
+import { useHabits } from "@/hooks/useHabits";
+import MonthSelector from "@/components/dashboard/MonthSelector";
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -71,7 +73,12 @@ type ExportFormat = "csv" | "json";
 const Analytics = () => {
   const [viewMode, setViewMode] = useState<ViewMode>("weekly");
   const [selectedHabitIndex, setSelectedHabitIndex] = useState<number | null>(null);
-  const { habits, currentDay, daysInMonth } = generateSampleData();
+  const [month, setMonth] = useState(new Date());
+  const { habits } = useHabits(month);
+  const now = new Date();
+  const daysInMonth = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
+  const isThisMonth = month.getMonth() === now.getMonth() && month.getFullYear() === now.getFullYear();
+  const currentDay = isThisMonth ? now.getDate() : month > now ? 0 : daysInMonth;
   const { toast } = useToast();
 
   // Calculate daily trend data
@@ -244,6 +251,7 @@ const Analytics = () => {
               </h1>
               <p className="text-sm text-muted-foreground">Deep insights into your habit performance</p>
             </div>
+            <MonthSelector currentMonth={month} onChange={setMonth} onPrevMonth={() => setMonth(new Date(month.getFullYear(), month.getMonth() - 1, 1))} onNextMonth={() => setMonth(new Date(month.getFullYear(), month.getMonth() + 1, 1))} />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="gap-2 self-start sm:self-auto">

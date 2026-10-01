@@ -79,7 +79,8 @@ Deno.serve(async (req) => {
       if (habits) {
         for (let d = weekStart; d <= currentDay; d++) {
           total += habits.length;
-          completed += habits.filter(h => (h.completed_days as number[]).includes(d)).length;
+          const code = (today.getFullYear() * 100 + today.getMonth() + 1) * 100 + d;
+          completed += habits.filter(h => (h.completed_days as number[]).includes(code)).length;
         }
       }
 

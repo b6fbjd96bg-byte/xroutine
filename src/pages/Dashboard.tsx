@@ -43,15 +43,15 @@ import { useToast } from "@/hooks/use-toast";
 const Dashboard = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const [currentMonth, setCurrentMonth] = useState(new Date());
   const {
     habits, weeklyHabits, loading,
     addHabit, editHabit, deleteHabit, toggleDay,
     addWeeklyHabit, editWeeklyHabit, deleteWeeklyHabit, toggleWeek,
-  } = useHabits();
+  } = useHabits(currentMonth);
 
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const prevCompletedToday = useRef<number>(0);
   const [taskStats, setTaskStats] = useState({ completed: 0, total: 0 });
@@ -198,7 +198,7 @@ const Dashboard = () => {
 
   const handleToggleDay = async (habitId: string, day: number, event?: React.MouseEvent) => {
     const newlyCompleted = await toggleDay(habitId, day);
-    if (newlyCompleted && day === currentDay) {
+    if (newlyCompleted && day === currentDay && currentMonth.getMonth() === new Date().getMonth()) {
       addDailyXP(event);
     }
   };
@@ -234,7 +234,7 @@ const Dashboard = () => {
               </h1>
               <p className="text-muted-foreground">{habits.length === 0 ? "Add your first habit to get started 🌱" : "Track your daily habits and build better routines"}</p>
             </div>
-            <MonthSelector currentMonth={currentMonth} onPrevMonth={() => { setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1)); setSelectedDate(null); }} onNextMonth={() => { setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1)); setSelectedDate(null); }} />
+            <MonthSelector currentMonth={currentMonth} onChange={(d) => { setCurrentMonth(d); setSelectedDate(null); }} onPrevMonth={() => { setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1)); setSelectedDate(null); }} onNextMonth={() => { setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1)); setSelectedDate(null); }} />
           </motion.div>
 
           {/* Push Notification Prompt */}
@@ -342,7 +342,7 @@ const Dashboard = () => {
       </main>
 
       <MotivationPopup />
-      <DashboardTour userId={user?.id} />
+      <DashboardTour userId={user?.id} createdAt={user?.created_at} />
       <AIMotivationAgent completedToday={completedToday} totalHabits={habits.length} currentStreak={maxStreak} weeklyProgress={avgWeeklyProgress} />
     </div>
   );
