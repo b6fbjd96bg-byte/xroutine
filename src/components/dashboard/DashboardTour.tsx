@@ -8,14 +8,15 @@ const STEPS = [
   { id: "tour-weekly", title: "Weekly habits 🗓️", text: "Add bigger goals you want to hit once a week, like a long run or a deep clean." },
 ];
 
-const DashboardTour = ({ userId }: { userId?: string }) => {
+const DashboardTour = ({ userId, createdAt }: { userId?: string; createdAt?: string }) => {
   const key = `tour_done_${userId}`;
   const [step, setStep] = useState<number>(-1);
   const [rect, setRect] = useState<DOMRect | null>(null);
 
   useEffect(() => {
-    if (userId && !localStorage.getItem(key)) setTimeout(() => setStep(0), 700);
-  }, [userId, key]);
+    const isNew = createdAt && Date.now() - new Date(createdAt).getTime() < 24 * 60 * 60 * 1000;
+    if (userId && isNew && !localStorage.getItem(key)) setTimeout(() => setStep(0), 700);
+  }, [userId, key, createdAt]);
 
   useEffect(() => {
     if (step < 0) return;
