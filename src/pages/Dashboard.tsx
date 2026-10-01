@@ -262,16 +262,16 @@ const Dashboard = () => {
               <HabitGrid habits={habits} daysInMonth={daysInMonth} currentDay={currentDay} onToggleDay={handleToggleDay} onAddHabit={addHabit} onEditHabit={editHabit} onDeleteHabit={deleteHabit} />
             </div>
 
+            <div id="tour-trend" className="lg:col-span-12"><SectionTitle icon={TrendingUp} title="Daily Completion Trend" colorClass="from-chart-purple to-chart-pink" /></div>
+            <div className={habitStats.length > 0 ? "lg:col-span-8" : "lg:col-span-12"}><TrendLineChart data={trendData} /></div>
+            {habitStats.length > 0 && <div className="lg:col-span-4"><TopHabits habits={habitStats} /></div>}
+
             {engaged && <>
               <div className="lg:col-span-12"><SectionTitle icon={Target} title="Today's Plan & Focus" colorClass="from-chart-blue to-primary" /></div>
               <div className="lg:col-span-4"><TodaysFocus habits={habits} currentDay={currentDay} onToggleDay={handleToggleDay} tasksCompleted={taskStats.completed} tasksTotal={taskStats.total} /></div>
               <div className="lg:col-span-4"><DailyPlanner onStatsChange={handleTaskStats} onTaskCompleted={addDailyXP} /></div>
               <div className="lg:col-span-4 space-y-4"><DashboardFocusTimer habits={habits} /><DailyJournal /></div>
             </>}
-
-            <div id="tour-trend" className="lg:col-span-12"><SectionTitle icon={TrendingUp} title="Daily Completion Trend" colorClass="from-chart-purple to-chart-pink" /></div>
-            <div className={habitStats.length > 0 ? "lg:col-span-8" : "lg:col-span-12"}><TrendLineChart data={trendData} /></div>
-            {habitStats.length > 0 && <div className="lg:col-span-4"><TopHabits habits={habitStats} /></div>}
 
             <div className="lg:col-span-12"><SectionTitle icon={CalendarDays} title="Weekly Plans & Habits" colorClass="from-chart-yellow to-chart-pink" /></div>
             <div id="tour-weekly" className="lg:col-span-8">
