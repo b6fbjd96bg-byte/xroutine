@@ -7,6 +7,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { CheckCircle, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import GoogleButton, { OrDivider } from "@/components/auth/GoogleButton";
+import { supabase } from "@/integrations/supabase/client";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -14,6 +16,7 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [sentTo, setSentTo] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { signUp } = useAuth();
@@ -40,11 +43,7 @@ const Signup = () => {
       return;
     }
 
-    toast({
-      title: "Account created! 🎉",
-      description: "Welcome aboard — loading your dashboard...",
-    });
-    navigate("/dashboard");
+    setSentTo(email.trim());
   };
 
   return (
@@ -74,6 +73,20 @@ const Signup = () => {
           <h1 className="text-2xl font-bold font-display mb-2">Create your account</h1>
           <p className="text-muted-foreground mb-8">Start building better habits today — it's free</p>
 
+          {sentTo ? (
+            <div className="text-center space-y-4">
+              <CheckCircle className="w-12 h-12 text-primary mx-auto" />
+              <h2 className="text-xl font-bold font-display">Check your email</h2>
+              <p className="text-muted-foreground text-sm">We sent a verification link to <span className="text-foreground font-medium">{sentTo}</span>. Click it to activate your account, then sign in.</p>
+              <Button variant="outline" className="w-full" onClick={async () => {
+                const { error } = await supabase.auth.resend({ type: "signup", email: sentTo, options: { emailRedirectTo: `${window.location.origin}/login` } });
+                toast(error ? { title: "Couldn't resend", description: error.message, variant: "destructive" } : { title: "Email sent again", description: "Check your inbox and spam folder." });
+              }}>Resend email</Button>
+              <Button variant="hero" className="w-full" onClick={() => navigate("/login")}>Go to Sign In</Button>
+            </div>
+          ) : (<>
+          <GoogleButton label="Sign up with Google" />
+          <OrDivider />
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="name">Full Name</Label>
@@ -97,6 +110,7 @@ const Signup = () => {
               {isLoading ? "Creating account..." : "Create Account"}
             </Button>
           </form>
+          </>)}
 
           <p className="text-sm text-muted-foreground text-center mt-6">
             Already have an account?{" "}
