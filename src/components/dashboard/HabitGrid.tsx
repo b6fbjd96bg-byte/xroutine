@@ -112,16 +112,16 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
     <div className="glass-card overflow-hidden">
       {/* Header */}
       <div 
-        className="flex items-center justify-between p-6 cursor-pointer hover:bg-secondary/20 transition-colors"
+        className="flex items-center justify-between gap-3 p-4 sm:p-6 cursor-pointer hover:bg-secondary/20 transition-colors"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <div className="flex items-center gap-4">
-          <h2 className="text-xl font-bold font-display">Daily Habits</h2>
-          <span className="text-sm text-muted-foreground">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-4 min-w-0">
+          <h2 className="text-lg sm:text-xl font-bold font-display whitespace-nowrap">Daily Habits</h2>
+          <span className="text-xs sm:text-sm text-muted-foreground whitespace-nowrap">
             {habits.length} habits tracked
           </span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 shrink-0">
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild onClick={(e) => {
               e.stopPropagation();

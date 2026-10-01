@@ -135,7 +135,7 @@ const Dashboard = () => {
     return weeks;
   }, [habits, daysInMonth]);
 
-  const monthlyCompleted = habits.reduce((sum, h) => sum + h.completedDays.length, 0);
+  const monthlyCompleted = habits.reduce((sum, h) => sum + h.completedDays.filter((d) => d <= currentDay).length, 0);
   const monthlyTotal = habits.length * currentDay;
 
   const habitStats = useMemo(() => habits.map((habit) => {
