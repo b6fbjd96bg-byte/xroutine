@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Settings as SettingsIcon,
   User,
@@ -43,24 +43,56 @@ import SmartReminders from "@/components/gamification/SmartReminders";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { useSubscription } from "@/hooks/useSubscription";
+import { useSubscription, PRO_PRICE_MONTHLY, TRIAL_DAYS } from "@/hooks/useSubscription";
+import { applyTheme, getTheme } from "@/lib/theme";
 import UpgradePrompt from "@/components/premium/UpgradePrompt";
 
 const Settings = () => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const { toast } = useToast();
-  const { tier, isPremium, limits } = useSubscription();
+  const { tier, isPremium, isTrial, trialDaysLeft, limits } = useSubscription();
+  const [busy, setBusy] = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
 
-  const [notifications, setNotifications] = useState({
-    dailyReminder: true,
-    weeklyReport: true,
-    achievements: true,
-    sound: false,
+  const [notifications, setNotifications] = useState(() => {
+    try { return { dailyReminder: true, weeklyReport: true, achievements: true, sound: false, ...JSON.parse(localStorage.getItem("notif_prefs") || "{}") }; }
+    catch { return { dailyReminder: true, weeklyReport: true, achievements: true, sound: false }; }
   });
+  useEffect(() => { localStorage.setItem("notif_prefs", JSON.stringify(notifications)); }, [notifications]);
   const [weeklyEmailEnabled, setWeeklyEmailEnabled] = useState(true);
   const [emailPrefLoaded, setEmailPrefLoaded] = useState(false);
-  const [theme, setTheme] = useState("dark");
+  const [theme, setThemeState] = useState(getTheme());
+  const setTheme = (t: string) => { setThemeState(t); applyTheme(t as "dark" | "light"); toast({ title: `${t === "dark" ? "Dark" : "Light"} theme on` }); };
+
+  const exportData = async () => {
+    if (!user) return;
+    setBusy(true);
+    const tables = ["habits", "weekly_habits", "todos", "journal_entries", "mood_checkins", "user_commitments", "user_gamification", "profiles"] as const;
+    const out: Record<string, unknown> = { exported_at: new Date().toISOString(), email: user.email };
+    for (const t of tables) {
+      const { data } = await supabase.from(t).select("*");
+      out[t] = data || [];
+    }
+    setBusy(false);
+    const url = URL.createObjectURL(new Blob([JSON.stringify(out, null, 2)], { type: "application/json" }));
+    const a = document.createElement("a"); a.href = url; a.download = `superoutine-data-${new Date().toISOString().slice(0, 10)}.json`; a.click();
+    URL.revokeObjectURL(url);
+    toast({ title: "Your data is downloading ✅" });
+  };
+
+  const deleteAllData = async () => {
+    if (!user) return;
+    setBusy(true);
+    const tables = ["habits", "weekly_habits", "todos", "journal_entries", "user_commitments"] as const;
+    for (const t of tables) await supabase.from(t).delete().eq("user_id", user.id);
+    await supabase.from("user_gamification").update({ total_xp: 0 }).eq("user_id", user.id);
+    setBusy(false);
+    toast({ title: "All your data was deleted", description: "Fresh start — let's build new habits!" });
+    navigate("/dashboard");
+  };
+
+  const handleSignOutClick = async () => { await signOut(); navigate("/"); };
 
   // Profile state
   const [displayName, setDisplayName] = useState("");
@@ -326,8 +358,9 @@ const Settings = () => {
                 "px-3 py-1 rounded-full text-xs font-bold",
                 isPremium ? "bg-chart-yellow/20 text-chart-yellow" : "bg-secondary text-muted-foreground"
               )}>
-                {isPremium ? "👑 PREMIUM" : "FREE PLAN"}
+                {isTrial ? `FREE TRIAL · ${trialDaysLeft} day${trialDaysLeft === 1 ? "" : "s"} left` : isPremium ? "👑 PRO" : "FREE PLAN"}
               </div>
+              {!(tier === "premium") && <span className="text-xs text-muted-foreground">Pro is just ₹{PRO_PRICE_MONTHLY}/month</span>}
             </div>
             <div className="space-y-2 mb-4">
               {[
@@ -345,10 +378,11 @@ const Settings = () => {
                 </div>
               ))}
             </div>
-            {!isPremium && (
+            {isTrial && <p className="text-xs text-muted-foreground mb-3">You have every feature unlocked for your first {TRIAL_DAYS} days. After that the free plan allows 5 daily and 3 weekly habits.</p>}
+            {tier !== "premium" && (
               <Button variant="outline" className="w-full gap-2 border-chart-yellow/30 text-chart-yellow hover:bg-chart-yellow/10" onClick={() => setShowUpgrade(true)}>
                 <Crown className="w-4 h-4" />
-                Upgrade to Premium
+                Go Pro — ₹{PRO_PRICE_MONTHLY}/month
               </Button>
             )}
           </motion.div>
@@ -360,7 +394,7 @@ const Settings = () => {
               <h2 className="text-base sm:text-xl font-bold font-display">Data & Privacy</h2>
             </div>
             <div className="space-y-3">
-              <Button variant="outline" className="w-full justify-start gap-3 text-xs sm:text-sm h-10 sm:h-11">
+              <Button onClick={exportData} disabled={busy} variant="outline" className="w-full justify-start gap-3 text-xs sm:text-sm h-10 sm:h-11">
                 <Download className="w-4 h-4 shrink-0" />
                 Export All Data
               </Button>
@@ -380,7 +414,7 @@ const Settings = () => {
                   </AlertDialogHeader>
                   <AlertDialogFooter className="flex-col sm:flex-row gap-2">
                     <AlertDialogCancel className="text-xs sm:text-sm">Cancel</AlertDialogCancel>
-                    <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90 text-xs sm:text-sm">Delete Everything</AlertDialogAction>
+                    <AlertDialogAction onClick={deleteAllData} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 text-xs sm:text-sm">Delete Everything</AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
@@ -394,25 +428,21 @@ const Settings = () => {
               <h2 className="text-base sm:text-xl font-bold font-display">Help & Support</h2>
             </div>
             <div className="space-y-3">
-              <Button variant="outline" className="w-full justify-start gap-3 text-xs sm:text-sm h-10 sm:h-11">
-                <Mail className="w-4 h-4 shrink-0" />
-                Contact Support
+              <Button asChild variant="outline" className="w-full justify-start gap-3 text-xs sm:text-sm h-10 sm:h-11">
+                <a href="mailto:support@superoutine.pro"><Mail className="w-4 h-4 shrink-0" />Contact Support</a>
               </Button>
-              <Button variant="outline" className="w-full justify-start gap-3 text-xs sm:text-sm h-10 sm:h-11">
-                <HelpCircle className="w-4 h-4 shrink-0" />
-                FAQ & Documentation
+              <Button asChild variant="outline" className="w-full justify-start gap-3 text-xs sm:text-sm h-10 sm:h-11">
+                <Link to="/contact"><HelpCircle className="w-4 h-4 shrink-0" />Help & Contact page</Link>
               </Button>
             </div>
           </motion.div>
 
           {/* Sign Out */}
           <motion.div variants={itemVariants}>
-            <Link to="/">
-              <Button variant="outline" className="w-full gap-3 text-destructive hover:text-destructive hover:bg-destructive/10 text-xs sm:text-sm">
-                <LogOut className="w-4 h-4" />
-                Sign Out
-              </Button>
-            </Link>
+            <Button onClick={handleSignOutClick} variant="outline" className="w-full gap-3 text-destructive hover:text-destructive hover:bg-destructive/10 text-xs sm:text-sm">
+              <LogOut className="w-4 h-4" />
+              Sign Out
+            </Button>
           </motion.div>
 
           {/* Version */}
