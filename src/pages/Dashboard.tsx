@@ -101,11 +101,14 @@ const Dashboard = () => {
   const trendData = useMemo(() => {
     return Array.from({ length: Math.min(currentDay, daysInMonth) }, (_, i) => {
       const day = i + 1;
-      const completed = habits.filter((h) => h.completedDays.includes(day)).length;
-      const percentage = habits.length > 0 ? Math.round((completed / habits.length) * 100) : 0;
+      const isToday = day === currentDay;
+      const habitDone = habits.filter((h) => h.completedDays.includes(day)).length;
+      const completed = habitDone + (isToday ? taskStats.completed : 0);
+      const total = habits.length + (isToday ? taskStats.total : 0);
+      const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
       return { day, completed, percentage };
     });
-  }, [habits, currentDay, daysInMonth]);
+  }, [habits, currentDay, daysInMonth, taskStats]);
 
   const weeklyProgress = useMemo(() => {
     const weeks: { week: number; completed: number; goal: number; percentage: number }[] = [];
