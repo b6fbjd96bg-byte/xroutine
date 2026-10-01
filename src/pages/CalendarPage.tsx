@@ -127,7 +127,7 @@ const CalendarPage = () => {
     }
 
     return {
-      completionRate: totalPossible > 0 ? Math.round((totalCompleted / totalPossible) * 100) : 0,
+      completionRate: totalPossible > 0 ? Math.min(100, Math.round((totalCompleted / totalPossible) * 100)) : 0,
       perfectDays,
       currentStreak: streak,
       bestWeek: { num: bestWeekNum, pct: bestWeekPct },
@@ -358,7 +358,7 @@ const CalendarPage = () => {
                   if (habit.completedDays.includes(d)) streak++;
                   else break;
                 }
-                const completionRate = maxDay > 0 ? Math.round((habit.completedDays.length / maxDay) * 100) : 0;
+                const completionRate = maxDay > 0 ? Math.min(100, Math.round((habit.completedDays.filter((d) => d <= maxDay).length / maxDay) * 100)) : 0;
                 return (
                   <motion.div key={habit.id} whileHover={{ scale: 1.02 }} className="p-3 rounded-xl bg-secondary/30 border border-border/20">
                     <div className="flex items-center justify-between mb-2">

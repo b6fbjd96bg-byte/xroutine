@@ -31,7 +31,7 @@ const Hero = () => {
       {/* Grid Pattern */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(45,212,191,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(45,212,191,0.03)_1px,transparent_1px)] bg-[size:64px_64px]" />
 
-      <div className="relative z-10 max-w-6xl mx-auto text-center">
+      <div className="relative z-10 w-full min-w-0 max-w-6xl mx-auto text-center">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -39,7 +39,7 @@ const Hero = () => {
           className="text-3xl sm:text-5xl md:text-7xl font-bold font-display mb-4 sm:mb-6 leading-tight"
         >
           Stop Tracking. Start{" "}
-          <span className="relative inline-block min-w-[6ch] align-bottom">
+          <br className="sm:hidden" /><span className="relative inline-block min-w-[6ch] align-bottom">
             <AnimatePresence mode="wait">
               <motion.span key={WORDS[w]} className="text-gradient inline-block" initial={{ opacity: 0, y: 30, rotateX: -60 }} animate={{ opacity: 1, y: 0, rotateX: 0 }} exit={{ opacity: 0, y: -30, rotateX: 60 }} transition={{ duration: 0.45 }}>
                 {WORDS[w]}
@@ -61,7 +61,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
+          className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 justify-center mb-12"
         >
           <Link to="/signup">
             <Button variant="hero" size="xl" className="group">
@@ -87,7 +87,7 @@ const Hero = () => {
                   }
                 } catch (e) {}
               }}
-              className="ml-3 inline-flex items-center gap-2 px-4 py-3 rounded-lg border border-border text-sm bg-secondary/30 hover:bg-secondary/40 transition"
+              className="sm:ml-3 inline-flex items-center gap-2 px-4 py-3 rounded-lg border border-border text-sm bg-secondary/30 hover:bg-secondary/40 transition"
             >
               Share
             </button>
@@ -126,7 +126,7 @@ const Hero = () => {
         >
           <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         >
-          <div className="glass-card p-4 md:p-6 rounded-2xl">
+          <div className="glass-card p-3 md:p-6 rounded-2xl overflow-hidden max-w-full">
             <LiveDashboardDemo />
           </div>
           
