@@ -33,7 +33,7 @@ const HabitStreaksCalendar = ({ habits, currentDay }: HabitStreaksCalendarProps)
   return (
     <div className="glass-card p-4 sm:p-5">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-display font-bold text-sm">🔥 Habit Streaks</h3>
+        <h3 className="font-display font-bold text-sm">Habit Streaks</h3>
         <div className="flex items-center gap-1 text-xs text-muted-foreground">
           <span>Less</span>
           {[0, 25, 50, 75, 100].map(p => (

@@ -1,17 +1,18 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Calendar, BarChart3, Settings, LogOut, Menu, X } from "lucide-react";
+import { LogOut, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { DashIcon, CalIcon, StatsIcon, GearIcon } from "./NavIcons";
 
 const navItems = [
-  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
-  { icon: Calendar, label: "Calendar", path: "/dashboard/calendar" },
-  { icon: BarChart3, label: "Analytics", path: "/dashboard/analytics" },
-  { icon: Settings, label: "Settings", path: "/dashboard/settings" },
+  { icon: DashIcon, label: "Dashboard", path: "/dashboard" },
+  { icon: CalIcon, label: "Calendar", path: "/dashboard/calendar" },
+  { icon: StatsIcon, label: "Analytics", path: "/dashboard/analytics" },
+  { icon: GearIcon, label: "Settings", path: "/dashboard/settings" },
 ];
 
 const SidebarContent = ({ onNavigate, compact }: { onNavigate?: () => void; compact?: boolean }) => {
