@@ -15,6 +15,9 @@ interface SubscriptionLimits {
   customEmojis: boolean;
 }
 
+export const TRIAL_DAYS = 7;
+export const PRO_PRICE_MONTHLY = 49; // ₹ per month
+
 const FREE_LIMITS: SubscriptionLimits = {
   maxDailyHabits: 5,
   maxWeeklyHabits: 3,
@@ -60,7 +63,12 @@ export const useSubscription = () => {
       });
   }, [user]);
 
-  const isPremium = tier === "premium";
+  const createdAt = user?.created_at ? new Date(user.created_at).getTime() : 0;
+  const trialEndsAt = createdAt + TRIAL_DAYS * 86400000;
+  const trialDaysLeft = createdAt ? Math.max(0, Math.ceil((trialEndsAt - Date.now()) / 86400000)) : 0;
+  const isTrial = tier !== "premium" && trialDaysLeft > 0;
+  // During the free trial everything is unlocked
+  const isPremium = tier === "premium" || isTrial;
   const limits = isPremium ? PREMIUM_LIMITS : FREE_LIMITS;
 
   const canAccess = useCallback(
@@ -72,5 +80,5 @@ export const useSubscription = () => {
     [limits]
   );
 
-  return { tier, isPremium, loading, limits, canAccess };
+  return { tier, isPremium, isTrial, trialDaysLeft, loading, limits, canAccess };
 };
