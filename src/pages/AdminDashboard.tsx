@@ -48,6 +48,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import AdminMoney from "@/components/admin/AdminMoney";
 import {
   AreaChart,
   Area,
@@ -81,7 +82,7 @@ const AdminDashboard = () => {
     demoteUser,
   } = useAdmin();
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState<"overview" | "users" | "traffic" | "waitlist">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "users" | "money" | "traffic" | "waitlist">("overview");
 
   useEffect(() => {
     if (!loading && !isAdmin) {
@@ -95,6 +96,8 @@ const AdminDashboard = () => {
       fetchUsers();
       fetchTraffic();
       fetchWaitlist();
+      const t = setInterval(() => { fetchStats(); fetchUsers(); }, 30000);
+      return () => clearInterval(t);
     }
   }, [isAdmin]);
 
@@ -167,7 +170,7 @@ const AdminDashboard = () => {
               <Shield className="w-5 h-5 text-destructive" />
             </div>
             <div>
-              <h1 className="text-lg font-bold font-display">Admin Panel</h1>
+              <h1 className="text-lg font-bold font-display flex items-center gap-2">Admin Panel <span className="flex items-center gap-1 text-[10px] font-semibold text-primary"><span className="w-2 h-2 rounded-full bg-primary animate-pulse" />LIVE</span></h1>
               <p className="text-xs text-muted-foreground">{user?.email}</p>
             </div>
           </div>
@@ -195,7 +198,7 @@ const AdminDashboard = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
         {/* Tab Navigation */}
         <div className="flex gap-1 p-1 rounded-lg bg-secondary/50 w-fit">
-          {(["overview", "users", "traffic", "waitlist"] as const).map((tab) => (
+          {(["overview", "users", "money", "traffic", "waitlist"] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -205,10 +208,12 @@ const AdminDashboard = () => {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {tab === "overview" ? "📊 Overview" : tab === "users" ? "👥 Users" : tab === "traffic" ? "🌐 Traffic" : "👑 Waitlist"}
+              {tab === "overview" ? "📊 Overview" : tab === "users" ? "👥 Users" : tab === "money" ? "💰 Money & Referrals" : tab === "traffic" ? "🌐 Traffic" : "👑 Waitlist"}
             </button>
           ))}
         </div>
+
+        {activeTab === "money" && <AdminMoney users={users.map(u => ({ id: u.id, email: u.email }))} onChanged={() => { fetchUsers(); fetchStats(); }} />}
 
         {activeTab === "overview" && (
           <>
@@ -351,6 +356,10 @@ const AdminDashboard = () => {
                         <TableHead>Joined</TableHead>
                         <TableHead>Last Active</TableHead>
                         <TableHead>Tier</TableHead>
+                        <TableHead>Paid</TableHead>
+                        <TableHead>Referred by</TableHead>
+                        <TableHead>Invited</TableHead>
+                        <TableHead>Balance</TableHead>
                         <TableHead>Habits</TableHead>
                         <TableHead>XP</TableHead>
                         <TableHead>Status</TableHead>
@@ -378,6 +387,10 @@ const AdminDashboard = () => {
                               {u.tier === "premium" ? "Premium" : "Free"}
                             </Badge>
                           </TableCell>
+                          <TableCell className="text-sm">₹{(u.total_paid || 0).toFixed(0)}</TableCell>
+                          <TableCell className="text-xs text-muted-foreground">{u.referred_by || "—"}</TableCell>
+                          <TableCell className="text-sm">{u.invited_count || 0}</TableCell>
+                          <TableCell className="text-sm">₹{((u.earned || 0) - (u.withdrawn || 0)).toFixed(2)}</TableCell>
                           <TableCell className="text-sm">{u.habit_count}</TableCell>
                           <TableCell>
                             <Badge variant="secondary" className="text-xs">{u.total_xp} XP</Badge>

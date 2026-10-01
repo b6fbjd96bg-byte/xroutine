@@ -12,6 +12,11 @@ interface AdminUser {
   total_xp: number;
   email_confirmed: boolean;
   tier: string;
+  total_paid?: number;
+  referred_by?: string | null;
+  invited_count?: number;
+  earned?: number;
+  withdrawn?: number;
 }
 
 interface AdminStats {

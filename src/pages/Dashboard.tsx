@@ -266,8 +266,8 @@ const Dashboard = () => {
             <div className={habitStats.length > 0 ? "lg:col-span-8" : "lg:col-span-12"}><TrendLineChart data={trendData} /></div>
             {habitStats.length > 0 && <div className="lg:col-span-4"><TopHabits habits={habitStats} /></div>}
 
-            {engaged && <>
-              <div className="lg:col-span-12"><SectionTitle icon={Target} title="Today's Plan & Focus" colorClass="from-chart-blue to-primary" /></div>
+            {<>
+              <div className="lg:col-span-12"><SectionTitle icon={Target} title="Today's Plan & Focus — daily completion" colorClass="from-chart-blue to-primary" /></div>
               <div className="lg:col-span-4"><TodaysFocus habits={habits} currentDay={currentDay} onToggleDay={handleToggleDay} tasksCompleted={taskStats.completed} tasksTotal={taskStats.total} /></div>
               <div className="lg:col-span-4"><DailyPlanner onStatsChange={handleTaskStats} onTaskCompleted={addDailyXP} /></div>
               <div className="lg:col-span-4 space-y-4"><DashboardFocusTimer habits={habits} /><DailyJournal /></div>

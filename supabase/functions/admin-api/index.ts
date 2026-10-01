@@ -86,6 +86,12 @@ Deno.serve(async (req) => {
           .select("user_id, tier")
           .in("user_id", userIds);
 
+        const { data: pays } = await adminClient.from("payments").select("user_id, amount");
+        const { data: refs } = await adminClient.from("referrals").select("referrer_id, referred_id");
+        const { data: earns } = await adminClient.from("referral_earnings").select("referrer_id, amount");
+        const { data: outs } = await adminClient.from("payout_requests").select("user_id, amount, status");
+        const emailOf = (id: string) => data.users.find(x => x.id === id)?.email || "Unknown";
+
         const enrichedUsers = data.users.map(u => {
           const habitCount = habits?.filter(h => h.user_id === u.id).length || 0;
           const xp = gamification?.find(g => g.user_id === u.id)?.total_xp || 0;
@@ -101,6 +107,11 @@ Deno.serve(async (req) => {
             total_xp: xp,
             email_confirmed: !!u.email_confirmed_at,
             tier: sub?.tier || "free",
+            total_paid: (pays || []).filter(p => p.user_id === u.id).reduce((a, p) => a + Number(p.amount), 0),
+            referred_by: (() => { const r = (refs || []).find(r => r.referred_id === u.id); return r ? emailOf(r.referrer_id) : null; })(),
+            invited_count: (refs || []).filter(r => r.referrer_id === u.id).length,
+            earned: (earns || []).filter(e => e.referrer_id === u.id).reduce((a, e) => a + Number(e.amount), 0),
+            withdrawn: (outs || []).filter(o => o.user_id === u.id && o.status !== "rejected").reduce((a, o) => a + Number(o.amount), 0),
           };
         });
 
@@ -141,6 +152,46 @@ Deno.serve(async (req) => {
         return new Response(JSON.stringify({ success: true }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
+      }
+
+      case "record-payment": {
+        const body = await req.json();
+        const userId = body.userId;
+        const amount = Number(body.amount);
+        if (!userId || !(amount > 0) || amount > 1000000) throw new Error("userId and a valid amount required");
+        const plan = typeof body.plan === "string" ? body.plan.slice(0, 50) : "premium";
+        const { error: pe } = await adminClient.from("payments").insert({ user_id: userId, amount, plan, note: typeof body.note === "string" ? body.note.slice(0, 200) : null });
+        if (pe) throw pe;
+        await adminClient.from("user_subscriptions").update({ tier: "premium" }).eq("user_id", userId);
+        return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+
+      case "money": {
+        const { data: all } = await adminClient.auth.admin.listUsers({ page: 1, perPage: 1000 });
+        const em = (id: string) => all?.users?.find(u => u.id === id)?.email || "Unknown";
+        const [{ data: payments }, { data: referrals }, { data: earnings }, { data: payouts }] = await Promise.all([
+          adminClient.from("payments").select("*").order("created_at", { ascending: false }),
+          adminClient.from("referrals").select("*").order("created_at", { ascending: false }),
+          adminClient.from("referral_earnings").select("*").order("created_at", { ascending: false }),
+          adminClient.from("payout_requests").select("*").order("created_at", { ascending: false }),
+        ]);
+        return new Response(JSON.stringify({
+          payments: (payments || []).map(p => ({ ...p, email: em(p.user_id) })),
+          referrals: (referrals || []).map(r => ({ ...r, referrer_email: em(r.referrer_id), referred_email: em(r.referred_id) })),
+          earnings: (earnings || []).map(e => ({ ...e, referrer_email: em(e.referrer_id), referred_email: em(e.referred_id) })),
+          payouts: (payouts || []).map(p => ({ ...p, email: em(p.user_id) })),
+        }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+
+      case "update-payout": {
+        const body = await req.json();
+        if (!body.id || !["paid", "rejected", "pending"].includes(body.status)) throw new Error("id and valid status required");
+        const { error: ue } = await adminClient.from("payout_requests").update({
+          status: body.status, processed_at: body.status === "pending" ? null : new Date().toISOString(),
+          admin_note: typeof body.note === "string" ? body.note.slice(0, 200) : null,
+        }).eq("id", body.id);
+        if (ue) throw ue;
+        return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
       case "demote-user": {

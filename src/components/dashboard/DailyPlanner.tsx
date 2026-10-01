@@ -84,9 +84,9 @@ const DailyPlanner = ({ onStatsChange, onTaskCompleted }: DailyPlannerProps) => 
     <div className="glass-card p-4 sm:p-5">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="font-display font-bold text-sm">📝 Daily Planner</h3>
+          <h3 className="font-display font-bold text-sm">Today's Tasks</h3>
           <p className="text-xs text-muted-foreground mt-0.5">
-            {completedCount}/{todos.length} tasks done
+            {completedCount}/{todos.length} tasks done · <a href="/dashboard/todos" className="text-primary underline">Open calendar</a>
           </p>
         </div>
         {todos.length > 0 && (
