@@ -11,7 +11,8 @@ const HABITS = [
 ];
 const DAYS = 14;
 // Pre-defined "story" of which cells get ticked (day-major order)
-const pattern = (h: number, d: number) => ((h * 7 + d * 3) % 5 !== 0) || d > 10;
+const RATES = [0.4, 0.6, 0.5, 0.8, 0.6, 0.9, 0.7, 1, 0.8, 0.6, 1, 0.9, 1, 1];
+const pattern = (h: number, d: number) => ((h * 37 + d * 11) % 10) / 10 < RATES[d];
 
 const LiveDashboardDemo = () => {
   const order = useMemo(() => {
@@ -55,18 +56,18 @@ const LiveDashboardDemo = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+      <div className="flex flex-col lg:flex-row gap-4">
         {/* Habit grid */}
-        <div className="md:col-span-3 space-y-1.5">
+        <div className="space-y-1.5 shrink-0 overflow-x-auto">
           {HABITS.map((h, hi) => (
             <div key={h.name} className="flex items-center gap-2">
               <span className={`w-20 sm:w-24 shrink-0 text-[11px] sm:text-xs font-medium truncate ${h.text}`}>{h.name}</span>
-              <div className="flex gap-[3px] flex-1">
+              <div className="flex gap-1">
                 {Array.from({ length: DAYS }).map((_, d) => {
                   const on = done.has(`${hi}-${d}`);
                   return (
                     <motion.div key={d} animate={on ? { scale: [0.6, 1.15, 1] } : { scale: 1 }} transition={{ duration: 0.3 }}
-                      className={`flex-1 aspect-square rounded-[3px] flex items-center justify-center ${on ? h.color : "bg-secondary/70"}`}>
+                      className={`w-4 h-4 sm:w-5 sm:h-5 rounded flex items-center justify-center border border-border ${on ? h.color : "bg-muted"}`}>
                       {on && <Check className="w-2 h-2 text-background" strokeWidth={4} />}
                     </motion.div>
                   );
@@ -77,9 +78,9 @@ const LiveDashboardDemo = () => {
         </div>
 
         {/* Trend */}
-        <div className="md:col-span-2 bg-secondary/40 rounded-lg p-3">
+        <div className="flex-1 bg-secondary/40 rounded-lg p-3">
           <div className="flex items-center justify-between mb-1 text-xs"><span className="text-muted-foreground">Completion trend</span><TrendingUp className="w-3.5 h-3.5 text-chart-green" /></div>
-          <svg viewBox="0 0 300 100" className="w-full h-24" preserveAspectRatio="none">
+          <svg viewBox="0 0 300 100" className="w-full h-24 lg:h-36" preserveAspectRatio="none">
             <defs><linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.4" /><stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" /></linearGradient></defs>
             {activeDays > 1 && <polygon points={`0,100 ${pts} ${((activeDays - 1) / (DAYS - 1)) * 300},100`} fill="url(#trendFill)" />}
             <polyline points={pts} fill="none" stroke="hsl(var(--primary))" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
