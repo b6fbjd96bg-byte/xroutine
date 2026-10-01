@@ -262,11 +262,6 @@ const Dashboard = () => {
           {habitStats.length > 0 && <TopHabits habits={habitStats} />}
           </div>
 
-          <div id="tour-trend" className="space-y-5 sm:space-y-8">
-            <SectionTitle icon={TrendingUp} title="Daily Completion Trend" colorClass="from-chart-purple to-chart-pink" />
-            <TrendLineChart data={trendData} />
-          </div>
-
           {engaged && <>
           <SectionTitle icon={Target} title="Today's Plan & Focus" colorClass="from-chart-blue to-primary" />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -278,6 +273,11 @@ const Dashboard = () => {
             </div>
           </div>
           </>}
+
+          <div id="tour-trend" className="space-y-5 sm:space-y-8">
+            <SectionTitle icon={TrendingUp} title="Daily Completion Trend" colorClass="from-chart-purple to-chart-pink" />
+            <TrendLineChart data={trendData} />
+          </div>
 
           <SectionTitle icon={CalendarDays} title="Weekly Plans & Habits" colorClass="from-chart-yellow to-chart-pink" />
           <div id="tour-weekly" className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
