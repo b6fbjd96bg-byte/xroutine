@@ -63,7 +63,7 @@ const Settings = () => {
   const [weeklyEmailEnabled, setWeeklyEmailEnabled] = useState(true);
   const [emailPrefLoaded, setEmailPrefLoaded] = useState(false);
   const [theme, setThemeState] = useState(getTheme());
-  const setTheme = (t: string) => { setThemeState(t); applyTheme(t as "dark" | "light"); toast({ title: `${t === "dark" ? "Dark" : "Light"} theme on` }); };
+  const setTheme = (t: string) => { setThemeState(t as "dark" | "light"); applyTheme(t as "dark" | "light"); toast({ title: `${t === "dark" ? "Dark" : "Light"} theme on` }); };
 
   const exportData = async () => {
     if (!user) return;
