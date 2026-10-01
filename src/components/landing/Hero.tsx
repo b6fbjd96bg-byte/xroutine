@@ -39,7 +39,7 @@ const Hero = () => {
           className="text-3xl sm:text-5xl md:text-7xl font-bold font-display mb-4 sm:mb-6 leading-tight"
         >
           Stop Tracking. Start{" "}
-          <br className="sm:hidden" /><span className="relative inline-block min-w-[6ch] align-bottom">
+          <span className="relative block sm:inline-block min-w-[6ch] sm:align-bottom mt-1 sm:mt-0">
             <AnimatePresence mode="wait">
               <motion.span key={WORDS[w]} className="text-gradient inline-block" initial={{ opacity: 0, y: 30, rotateX: -60 }} animate={{ opacity: 1, y: 0, rotateX: 0 }} exit={{ opacity: 0, y: -30, rotateX: 60 }} transition={{ duration: 0.45 }}>
                 {WORDS[w]}
