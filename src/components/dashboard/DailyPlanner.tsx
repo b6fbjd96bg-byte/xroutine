@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Check, Trash2, Circle, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -86,7 +87,7 @@ const DailyPlanner = ({ onStatsChange, onTaskCompleted }: DailyPlannerProps) => 
         <div>
           <h3 className="font-display font-bold text-sm">Today's Tasks</h3>
           <p className="text-xs text-muted-foreground mt-0.5">
-            {completedCount}/{todos.length} tasks done · <a href="/dashboard/todos" className="text-primary underline">Open calendar</a>
+            {completedCount}/{todos.length} tasks done · <Link to="/dashboard/todos" className="text-primary underline">Open calendar</Link>
           </p>
         </div>
         {todos.length > 0 && (

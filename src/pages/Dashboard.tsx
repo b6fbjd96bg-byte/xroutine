@@ -31,7 +31,6 @@ import WeeklyReportCard from "@/components/dashboard/WeeklyReportCard";
 import CommitmentCard from "@/components/dashboard/CommitmentCard";
 import MilestoneShare from "@/components/dashboard/MilestoneShare";
 import DashboardTour from "@/components/dashboard/DashboardTour";
-import MotivationPopup from "@/components/dashboard/MotivationPopup";
 import PushNotificationPrompt from "@/components/dashboard/PushNotificationPrompt";
 import { useGameification } from "@/hooks/useGameification";
 import { useHabits } from "@/hooks/useHabits";
@@ -346,7 +345,6 @@ const Dashboard = () => {
         </motion.div>
       </main>
 
-      <MotivationPopup />
       <DashboardTour userId={user?.id} createdAt={user?.created_at} />
       <AIMotivationAgent completedToday={completedToday} totalHabits={habits.length} currentStreak={maxStreak} weeklyProgress={avgWeeklyProgress} />
     </div>

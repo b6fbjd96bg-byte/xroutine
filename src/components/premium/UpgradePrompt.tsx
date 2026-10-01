@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
+import { PRO_PRICE_MONTHLY } from "@/hooks/useSubscription";
 
 interface UpgradePromptProps {
   open: boolean;
@@ -84,6 +85,11 @@ const UpgradePrompt = ({ open, onOpenChange, feature }: UpgradePromptProps) => {
           </div>
         )}
 
+        <div className="rounded-2xl border border-primary/30 bg-primary/10 p-4 text-center">
+          <div className="text-4xl font-bold font-display">₹{PRO_PRICE_MONTHLY}<span className="text-base font-medium text-muted-foreground">/month</span></div>
+          <div className="text-sm text-primary font-medium mt-1">Less than ₹2 a day — cheaper than a cup of chai ☕</div>
+        </div>
+
         <div className="space-y-3 py-2">
           {benefits.map((b) => (
             <div key={b.label} className="flex items-start gap-3 p-2 rounded-xl bg-secondary/30">
@@ -105,10 +111,10 @@ const UpgradePrompt = ({ open, onOpenChange, feature }: UpgradePromptProps) => {
             disabled={loading || alreadyJoined}
           >
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : alreadyJoined ? <Check className="w-5 h-5" /> : <Crown className="w-5 h-5" />}
-            {alreadyJoined ? "You're on the Waitlist!" : "Join Waitlist — Coming Soon"}
+            {alreadyJoined ? "You're on the Waitlist!" : `Lock in ₹${PRO_PRICE_MONTHLY}/month — Join Waitlist`}
           </Button>
           <p className="text-xs text-center text-muted-foreground">
-            Premium pricing will be announced soon. No charge today.
+            Online payment is coming soon. Join now to lock in ₹{PRO_PRICE_MONTHLY}/month. No charge today.
           </p>
         </div>
       </DialogContent>

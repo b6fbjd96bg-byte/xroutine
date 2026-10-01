@@ -10,8 +10,8 @@ import { DashIcon, CalIcon, StatsIcon, GearIcon } from "./NavIcons";
 
 const navItems = [
   { icon: DashIcon, label: "Dashboard", path: "/dashboard" },
+  { icon: ListTodo, label: "To-Do Calendar", path: "/dashboard/todos" },
   { icon: CalIcon, label: "Calendar", path: "/dashboard/calendar" },
-  { icon: ListTodo, label: "To-Do", path: "/dashboard/todos" },
   { icon: StatsIcon, label: "Analytics", path: "/dashboard/analytics" },
   { icon: Gift, label: "Refer & Earn", path: "/dashboard/refer" },
   { icon: GearIcon, label: "Settings", path: "/dashboard/settings" },
