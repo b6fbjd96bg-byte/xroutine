@@ -231,7 +231,7 @@ const Analytics = () => {
   return (
     <div className="min-h-screen bg-background">
       <DashboardSidebar />
-      <main className="md:ml-64 p-4 sm:p-6 lg:p-8">
+      <main className="md:ml-20 p-4 sm:p-6 lg:p-8">
         <motion.div className="max-w-[1400px] mx-auto space-y-4 sm:space-y-6" variants={containerVariants} initial="hidden" animate="visible">
           {/* Header */}
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

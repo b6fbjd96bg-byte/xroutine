@@ -207,7 +207,7 @@ const Dashboard = () => {
       <ConfettiCelebration trigger={showConfetti} onComplete={resetConfetti} />
       <DashboardSidebar />
 
-      <main className="md:ml-64 p-4 sm:p-6 lg:p-10 relative bg-[radial-gradient(60%_40%_at_70%_0%,hsl(var(--primary)/0.08),transparent),radial-gradient(40%_30%_at_10%_20%,hsl(var(--chart-purple)/0.06),transparent)]">
+      <main className="md:ml-20 p-4 sm:p-6 lg:p-10 relative bg-[radial-gradient(60%_40%_at_70%_0%,hsl(var(--primary)/0.08),transparent),radial-gradient(40%_30%_at_10%_20%,hsl(var(--chart-purple)/0.06),transparent)]">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="max-w-[1400px] mx-auto space-y-5 sm:space-y-8">
           {/* Daily Login Reward */}
           <DailyLoginReward

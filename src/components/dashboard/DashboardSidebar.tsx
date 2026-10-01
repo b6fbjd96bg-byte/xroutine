@@ -14,7 +14,7 @@ const navItems = [
   { icon: Settings, label: "Settings", path: "/dashboard/settings" },
 ];
 
-const SidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => {
+const SidebarContent = ({ onNavigate, compact }: { onNavigate?: () => void; compact?: boolean }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { signOut } = useAuth();
@@ -27,9 +27,9 @@ const SidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => {
 
   return (
     <div className="flex flex-col h-full">
-      <Link to="/" className="flex items-center gap-3 mb-10" onClick={onNavigate}>
-        <img src="/logo.png" alt="Superoutine" className="w-10 h-10 rounded-xl" />
-        <span className="text-xl font-bold font-display">Superoutine</span>
+      <Link to="/" className={cn("flex items-center gap-3 mb-8", compact && "justify-center")} onClick={onNavigate} title="Superoutine">
+        <img src="/logo.png" alt="Superoutine" className="w-9 h-9 rounded-xl" />
+        {!compact && <span className="text-xl font-bold font-display">Superoutine</span>}
       </Link>
 
       <nav className="flex-1 space-y-2">
@@ -38,23 +38,26 @@ const SidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => {
             key={item.path}
             to={item.path}
             onClick={onNavigate}
+            title={item.label}
             className={cn(
+              compact && "justify-center px-0",
               "flex items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-200",
               location.pathname === item.path && "bg-primary/10 text-primary"
             )}
           >
             <item.icon className="w-5 h-5" />
-            <span className="font-medium">{item.label}</span>
+            {!compact && <span className="font-medium">{item.label}</span>}
           </Link>
         ))}
       </nav>
 
       <button
         onClick={handleSignOut}
-        className="flex items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200"
+        title="Sign Out"
+        className={cn(compact && "justify-center px-0", "flex items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200")}
       >
         <LogOut className="w-5 h-5" />
-        <span className="font-medium">Sign Out</span>
+        {!compact && <span className="font-medium">Sign Out</span>}
       </button>
     </div>
   );
@@ -90,8 +93,8 @@ const DashboardSidebar = () => {
   }
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 bg-card border-r border-border p-6 flex flex-col">
-      <SidebarContent />
+    <aside className="fixed left-0 top-0 h-screen w-20 bg-card border-r border-border py-6 px-3 flex flex-col z-40">
+      <SidebarContent compact />
     </aside>
   );
 };
