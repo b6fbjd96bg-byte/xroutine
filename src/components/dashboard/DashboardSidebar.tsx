@@ -40,9 +40,9 @@ const SidebarContent = ({ onNavigate, compact }: { onNavigate?: () => void; comp
             onClick={onNavigate}
             title={item.label}
             className={cn(
-              compact && "justify-center px-0",
               "flex items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-200",
-              location.pathname === item.path && "bg-primary/10 text-primary"
+              location.pathname === item.path && "bg-primary/10 text-primary",
+              compact && "justify-center px-0"
             )}
           >
             <item.icon className="w-5 h-5" />
@@ -54,7 +54,7 @@ const SidebarContent = ({ onNavigate, compact }: { onNavigate?: () => void; comp
       <button
         onClick={handleSignOut}
         title="Sign Out"
-        className={cn(compact && "justify-center px-0", "flex items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200")}
+        className={cn("flex items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200", compact && "justify-center px-0")}
       >
         <LogOut className="w-5 h-5" />
         {!compact && <span className="font-medium">Sign Out</span>}
