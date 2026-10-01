@@ -95,7 +95,6 @@ const CommitmentCard = () => {
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && save()}
             className="text-sm bg-secondary/50"
-            autoFocus
           />
           <Button size="sm" onClick={save} disabled={!draft.trim()}>
             <Check className="w-4 h-4" />
