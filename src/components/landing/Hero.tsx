@@ -36,7 +36,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-3xl sm:text-5xl md:text-7xl font-bold font-display mb-4 sm:mb-6 leading-tight"
+          className="text-3xl sm:text-5xl md:text-7xl font-bold font-display mb-4 sm:mb-6 leading-snug sm:leading-tight"
         >
           Stop Tracking. Start{" "}
           <span className="relative block sm:inline-block min-w-[6ch] sm:align-bottom mt-1 sm:mt-0">
