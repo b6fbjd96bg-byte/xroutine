@@ -190,6 +190,72 @@ export type Database = {
         }
         Relationships: []
       }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          note: string | null
+          plan: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          note?: string | null
+          plan?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          note?: string | null
+          plan?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      payout_requests: {
+        Row: {
+          account_holder: string
+          account_number: string
+          admin_note: string | null
+          amount: number
+          created_at: string
+          id: string
+          ifsc: string
+          processed_at: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          account_holder: string
+          account_number: string
+          admin_note?: string | null
+          amount: number
+          created_at?: string
+          id?: string
+          ifsc: string
+          processed_at?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          account_holder?: string
+          account_number?: string
+          admin_note?: string | null
+          amount?: number
+          created_at?: string
+          id?: string
+          ifsc?: string
+          processed_at?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       premium_waitlist: {
         Row: {
           created_at: string
@@ -213,19 +279,81 @@ export type Database = {
           created_at: string
           display_name: string | null
           id: string
+          referral_code: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
           display_name?: string | null
           id: string
+          referral_code?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
           display_name?: string | null
           id?: string
+          referral_code?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      referral_earnings: {
+        Row: {
+          amount: number
+          available_at: string
+          created_at: string
+          id: string
+          payment_id: string
+          referred_id: string
+          referrer_id: string
+        }
+        Insert: {
+          amount: number
+          available_at?: string
+          created_at?: string
+          id?: string
+          payment_id: string
+          referred_id: string
+          referrer_id: string
+        }
+        Update: {
+          amount?: number
+          available_at?: string
+          created_at?: string
+          id?: string
+          payment_id?: string
+          referred_id?: string
+          referrer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_earnings_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referrals: {
+        Row: {
+          created_at: string
+          id: string
+          referred_id: string
+          referrer_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          referred_id: string
+          referrer_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          referred_id?: string
+          referrer_id?: string
         }
         Relationships: []
       }
@@ -396,12 +524,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      claim_referral: { Args: { _code: string }; Returns: string }
+      get_referral_wallet: { Args: never; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      request_payout: {
+        Args: {
+          _account: string
+          _amount: number
+          _holder: string
+          _ifsc: string
+        }
+        Returns: string
       }
     }
     Enums: {

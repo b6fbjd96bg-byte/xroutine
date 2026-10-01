@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { LogOut, Menu, X } from "lucide-react";
+import { LogOut, Menu, X, ListTodo, Gift } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,9 @@ import { DashIcon, CalIcon, StatsIcon, GearIcon } from "./NavIcons";
 const navItems = [
   { icon: DashIcon, label: "Dashboard", path: "/dashboard" },
   { icon: CalIcon, label: "Calendar", path: "/dashboard/calendar" },
+  { icon: ListTodo, label: "To-Do", path: "/dashboard/todos" },
   { icon: StatsIcon, label: "Analytics", path: "/dashboard/analytics" },
+  { icon: Gift, label: "Refer & Earn", path: "/dashboard/refer" },
   { icon: GearIcon, label: "Settings", path: "/dashboard/settings" },
 ];
 

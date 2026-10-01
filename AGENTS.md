@@ -1,0 +1,1 @@
+- Referral commissions come only from the `payments` table (DB trigger), so a real checkout later just inserts payments; why: one source of truth for commission.
