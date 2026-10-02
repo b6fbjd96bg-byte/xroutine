@@ -24,6 +24,7 @@ import {
   Crown,
   Star,
   ClipboardList,
+  Megaphone,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -52,6 +53,7 @@ import { toast } from "sonner";
 import AdminMoney from "@/components/admin/AdminMoney";
 import AdminLogin from "@/components/admin/AdminLogin";
 import AdminRevenue from "@/components/admin/AdminRevenue";
+import { AdminContent, AdminNotifications } from "@/components/admin/AdminContent";
 import AdminOverview from "@/components/admin/AdminOverview";
 import {
   AreaChart,
@@ -177,6 +179,8 @@ const AdminDashboard = () => {
     { k: "revenue", label: "Plans & Payments", icon: Crown },
     { k: "money", label: "Referrals & Payouts", icon: TrendingUp },
     { k: "traffic", label: "Analytics", icon: Globe },
+    { k: "content", label: "Content", icon: BookOpen },
+    { k: "notifications", label: "Notifications", icon: Megaphone },
     { k: "waitlist", label: "Waitlist", icon: ClipboardList },
   ] as const;
   const refreshAll = () => { fetchStats(); fetchUsers(); fetchTraffic(); fetchWaitlist(); };
@@ -233,6 +237,8 @@ const AdminDashboard = () => {
       <main className="px-4 sm:px-6 py-6 space-y-6 max-w-[1600px]">
         {activeTab === "overview" && <AdminOverview users={users} traffic={traffic} onGo={setActiveTab} />}
 
+        {activeTab === "content" && <AdminContent />}
+        {activeTab === "notifications" && <AdminNotifications />}
         {activeTab === "revenue" && <AdminRevenue onChanged={() => { fetchUsers(); fetchStats(); }} />}
 
         {activeTab === "money" && <AdminMoney users={users.map(u => ({ id: u.id, email: u.email }))} onChanged={() => { fetchUsers(); fetchStats(); }} />}
