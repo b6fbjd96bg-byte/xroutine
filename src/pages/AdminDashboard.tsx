@@ -85,11 +85,6 @@ const AdminDashboard = () => {
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<"overview" | "users" | "money" | "traffic" | "waitlist">("overview");
 
-  useEffect(() => {
-    if (!loading && !isAdmin) {
-      navigate("/");
-    }
-  }, [loading, isAdmin, navigate]);
 
   useEffect(() => {
     if (isAdmin) {
@@ -131,7 +126,7 @@ const AdminDashboard = () => {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate("/");
+    navigate("/RajputAdMin");
   };
 
   const filteredUsers = users.filter(
@@ -140,7 +135,7 @@ const AdminDashboard = () => {
       u.display_name?.toLowerCase().includes(search.toLowerCase())
   );
 
-  if (loading) {
+  if (loading || authLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full" />
@@ -148,7 +143,19 @@ const AdminDashboard = () => {
     );
   }
 
-  if (!isAdmin) return null;
+  if (!user) return <AdminLogin />;
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-4">
+        <div className="glass-card p-8 max-w-sm text-center space-y-4">
+          <h1 className="text-xl font-bold font-display">Admin access only</h1>
+          <p className="text-sm text-muted-foreground">You're signed in with a regular account. Sign out to use the admin sign in.</p>
+          <Button onClick={() => signOut()} className="w-full">Sign out</Button>
+        </div>
+      </div>
+    );
+  }
 
   const statCards = [
     { title: "Total Users", value: stats?.totalUsers || 0, icon: Users, color: "text-primary", bg: "bg-primary/10" },
