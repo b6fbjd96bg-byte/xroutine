@@ -52,7 +52,7 @@ const App = () => (
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/shipping" element={<Shipping />} />
             <Route path="/refunds" element={<Refunds />} />
-            <Route path="/RajputAdMin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+            <Route path="/RajputAdMin" element={<AdminDashboard />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/dashboard/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
             <Route path="/dashboard/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />

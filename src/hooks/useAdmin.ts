@@ -67,6 +67,7 @@ export const useAdmin = () => {
         setLoading(false);
         return;
       }
+      setLoading(true);
       const { data } = await supabase
         .from("user_roles")
         .select("role")

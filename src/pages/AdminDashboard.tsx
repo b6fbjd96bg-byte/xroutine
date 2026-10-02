@@ -50,6 +50,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import AdminMoney from "@/components/admin/AdminMoney";
+import AdminLogin from "@/components/admin/AdminLogin";
 import {
   AreaChart,
   Area,
@@ -62,7 +63,7 @@ import {
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
+  const { user, signOut, loading: authLoading } = useAuth();
   const {
     isAdmin,
     loading,
