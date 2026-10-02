@@ -173,7 +173,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (habits.length > 0 && completedToday === habits.length && prevCompletedToday.current < habits.length) {
       triggerConfetti();
-      toast({ title: " Perfect Day!", description: "You completed all your habits! Amazing work!" });
+      toast({ title: "Perfect Day!", description: "You completed all your habits! Amazing work!" });
     }
     prevCompletedToday.current = completedToday;
   }, [completedToday, habits.length, triggerConfetti, toast]);
@@ -183,7 +183,7 @@ const Dashboard = () => {
       await addHabit(h.name, h.goal);
     }
     setShowOnboarding(false);
-    toast({ title: " Dashboard ready!", description: `${selectedHabits.length} habits loaded. Start checking them off!` });
+    toast({ title: "Dashboard ready!", description: `${selectedHabits.length} habits loaded. Start checking them off!` });
   }, [addHabit, toast]);
 
   if (loading) {

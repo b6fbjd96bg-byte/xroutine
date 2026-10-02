@@ -54,7 +54,7 @@ const DailyJournal = () => {
 
     setSavedContent(content);
     setSaving(false);
-    toast({ title: " Saved!", description: "Journal entry updated" });
+    toast({ title: "Saved!", description: "Journal entry updated" });
   };
 
   return (
