@@ -9,4 +9,4 @@
 - [x] USD pricing: monthly, yearly, student (admin-approved), lifetime (capped 100)
 - [x] Admin Revenue tab + Razorpay missed-payment sync; landing Pricing section; sidebar Go Pro card for free/trial users
 - [x] Admin panel redesign to match reference (sidebar, stat cards w/ sparklines, page views chart, traffic sources, top pages, recent users/payments)
-- [ ] Google sign-in keys in admin panel — not possible (sign-in reads keys only from backend auth settings); explained to user
+- [x] Google sign-in keys in admin panel — declined (cannot work), user told to use Cloud auth settings
