@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,23 +9,33 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import ReferralCapture from "@/components/referral/ReferralCapture";
 import { usePageTracking } from "@/hooks/usePageTracking";
 import Index from "./pages/Index";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Dashboard from "./pages/Dashboard";
-import NotFound from "./pages/NotFound";
-import Analytics from "./pages/Analytics";
-import CalendarPage from "./pages/CalendarPage";
-import Settings from "./pages/Settings";
-import TodoCalendar from "./pages/TodoCalendar";
-import ReferEarn from "./pages/ReferEarn";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-import AdminDashboard from "./pages/AdminDashboard";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import { Terms, Privacy, Shipping, Refunds } from "./pages/Legal";
+const Login = lazy(() => import("./pages/Login"));
+const Signup = lazy(() => import("./pages/Signup"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const Analytics = lazy(() => import("./pages/Analytics"));
+const CalendarPage = lazy(() => import("./pages/CalendarPage"));
+const Settings = lazy(() => import("./pages/Settings"));
+const TodoCalendar = lazy(() => import("./pages/TodoCalendar"));
+const ReferEarn = lazy(() => import("./pages/ReferEarn"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const About = lazy(() => import("./pages/About"));
+const Contact = lazy(() => import("./pages/Contact"));
+const AICoach = lazy(() => import("./pages/AICoach"));
+const Terms = lazy(() => import("./pages/Legal").then((m) => ({ default: m.Terms })));
+const Privacy = lazy(() => import("./pages/Legal").then((m) => ({ default: m.Privacy })));
+const Shipping = lazy(() => import("./pages/Legal").then((m) => ({ default: m.Shipping })));
+const Refunds = lazy(() => import("./pages/Legal").then((m) => ({ default: m.Refunds })));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({ defaultOptions: { queries: { staleTime: 60_000, refetchOnWindowFocus: false } } });
+
+const PageLoader = () => (
+  <div className="min-h-screen bg-background flex items-center justify-center">
+    <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+  </div>
+);
 
 const PageTracker = () => {
   usePageTracking();
@@ -40,6 +51,7 @@ const App = () => (
         <AuthProvider>
           <PageTracker />
           <ReferralCapture />
+          <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
@@ -56,11 +68,13 @@ const App = () => (
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/dashboard/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
             <Route path="/dashboard/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
+            <Route path="/dashboard/coach" element={<ProtectedRoute><AICoach /></ProtectedRoute>} />
             <Route path="/dashboard/todos" element={<ProtectedRoute><TodoCalendar /></ProtectedRoute>} />
             <Route path="/dashboard/refer" element={<ProtectedRoute><ReferEarn /></ProtectedRoute>} />
             <Route path="/dashboard/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </Suspense>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

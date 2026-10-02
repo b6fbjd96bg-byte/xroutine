@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { LogOut, Menu, X, ListTodo, Gift } from "lucide-react";
+import { LogOut, Menu, X, ListTodo, Gift, Bot } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import SidebarUpgrade from "@/components/premium/SidebarUpgrade";
 const navItems = [
   { icon: DashIcon, label: "Dashboard", path: "/dashboard" },
   { icon: ListTodo, label: "To-Do Calendar", path: "/dashboard/todos" },
+  { icon: Bot, label: "AI Coach", path: "/dashboard/coach" },
   { icon: CalIcon, label: "Calendar", path: "/dashboard/calendar" },
   { icon: StatsIcon, label: "Analytics", path: "/dashboard/analytics" },
   { icon: Gift, label: "Refer & Earn", path: "/dashboard/refer" },

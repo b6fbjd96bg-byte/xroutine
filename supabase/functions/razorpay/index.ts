@@ -5,7 +5,6 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 const PLANS: Record<string, { cents: number; days: number | null; label: string }> = {
   monthly: { cents: 499, days: 30, label: "Pro monthly" },
   yearly: { cents: 3900, days: 365, label: "Pro yearly" },
-  student: { cents: 249, days: 30, label: "Pro student" },
   lifetime: { cents: 7900, days: null, label: "Pro lifetime" },
 };
 const LIFETIME_CAP = 100;
@@ -100,7 +99,6 @@ Deno.serve(async (req) => {
     const checkAllowed = async (planKey: string) => {
       if (!PLANS[planKey]) return "Unknown plan";
       if (sub?.plan === "lifetime" && sub?.tier === "premium") return "You already have lifetime Pro";
-      if (planKey === "student" && !sub?.is_student) return "Student price needs approval first";
       if (planKey === "lifetime" && (await spotsLeft()) <= 0) return "The lifetime offer is sold out";
       return null;
     };

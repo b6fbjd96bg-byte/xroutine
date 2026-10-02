@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CheckCircle, ArrowRight, Sparkles, Target, Zap, Trophy, Crown, Rocket, Droplets, Brain, BookOpen, Footprints, StretchHorizontal, Salad, NotebookPen, Moon, Star, ShieldCheck, Flame, Timer, type LucideIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import UpgradePrompt from "@/components/premium/UpgradePrompt";
+import { PLANS, PRO_FEATURES, TRIAL_DAYS } from "@/lib/plans";
 
 interface OnboardingWizardProps {
   onComplete: (habits: { name: string; goal: number }[]) => void;
@@ -26,12 +28,13 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
   const [habitOptions, setHabitOptions] = useState(suggestedHabits);
   const [selectedHabits, setSelectedHabits] = useState<Set<number>>(new Set());
   const [customHabit, setCustomHabit] = useState("");
+  const [showPay, setShowPay] = useState(false);
   const { toast } = useToast();
 
   const steps = [
     { icon: Sparkles, title: "Welcome to Superoutine!", subtitle: "Let's set up your habit tracker in 30 seconds" },
     { icon: Target, title: "Pick Your Habits", subtitle: "Choose habits you want to build (you can always add more later)" },
-    { icon: Crown, title: "Choose Your Path", subtitle: "Start free or go all-in" },
+    { icon: Crown, title: "Choose Your Path", subtitle: "Try everything free, or go Pro now" },
     { icon: Zap, title: "How It Works", subtitle: "Quick tour of your superpowers" },
     { icon: Trophy, title: "You're All Set!", subtitle: "Let's start your journey" },
   ];
@@ -188,53 +191,38 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
                   <p className="text-muted-foreground text-sm">Pick the plan that fits your commitment level</p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                  {/* Free */}
+                  {/* Free trial */}
                   <motion.button
                     whileTap={{ scale: 0.97 }}
                     onClick={() => setStep(3)}
-                    className="p-5 rounded-2xl text-left border-2 border-border/50 bg-secondary/20 hover:border-primary/40 transition-all group"
+                    className="p-5 rounded-2xl text-left border-2 border-border/50 bg-secondary/20 hover:border-primary/40 transition-colors group"
                   >
                     <Rocket className="w-8 h-8 text-primary mb-3" />
-                    <div className="text-lg font-bold font-display mb-1">Start Free</div>
+                    <div className="text-lg font-bold font-display">{TRIAL_DAYS}-day free trial</div>
+                    <div className="text-xs text-muted-foreground mb-3">$0 · no card needed</div>
                     <ul className="space-y-1.5 text-xs text-muted-foreground">
-                      <li>✓ Up to 5 daily habits</li>
-                      <li>✓ Up to 3 weekly habits</li>
-                      <li>✓ Basic analytics</li>
-                      <li>✓ 1 streak protection/month</li>
-                      <li>✓ Focus timer & journal</li>
+                      <li>✓ Every Pro feature unlocked</li>
+                      <li>✓ Ends after {TRIAL_DAYS} days</li>
+                      <li>✗ Locked until you pick a plan</li>
                     </ul>
-                    <div className="mt-3 text-sm font-semibold text-primary group-hover:underline">
-                      Continue Free →
-                    </div>
+                    <div className="mt-3 text-sm font-semibold text-primary group-hover:underline">Start my trial →</div>
                   </motion.button>
 
-                  {/* Premium */}
+                  {/* Pro */}
                   <motion.button
                     whileTap={{ scale: 0.97 }}
-                    onClick={() => {
-                      toast({
-                        title: "You're on the waitlist!",
-                        description: "We'll notify you when Premium launches. Starting you on Free for now.",
-                      });
-                      setStep(3);
-                    }}
-                    className="p-5 rounded-2xl text-left border-2 border-chart-yellow/40 bg-chart-yellow/5 hover:border-chart-yellow/70 transition-all relative overflow-hidden group"
+                    onClick={() => setShowPay(true)}
+                    className="p-5 rounded-2xl text-left border-2 border-chart-yellow/40 bg-chart-yellow/5 hover:border-chart-yellow/70 transition-colors relative overflow-hidden group"
                   >
-                    <div className="absolute top-3 right-3 text-[10px] font-bold bg-chart-yellow/20 text-chart-yellow px-2 py-0.5 rounded-full">
-                      COMING SOON
-                    </div>
+                    <div className="absolute top-3 right-3 text-[10px] font-bold bg-chart-yellow/20 text-chart-yellow px-2 py-0.5 rounded-full">BEST VALUE</div>
                     <Crown className="w-8 h-8 text-chart-yellow mb-3" />
-                    <div className="text-lg font-bold font-display mb-1">Get Serious</div>
+                    <div className="text-lg font-bold font-display">Pro</div>
+                    <div className="text-xs text-muted-foreground mb-3">from ${PLANS.monthly.price}/month</div>
                     <ul className="space-y-1.5 text-xs text-muted-foreground">
-                      <li>✓ Unlimited habits</li>
-                      <li>✓ Deep analytics & insights</li>
-                      <li>✓ 3 streak protections/month</li>
-                      <li>✓ Weekly email reports</li>
-                      <li>✓ Full AI motivation</li>
+                      {PRO_FEATURES.slice(0, 4).map((f) => <li key={f}>✓ {f}</li>)}
+                      <li>✓ Never locked</li>
                     </ul>
-                    <div className="mt-3 text-sm font-semibold text-chart-yellow group-hover:underline">
-                      Join Waitlist →
-                    </div>
+                    <div className="mt-3 text-sm font-semibold text-chart-yellow group-hover:underline">Pay & go Pro →</div>
                   </motion.button>
                 </div>
                 <div className="flex gap-3">
@@ -333,6 +321,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
           </motion.div>
         </AnimatePresence>
       </div>
+      <UpgradePrompt open={showPay} onOpenChange={(o) => { setShowPay(o); }} />
     </div>
   );
 };

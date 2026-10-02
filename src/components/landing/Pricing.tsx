@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Check, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { PLANS, PlanKey, LIFETIME_CAP } from "@/lib/plans";
+import { PLANS, PlanKey, LIFETIME_CAP, PRO_FEATURES, TRIAL_DAYS } from "@/lib/plans";
 import { getLifetimeSpotsLeft } from "@/lib/razorpay";
 import { useAuth } from "@/contexts/AuthContext";
 import UpgradePrompt from "@/components/premium/UpgradePrompt";
 
-const ORDER: PlanKey[] = ["monthly", "yearly", "student", "lifetime"];
-const PERKS = ["Unlimited daily & weekly habits", "Full analytics & trends", "AI motivation coach", "Weekly email report"];
+const ORDER: PlanKey[] = ["monthly", "yearly", "lifetime"];
+const PERKS = PRO_FEATURES;
 
 const Pricing = () => {
   const { user } = useAuth();
@@ -21,9 +21,9 @@ const Pricing = () => {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold font-display">Cheaper than a coffee</h2>
-          <p className="text-muted-foreground mt-3">Start with a 7-day free trial of everything. Free forever for 5 habits. Go Pro when you're ready.</p>
+          <p className="text-muted-foreground mt-3">Try everything free for {TRIAL_DAYS} days. After that, keep going with Pro from just ${PLANS.monthly.price}/month.</p>
         </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto gap-4">
           {ORDER.map((k) => {
             const p = PLANS[k];
             const best = k === "yearly";
