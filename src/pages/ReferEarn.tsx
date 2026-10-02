@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
-type Wallet = { total_earned: number; unlocked: number; locked: number; withdrawn: number; invited: number; paying_friends: number };
+type Wallet = { total_earned: number; unlocked: number; locked: number; withdrawn: number; invited: number; paying_friends: number; level2_people?: number; level3_people?: number; earned_l1?: number; earned_l2?: number; earned_l3?: number };
 const inr = (n: number) => `$${Number(n || 0).toFixed(2)}`;
 
 const errors: Record<string, string> = {
@@ -70,7 +70,7 @@ const ReferEarn = () => {
             <div className="relative">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-4"><HeartHandshake className="w-4 h-4" /> Grow together</div>
               <h1 className="text-3xl sm:text-5xl font-bold font-display mb-3">Bring your partner or friend.<br /><span className="text-gradient">Build habits side by side.</span></h1>
-              <p className="text-muted-foreground max-w-xl mb-6">People who track habits with a friend stick with them longer. Invite someone you care about, and earn <b className="text-foreground">10% of every payment</b> they make on Pro, every month.</p>
+              <p className="text-muted-foreground max-w-xl mb-6">People who track habits with a friend stick with them longer. Invite someone you care about, and earn <b className="text-foreground">10% of every payment</b> they make on Pro. When they invite friends too, you earn <b className="text-foreground">2%</b> from those, and <b className="text-foreground">0.5%</b> one level further.</p>
               <div className="flex flex-col sm:flex-row gap-2 max-w-2xl">
                 <Input readOnly value={link || "Loading your link…"} className="bg-secondary/50 font-mono text-sm" />
                 <Button onClick={() => copy(link)} disabled={!link}><Copy className="w-4 h-4 mr-1" />Copy link</Button>
@@ -100,9 +100,26 @@ const ReferEarn = () => {
           </div>
 
           <div className="glass-card p-6">
+            <h2 className="font-display font-bold text-lg mb-4">Your 3 earning levels</h2>
+            <div className="grid sm:grid-cols-3 gap-4">
+              {[
+                { lvl: "Level 1", who: "Friends you invite", pct: "10%", people: wallet?.invited ?? 0, earned: wallet?.earned_l1 ?? 0 },
+                { lvl: "Level 2", who: "Friends they invite", pct: "2%", people: wallet?.level2_people ?? 0, earned: wallet?.earned_l2 ?? 0 },
+                { lvl: "Level 3", who: "One level further", pct: "0.5%", people: wallet?.level3_people ?? 0, earned: wallet?.earned_l3 ?? 0 },
+              ].map((l) => (
+                <div key={l.lvl} className="rounded-xl border border-border/50 bg-secondary/30 p-4">
+                  <div className="flex items-center justify-between mb-1"><span className="text-xs font-semibold text-muted-foreground">{l.lvl}</span><span className="text-primary font-bold">{l.pct}</span></div>
+                  <div className="text-sm font-semibold mb-2">{l.who}</div>
+                  <div className="flex justify-between text-xs text-muted-foreground"><span>{l.people} people</span><span className="text-foreground font-semibold">{inr(l.earned)} earned</span></div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="glass-card p-6">
             <h2 className="font-display font-bold text-lg mb-4">How it works</h2>
             <div className="grid sm:grid-cols-3 gap-4 text-sm">
-              {[["1", "Share your link", "Send it to your partner, friend or gym buddy."], ["2", "They join & go Pro", "You both keep each other accountable."], ["3", "You earn 10%", "Of every payment they make. Cash out after 30 days (min $10)."]].map(([n, t, d]) => (
+              {[["1", "Share your link", "Send it to your partner, friend or gym buddy."], ["2", "They join & go Pro", "You both keep each other accountable."], ["3", "You earn on 3 levels", "10%, 2% and 0.5% of every payment, renewals included. Cash out after 30 days (min $10)."]].map(([n, t, d]) => (
                 <div key={n} className="flex gap-3"><div className="w-8 h-8 shrink-0 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">{n}</div><div><div className="font-semibold">{t}</div><div className="text-muted-foreground">{d}</div></div></div>
               ))}
             </div>

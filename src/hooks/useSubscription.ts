@@ -48,6 +48,7 @@ export const useSubscription = () => {
   const [premiumUntil, setPremiumUntil] = useState<string | null>(null);
   const [isStudent, setIsStudent] = useState(false);
   const [plan, setPlan] = useState<string | null>(null);
+  const [autoRenew, setAutoRenew] = useState(false);
   const [reload, setReload] = useState(0);
   const [loadedFor, setLoadedFor] = useState<string | null>(null);
   const refresh = useCallback(() => setReload((n) => n + 1), []);
@@ -60,7 +61,7 @@ export const useSubscription = () => {
 
     supabase
       .from("user_subscriptions")
-      .select("tier, premium_until, is_student, plan")
+      .select("tier, premium_until, is_student, plan, auto_renew")
       .eq("user_id", user.id)
       .maybeSingle()
       .then(({ data }) => {
@@ -68,6 +69,7 @@ export const useSubscription = () => {
         setPremiumUntil(data?.premium_until ?? null);
         setIsStudent(!!(data as any)?.is_student);
         setPlan((data as any)?.plan ?? null);
+        setAutoRenew(!!(data as any)?.auto_renew);
         if (active) setTier("premium");
         else setTier("free");
         setLoadedFor(user.id);
@@ -94,5 +96,5 @@ export const useSubscription = () => {
     [limits]
   );
 
-  return { tier, trialExpired, premiumUntil, isStudent, plan, refresh, isPremium, isTrial, trialDaysLeft, loading: loading || (!!user && loadedFor !== user.id), limits, canAccess };
+  return { tier, autoRenew, trialExpired, premiumUntil, isStudent, plan, refresh, isPremium, isTrial, trialDaysLeft, loading: loading || (!!user && loadedFor !== user.id), limits, canAccess };
 };

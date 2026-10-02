@@ -23,6 +23,7 @@ const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const About = lazy(() => import("./pages/About"));
 const Contact = lazy(() => import("./pages/Contact"));
+const Earn = lazy(() => import("./pages/Earn"));
 const AICoach = lazy(() => import("./pages/AICoach"));
 const Terms = lazy(() => import("./pages/Legal").then((m) => ({ default: m.Terms })));
 const Privacy = lazy(() => import("./pages/Legal").then((m) => ({ default: m.Privacy })));
@@ -58,6 +59,7 @@ const App = () => (
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/earn" element={<Earn />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/terms" element={<Terms />} />

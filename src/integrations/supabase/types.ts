@@ -313,6 +313,7 @@ export type Database = {
           available_at: string
           created_at: string
           id: string
+          level: number
           payment_id: string
           referred_id: string
           referrer_id: string
@@ -322,6 +323,7 @@ export type Database = {
           available_at?: string
           created_at?: string
           id?: string
+          level?: number
           payment_id: string
           referred_id: string
           referrer_id: string
@@ -331,6 +333,7 @@ export type Database = {
           available_at?: string
           created_at?: string
           id?: string
+          level?: number
           payment_id?: string
           referred_id?: string
           referrer_id?: string
@@ -509,30 +512,36 @@ export type Database = {
       }
       user_subscriptions: {
         Row: {
+          auto_renew: boolean
           id: string
           is_student: boolean
           plan: string | null
           premium_until: string | null
+          razorpay_subscription_id: string | null
           started_at: string
           tier: string
           updated_at: string
           user_id: string
         }
         Insert: {
+          auto_renew?: boolean
           id?: string
           is_student?: boolean
           plan?: string | null
           premium_until?: string | null
+          razorpay_subscription_id?: string | null
           started_at?: string
           tier?: string
           updated_at?: string
           user_id: string
         }
         Update: {
+          auto_renew?: boolean
           id?: string
           is_student?: boolean
           plan?: string | null
           premium_until?: string | null
+          razorpay_subscription_id?: string | null
           started_at?: string
           tier?: string
           updated_at?: string
