@@ -360,7 +360,7 @@ const Settings = () => {
               )}>
                 {isTrial ? `FREE TRIAL · ${trialDaysLeft} day${trialDaysLeft === 1 ? "" : "s"} left` : isPremium ? "👑 PRO" : "FREE PLAN"}
               </div>
-              {!(tier === "premium") && <span className="text-xs text-muted-foreground">Pro is just ₹{PRO_PRICE_MONTHLY}/month</span>}
+              {!(tier === "premium") && <span className="text-xs text-muted-foreground">Pro from ${PRO_PRICE_MONTHLY}/month</span>}
             </div>
             <div className="space-y-2 mb-4">
               {[
@@ -379,11 +379,12 @@ const Settings = () => {
               ))}
             </div>
             {isTrial && <p className="text-xs text-muted-foreground mb-3">You have every feature unlocked for your first {TRIAL_DAYS} days. After that the free plan allows 5 daily and 3 weekly habits.</p>}
-            {tier === "premium" && premiumUntil && <p className="text-xs text-muted-foreground mb-3">Pro active until {new Date(premiumUntil).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}. Pay again anytime to add another month.</p>}
+            {tier === "premium" && !premiumUntil && <p className="text-xs text-muted-foreground mb-3">Pro active with no end date.</p>}
+            {tier === "premium" && premiumUntil && <p className="text-xs text-muted-foreground mb-3">Pro active until {new Date(premiumUntil).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}. Pay again anytime to add more time.</p>}
             {(tier !== "premium" || !!premiumUntil) && (
               <Button variant="outline" className="w-full gap-2 border-chart-yellow/30 text-chart-yellow hover:bg-chart-yellow/10" onClick={() => setShowUpgrade(true)}>
                 <Crown className="w-4 h-4" />
-                {tier === "premium" ? `Add 1 month — ₹${PRO_PRICE_MONTHLY}` : `Go Pro — ₹${PRO_PRICE_MONTHLY}/month`}
+                {tier === "premium" ? "Add more Pro time" : `Go Pro — from $${PRO_PRICE_MONTHLY}/month`}
               </Button>
             )}
           </motion.div>

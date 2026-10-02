@@ -388,10 +388,10 @@ const AdminDashboard = () => {
                               {u.tier === "premium" ? "Premium" : "Free"}
                             </Badge>
                           </TableCell>
-                          <TableCell className="text-sm">₹{(u.total_paid || 0).toFixed(0)}</TableCell>
+                          <TableCell className="text-sm">${(u.total_paid || 0).toFixed(0)}</TableCell>
                           <TableCell className="text-xs text-muted-foreground">{u.referred_by || "—"}</TableCell>
                           <TableCell className="text-sm">{u.invited_count || 0}</TableCell>
-                          <TableCell className="text-sm">₹{((u.earned || 0) - (u.withdrawn || 0)).toFixed(2)}</TableCell>
+                          <TableCell className="text-sm">${((u.earned || 0) - (u.withdrawn || 0)).toFixed(2)}</TableCell>
                           <TableCell className="text-sm">{u.habit_count}</TableCell>
                           <TableCell>
                             <Badge variant="secondary" className="text-xs">{u.total_xp} XP</Badge>

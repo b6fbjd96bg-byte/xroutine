@@ -11,7 +11,7 @@ const ReferPromo = () => (
         <h2 className="text-3xl sm:text-5xl font-bold font-display mb-4">Better habits are <span className="text-gradient">better together</span></h2>
         <p className="text-muted-foreground max-w-xl mx-auto mb-8">Bring your partner, best friend or gym buddy. Keep each other on track, and earn 10% of every Pro payment they make.</p>
         <div className="grid sm:grid-cols-3 gap-4 mb-8 text-sm">
-          {[[HeartHandshake, "Invite someone you care about"], [Gift, "They go Pro, you earn 10% every month"], [Wallet, "Cash out to your bank from ₹500"]].map(([Icon, t], i) => {
+          {[[HeartHandshake, "Invite someone you care about"], [Gift, "They go Pro, you earn 10% every month"], [Wallet, "Cash out to your bank from $10"]].map(([Icon, t], i) => {
             const I = Icon as typeof Gift;
             return <div key={i} className="flex flex-col items-center gap-2"><I className="w-6 h-6 text-primary" /><span>{t as string}</span></div>;
           })}

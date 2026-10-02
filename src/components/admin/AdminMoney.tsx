@@ -21,7 +21,7 @@ const call = async (action: string, body?: object) => {
   return json;
 };
 
-const inr = (n: number) => `₹${Number(n || 0).toFixed(2)}`;
+const inr = (n: number) => `$${Number(n || 0).toFixed(2)}`;
 const d = (s: string) => new Date(s).toLocaleString();
 
 const AdminMoney = ({ users, onChanged }: { users: { id: string; email: string }[]; onChanged: () => void }) => {
@@ -29,6 +29,15 @@ const AdminMoney = ({ users, onChanged }: { users: { id: string; email: string }
   const [userId, setUserId] = useState("");
   const [amount, setAmount] = useState("");
   const [plan, setPlan] = useState("Pro monthly");
+  const [students, setStudents] = useState<Row[]>([]);
+  const loadStudents = useCallback(async () => {
+    try { setStudents((await call("students")).requests); } catch (e: any) { toast.error(e.message); }
+  }, []);
+  useEffect(() => { loadStudents(); }, [loadStudents]);
+  const decide = async (id: string, status: string) => {
+    try { await call("student-decision", { id, status }); toast.success(`Student request ${status}`); loadStudents(); }
+    catch (e: any) { toast.error(e.message); }
+  };
 
   const load = useCallback(async () => {
     try { setData(await call("money")); } catch (e: any) { toast.error(e.message); }
@@ -64,15 +73,40 @@ const AdminMoney = ({ users, onChanged }: { users: { id: string; email: string }
       </div>
 
       <Card className="border-border/50">
-        <CardHeader><CardTitle className="text-base">Record an offline payment (gives 1 month of Pro, inviter gets 10%). Razorpay payments appear automatically.</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">Record an offline payment (in USD — gives 1 month of Pro, inviter gets 10%). Razorpay payments appear automatically.</CardTitle></CardHeader>
         <CardContent className="flex flex-col md:flex-row gap-2">
           <select value={userId} onChange={e => setUserId(e.target.value)} className="h-10 rounded-md border border-input bg-background px-3 text-sm flex-1">
             <option value="">Select user…</option>
             {users.map(u => <option key={u.id} value={u.id}>{u.email}</option>)}
           </select>
           <Input value={plan} onChange={e => setPlan(e.target.value)} placeholder="Plan" className="md:w-40" />
-          <Input value={amount} onChange={e => setAmount(e.target.value)} placeholder="Amount ₹" type="number" className="md:w-32" />
+          <Input value={amount} onChange={e => setAmount(e.target.value)} placeholder="Amount $" type="number" className="md:w-32" />
           <Button onClick={record}>Record payment</Button>
+        </CardContent>
+      </Card>
+
+      <Card className="border-border/50">
+        <CardHeader><CardTitle className="text-base">Student price requests ($2.49/month once approved)</CardTitle></CardHeader>
+        <CardContent className="overflow-x-auto">
+          <Table>
+            <TableHeader><TableRow><TableHead>User</TableHead><TableHead>School</TableHead><TableHead>Student ID</TableHead><TableHead>Sent</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+            <TableBody>
+              {students.length === 0 && <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground">No student requests yet</TableCell></TableRow>}
+              {students.map(r => (
+                <TableRow key={r.id}>
+                  <TableCell className="text-sm">{r.email}</TableCell>
+                  <TableCell className="text-sm">{r.school}</TableCell>
+                  <TableCell className="text-xs">{r.student_id || "—"}</TableCell>
+                  <TableCell className="text-xs text-muted-foreground">{d(r.created_at)}</TableCell>
+                  <TableCell><Badge variant={r.status === "approved" ? "default" : r.status === "rejected" ? "destructive" : "secondary"}>{r.status}</Badge></TableCell>
+                  <TableCell className="text-right space-x-1">
+                    {r.status !== "approved" && <Button size="sm" onClick={() => decide(r.id, "approved")}>Approve</Button>}
+                    {r.status !== "rejected" && <Button size="sm" variant="outline" onClick={() => decide(r.id, "rejected")}>Reject</Button>}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
 

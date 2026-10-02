@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { PlanKey } from "@/lib/plans";
 
 declare global { interface Window { Razorpay?: any } }
 
@@ -12,11 +13,20 @@ const loadScript = () =>
     document.body.appendChild(s);
   });
 
-/** Opens Razorpay checkout for Pro monthly. Resolves "paid" | "cancelled", throws on error. */
-export async function payForPro(name?: string): Promise<"paid" | "cancelled"> {
+export async function getLifetimeSpotsLeft(): Promise<number | null> {
+  const { data } = await supabase.functions.invoke("razorpay", { body: { action: "info" } });
+  return typeof data?.lifetimeSpotsLeft === "number" ? data.lifetimeSpotsLeft : null;
+}
+
+/** Opens Razorpay checkout for a Pro plan. Resolves "paid" | "cancelled", throws on error. */
+export async function payForPro(plan: PlanKey = "monthly", name?: string): Promise<"paid" | "cancelled"> {
   if (!(await loadScript())) throw new Error("Could not load payment window. Check your internet.");
-  const { data, error } = await supabase.functions.invoke("razorpay", { body: { action: "create-order" } });
-  if (error || data?.error) throw new Error(data?.error || "Could not start payment");
+  const { data, error } = await supabase.functions.invoke("razorpay", { body: { action: "create-order", plan } });
+  if (error || data?.error) {
+    let msg = data?.error;
+    try { msg = msg || (await (error as any)?.context?.json())?.error; } catch { /* ignore */ }
+    throw new Error(msg || "Could not start payment");
+  }
 
   return new Promise((resolve, reject) => {
     const rzp = new window.Razorpay({
@@ -25,7 +35,7 @@ export async function payForPro(name?: string): Promise<"paid" | "cancelled"> {
       currency: data.currency,
       order_id: data.orderId,
       name: "Superoutine",
-      description: "Pro plan — 1 month",
+      description: data.label,
       prefill: { email: data.email, name },
       theme: { color: "#2dd4a8" },
       handler: async (resp: any) => {

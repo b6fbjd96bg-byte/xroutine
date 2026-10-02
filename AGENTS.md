@@ -1,2 +1,3 @@
 - Referral commissions come only from the `payments` table (DB trigger), so a real checkout later just inserts payments; why: one source of truth for commission.
 - Razorpay payments are verified server-side (signature + Razorpay API) in the razorpay edge function before inserting into payments; why: client can't fake Pro or commissions.
+- Plan prices live in src/lib/plans.ts (UI) and the razorpay edge function (charged amount); the server is authoritative, keep both in sync. Why: client can't change what is charged.

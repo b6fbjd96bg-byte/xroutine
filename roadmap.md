@@ -6,3 +6,4 @@
 - [x] Refer & Earn: invite friends, commission on their paid plan, wallet balance, payout requests (tested)
 - [x] Admin panel: all users, charges, plans, referrals, balances, payout requests, live overview
 - [x] Real online checkout (Razorpay) — ₹49 for 1 month of Pro, verified on server
+- [x] USD pricing: monthly, yearly, student (admin-approved), lifetime (capped 100)
