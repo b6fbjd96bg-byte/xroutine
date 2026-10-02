@@ -89,10 +89,11 @@ const Dashboard = () => {
 
   // Show onboarding for new users (no habits and not loading)
   useEffect(() => {
-    if (!loading && habits.length === 0) {
-      setShowOnboarding(true);
-    }
-  }, [loading, habits.length]);
+    // Only brand-new accounts (signed up in the last 24 hours) that never finished it
+    if (loading || habits.length > 0 || !user) return;
+    const isNew = Date.now() - new Date(user.created_at).getTime() < 24 * 60 * 60 * 1000;
+    if (isNew && !localStorage.getItem(`onboarding_done_${user.id}`)) setShowOnboarding(true);
+  }, [loading, habits.length, user]);
 
   const today = new Date();
   const daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
@@ -182,6 +183,7 @@ const Dashboard = () => {
     for (const h of selectedHabits) {
       await addHabit(h.name, h.goal);
     }
+    if (user) localStorage.setItem(`onboarding_done_${user.id}`, "1");
     setShowOnboarding(false);
     toast({ title: "Dashboard ready!", description: `${selectedHabits.length} habits loaded. Start checking them off!` });
   }, [addHabit, toast]);
@@ -199,9 +201,7 @@ const Dashboard = () => {
   }
 
   // Show welcome back screen for returning users
-  if (daysAway >= 2) {
-    return <WelcomeBack daysAway={daysAway} onDismiss={dismissWelcomeBack} />;
-  }
+
 
   const engaged = monthlyCompleted > 0 || weeklyHabits.some(h => h.completedWeeks.length > 0);
   const userName = user?.user_metadata?.display_name || "there";
