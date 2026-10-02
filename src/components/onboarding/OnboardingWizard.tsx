@@ -12,7 +12,7 @@ interface OnboardingWizardProps {
 const suggestedHabits: { name: string; goal: number; icon: LucideIcon; tone: string }[] = [
   { name: "Drink 2L of Water", goal: 25, icon: Droplets, tone: "text-chart-blue bg-chart-blue/15" },
   { name: "Meditation", goal: 20, icon: Brain, tone: "text-chart-purple bg-chart-purple/15" },
-  { name: "Reading", goal: 15, icon: BookOpen, tone: "text-chart-orange bg-chart-orange/15" },
+  { name: "Reading", goal: 15, icon: BookOpen, tone: "text-chart-cyan bg-chart-cyan/15" },
   { name: "Running", goal: 16, icon: Footprints, tone: "text-primary bg-primary/15" },
   { name: "Stretching", goal: 20, icon: StretchHorizontal, tone: "text-chart-pink bg-chart-pink/15" },
   { name: "Eating Healthy", goal: 25, icon: Salad, tone: "text-primary bg-primary/15" },
@@ -255,7 +255,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
                   {[
                     { icon: Zap, tone: "text-chart-yellow bg-chart-yellow/15", title: "XP & Levels", desc: "Every habit completed earns XP. Daily = +10 XP, Weekly = +50 XP. Level up as you grow!" },
                     { icon: ShieldCheck, tone: "text-chart-blue bg-chart-blue/15", title: "Life Happens Pass", desc: "Emergency skips protect your streak. Because everyone has bad days." },
-                    { icon: Flame, tone: "text-chart-orange bg-chart-orange/15", title: "Streak Fire", desc: "Build consecutive day streaks. Watch your flame grow and never want to break it." },
+                    { icon: Flame, tone: "text-chart-pink bg-chart-pink/15", title: "Streak Fire", desc: "Build consecutive day streaks. Watch your flame grow and never want to break it." },
                     { icon: Timer, tone: "text-primary bg-primary/15", title: "Focus Timer", desc: "Built-in deep work timer for habits like meditation and reading." },
                   ].map((item) => (
                     <motion.div
