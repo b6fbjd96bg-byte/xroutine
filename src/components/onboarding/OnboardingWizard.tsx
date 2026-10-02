@@ -2,22 +2,22 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CheckCircle, ArrowRight, Sparkles, Target, Zap, Trophy, Crown, Rocket } from "lucide-react";
+import { CheckCircle, ArrowRight, Sparkles, Target, Zap, Trophy, Crown, Rocket, Droplets, Brain, BookOpen, Footprints, StretchHorizontal, Salad, NotebookPen, Moon, Star, ShieldCheck, Flame, Timer, type LucideIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface OnboardingWizardProps {
   onComplete: (habits: { name: string; goal: number }[]) => void;
 }
 
-const suggestedHabits = [
-  { name: "Drink 2L of Water", goal: 25, emoji: "💧" },
-  { name: "Meditation", goal: 20, emoji: "🧘" },
-  { name: "Reading", goal: 15, emoji: "📚" },
-  { name: "Running", goal: 16, emoji: "🏃" },
-  { name: "Stretching", goal: 20, emoji: "🤸" },
-  { name: "Eating Healthy", goal: 25, emoji: "🥗" },
-  { name: "Journaling", goal: 20, emoji: "📝" },
-  { name: "Sleep by 11 PM", goal: 25, emoji: "😴" },
+const suggestedHabits: { name: string; goal: number; icon: LucideIcon; tone: string }[] = [
+  { name: "Drink 2L of Water", goal: 25, icon: Droplets, tone: "text-chart-blue bg-chart-blue/15" },
+  { name: "Meditation", goal: 20, icon: Brain, tone: "text-chart-purple bg-chart-purple/15" },
+  { name: "Reading", goal: 15, icon: BookOpen, tone: "text-chart-orange bg-chart-orange/15" },
+  { name: "Running", goal: 16, icon: Footprints, tone: "text-primary bg-primary/15" },
+  { name: "Stretching", goal: 20, icon: StretchHorizontal, tone: "text-chart-pink bg-chart-pink/15" },
+  { name: "Eating Healthy", goal: 25, icon: Salad, tone: "text-primary bg-primary/15" },
+  { name: "Journaling", goal: 20, icon: NotebookPen, tone: "text-chart-yellow bg-chart-yellow/15" },
+  { name: "Sleep by 11 PM", goal: 25, icon: Moon, tone: "text-chart-blue bg-chart-blue/15" },
 ];
 
 const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
@@ -45,7 +45,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
   const addCustom = () => {
     if (customHabit.trim()) {
       setHabitOptions((prev) => {
-        const next = [...prev, { name: customHabit.trim(), goal: 20, emoji: "⭐" }];
+        const next = [...prev, { name: customHabit.trim(), goal: 20, icon: Star, tone: "text-chart-yellow bg-chart-yellow/15" }];
         setSelectedHabits((sel) => new Set([...sel, next.length - 1]));
         return next;
       });
@@ -147,7 +147,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
                           : "bg-secondary/30 border-border/30 hover:border-border/60"
                       }`}
                     >
-                      <div className="text-lg mb-1">{habit.emoji}</div>
+                      <div className={`mb-2 flex h-8 w-8 items-center justify-center rounded-lg ${habit.tone}`}><habit.icon className="h-4 w-4" /></div>
                       <div className="text-sm font-medium">{habit.name}</div>
                     </motion.button>
                   ))}
@@ -253,10 +253,10 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
                 </div>
                 <div className="space-y-4 mb-8">
                   {[
-                    { icon: "⚡", title: "XP & Levels", desc: "Every habit completed earns XP. Daily = +10 XP, Weekly = +50 XP. Level up as you grow!" },
-                    { icon: "🛡️", title: "Life Happens Pass", desc: "Emergency skips protect your streak. Because everyone has bad days." },
-                    { icon: "🔥", title: "Streak Fire", desc: "Build consecutive day streaks. Watch your flame grow and never want to break it." },
-                    { icon: "🎯", title: "Focus Timer", desc: "Built-in deep work timer for habits like meditation and reading." },
+                    { icon: Zap, tone: "text-chart-yellow bg-chart-yellow/15", title: "XP & Levels", desc: "Every habit completed earns XP. Daily = +10 XP, Weekly = +50 XP. Level up as you grow!" },
+                    { icon: ShieldCheck, tone: "text-chart-blue bg-chart-blue/15", title: "Life Happens Pass", desc: "Emergency skips protect your streak. Because everyone has bad days." },
+                    { icon: Flame, tone: "text-chart-orange bg-chart-orange/15", title: "Streak Fire", desc: "Build consecutive day streaks. Watch your flame grow and never want to break it." },
+                    { icon: Timer, tone: "text-primary bg-primary/15", title: "Focus Timer", desc: "Built-in deep work timer for habits like meditation and reading." },
                   ].map((item) => (
                     <motion.div
                       key={item.title}
@@ -264,7 +264,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
                       animate={{ opacity: 1, x: 0 }}
                       className="flex items-start gap-4 p-3 rounded-xl bg-secondary/30"
                     >
-                      <div className="text-2xl">{item.icon}</div>
+                      <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${item.tone}`}><item.icon className="h-5 w-5" /></div>
                       <div>
                         <div className="font-semibold font-display text-sm">{item.title}</div>
                         <div className="text-xs text-muted-foreground">{item.desc}</div>
