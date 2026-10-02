@@ -35,7 +35,7 @@ const WelcomeBack = ({ daysAway, onDismiss }: WelcomeBackProps) => {
           </motion.div>
 
           <div>
-            <h2 className="font-display font-bold text-xl mb-2">Welcome back! 👋</h2>
+            <h2 className="font-display font-bold text-xl mb-2">Welcome back!</h2>
             <p className="text-muted-foreground text-sm">
               You were away for <span className="text-foreground font-semibold">{daysAway} days</span>. 
               Your habits missed you!

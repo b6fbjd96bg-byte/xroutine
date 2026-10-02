@@ -242,7 +242,7 @@ const Dashboard = () => {
               <h1 className="text-4xl font-bold font-display mb-2">
                 <span className="text-gradient">{habits.length === 0 ? `Hey ${userName}!` : "Habit Tracker"}</span>
               </h1>
-              <p className="text-muted-foreground">{habits.length === 0 ? "Add your first habit to get started 🌱" : "Track your daily habits and build better routines"}</p>
+              <p className="text-muted-foreground">{habits.length === 0 ? "Add your first habit to get started" : "Track your daily habits and build better routines"}</p>
             </div>
             <MonthSelector currentMonth={currentMonth} onChange={(d) => { setCurrentMonth(d); setSelectedDate(null); }} onPrevMonth={() => { setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1)); setSelectedDate(null); }} onNextMonth={() => { setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1)); setSelectedDate(null); }} />
           </motion.div>

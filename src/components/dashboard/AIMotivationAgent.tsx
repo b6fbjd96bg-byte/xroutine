@@ -34,7 +34,7 @@ const motivationalMessages = {
     "You're crushing it! This is what champions look like!",
   ],
   complete: [
-    " AMAZING! You've completed all habits today! You're unstoppable!",
+    "AMAZING! You've completed all habits today! You're unstoppable!",
     "100% completion! You're a habit-building machine!",
     "Perfect day! Your future self is going to thank you!",
   ],
@@ -288,7 +288,7 @@ const AIMotivationAgent = ({
                 >
                   <currentTip.icon className={cn("w-5 h-5 flex-shrink-0 mt-0.5", currentTip.color)} />
                   <div>
-                    <p className="text-xs font-semibold text-foreground mb-1">💡 Pro Tip</p>
+                    <p className="text-xs font-semibold text-foreground mb-1">Pro Tip</p>
                     <p className="text-xs text-muted-foreground">{currentTip.text}</p>
                   </div>
                 </motion.div>

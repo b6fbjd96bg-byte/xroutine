@@ -95,7 +95,7 @@ const UpgradePrompt = ({ open, onOpenChange, feature }: UpgradePromptProps) => {
         )}
 
         {isLifetime ? (
-          <div className="rounded-2xl border border-primary/30 bg-primary/10 p-4 text-center text-sm">You have lifetime Pro. Nothing more to pay. 🎉</div>
+          <div className="rounded-2xl border border-primary/30 bg-primary/10 p-4 text-center text-sm">You have lifetime Pro. Nothing more to pay.</div>
         ) : (
           <>
             <div className="grid grid-cols-2 gap-2">
