@@ -163,7 +163,7 @@ Deno.serve(async (req) => {
         const plan = typeof body.plan === "string" ? body.plan.slice(0, 50) : "premium";
         const { error: pe } = await adminClient.from("payments").insert({ user_id: userId, amount, plan, note: typeof body.note === "string" ? body.note.slice(0, 200) : null });
         if (pe) throw pe;
-        await adminClient.from("user_subscriptions").update({ tier: "premium", premium_until: new Date(Date.now() + 30 * 86400000).toISOString() }).eq("user_id", userId);
+        await adminClient.from("user_subscriptions").update({ tier: "premium", plan: "monthly", premium_until: new Date(Date.now() + 30 * 86400000).toISOString() }).eq("user_id", userId);
         return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
@@ -194,6 +194,23 @@ Deno.serve(async (req) => {
         if (ue) throw ue;
         return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
+
+      case "students": {
+        const { data: all } = await adminClient.auth.admin.listUsers({ page: 1, perPage: 1000 });
+        const em = (id: string) => all?.users?.find(u => u.id === id)?.email || "Unknown";
+        const { data } = await adminClient.from("student_requests").select("*").order("created_at", { ascending: false });
+        return new Response(JSON.stringify({ requests: (data || []).map(r => ({ ...r, email: em(r.user_id) })) }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+
+      case "student-decision": {
+        const body = await req.json();
+        if (!body.id || !["approved", "rejected"].includes(body.status)) throw new Error("id and valid status required");
+        const { data: reqRow, error: ge } = await adminClient.from("student_requests").update({ status: body.status, processed_at: new Date().toISOString() }).eq("id", body.id).select("user_id").single();
+        if (ge) throw ge;
+        await adminClient.from("user_subscriptions").update({ is_student: body.status === "approved" }).eq("user_id", reqRow.user_id);
+        return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+
 
       case "demote-user": {
         const body = await req.json();
