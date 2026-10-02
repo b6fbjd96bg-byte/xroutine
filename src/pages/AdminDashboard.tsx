@@ -51,6 +51,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import AdminMoney from "@/components/admin/AdminMoney";
 import AdminLogin from "@/components/admin/AdminLogin";
+import AdminRevenue from "@/components/admin/AdminRevenue";
 import {
   AreaChart,
   Area,
@@ -84,7 +85,7 @@ const AdminDashboard = () => {
     demoteUser,
   } = useAdmin();
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState<"overview" | "users" | "money" | "traffic" | "waitlist">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "revenue" | "users" | "money" | "traffic" | "waitlist">("overview");
 
 
   useEffect(() => {
@@ -206,8 +207,8 @@ const AdminDashboard = () => {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
         {/* Tab Navigation */}
-        <div className="flex gap-1 p-1 rounded-lg bg-secondary/50 w-fit">
-          {(["overview", "users", "money", "traffic", "waitlist"] as const).map((tab) => (
+        <div className="flex gap-1 p-1 rounded-lg bg-secondary/50 w-fit max-w-full overflow-x-auto">
+          {(["overview", "revenue", "users", "money", "traffic", "waitlist"] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -217,10 +218,12 @@ const AdminDashboard = () => {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              <span className="inline-flex items-center gap-1.5"><EmojiIcon e={({ overview: "📊", users: "👥", money: "💰", traffic: "🌐" } as Record<string, string>)[tab] ?? "👑"} />{tab === "overview" ? "Overview" : tab === "users" ? "Users" : tab === "money" ? "Money & Referrals" : tab === "traffic" ? "Traffic" : "Waitlist"}</span>
+              <span className="inline-flex items-center gap-1.5"><EmojiIcon e={({ overview: "📊", revenue: "📊", users: "👥", money: "💰", traffic: "🌐" } as Record<string, string>)[tab] ?? "👑"} />{tab === "overview" ? "Overview" : tab === "revenue" ? "Revenue" : tab === "users" ? "Users" : tab === "money" ? "Money & Referrals" : tab === "traffic" ? "Traffic" : "Waitlist"}</span>
             </button>
           ))}
         </div>
+
+        {activeTab === "revenue" && <AdminRevenue onChanged={() => { fetchUsers(); fetchStats(); }} />}
 
         {activeTab === "money" && <AdminMoney users={users.map(u => ({ id: u.id, email: u.email }))} onChanged={() => { fetchUsers(); fetchStats(); }} />}
 
