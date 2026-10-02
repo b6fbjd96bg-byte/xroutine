@@ -20,7 +20,7 @@ const pct = (cur: number, prev: number) => (prev === 0 ? (cur > 0 ? 100 : 0) : M
 const SRC_COLORS = ["hsl(var(--chart-blue))", "hsl(var(--chart-purple))", "hsl(var(--chart-green))", "hsl(var(--chart-yellow))"];
 
 const Spark = ({ data, color, id }: { data: number[]; color: string; id: string }) => (
-  <div className="w-28 h-14">
+  <div className="w-24 h-12">
     <ResponsiveContainer width="100%" height="100%">
       <AreaChart data={data.map((v, i) => ({ i, v }))}>
         <defs><linearGradient id={id} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={color} stopOpacity={0.5} /><stop offset="100%" stopColor={color} stopOpacity={0} /></linearGradient></defs>
@@ -86,20 +86,20 @@ const AdminOverview = ({ users, traffic, onGo }: { users: U[]; traffic: Traffic;
     <div className="space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {cards.map((c, i) => (
-          <div key={c.t} className="rounded-2xl border border-border/60 bg-card/60 p-5 flex items-end justify-between gap-2 overflow-hidden">
+          <div key={c.t} className="relative rounded-2xl border border-border/60 bg-card/60 p-5 overflow-hidden min-h-[8.5rem]">
             <div className="flex gap-4">
               <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${c.bg}`}><c.icon className="w-6 h-6" /></div>
               <div>
-                <p className="text-sm text-muted-foreground">{c.t}</p>
+                <p className="text-sm text-muted-foreground whitespace-nowrap">{c.t}</p>
                 <p className="text-3xl font-bold font-display mt-1">{c.v}</p>
                 {c.p === null ? <p className="text-xs text-muted-foreground mt-2">{c.sub}</p> : (
-                  <p className={`text-xs mt-2 flex items-center gap-1 ${c.p >= 0 ? "text-chart-green" : "text-destructive"}`}>
-                    {c.p >= 0 ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />}<b>{Math.abs(c.p)}%</b><span className="text-muted-foreground">from last month</span>
+                  <p className={`text-xs mt-2 flex items-center gap-1 whitespace-nowrap ${c.p >= 0 ? "text-chart-green" : "text-destructive"}`}>
+                    {c.p >= 0 ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />}<b>{Math.min(999, Math.abs(c.p))}%</b><span className="text-muted-foreground">from last month</span>
                   </p>
                 )}
               </div>
             </div>
-            <Spark data={c.s} color={c.c} id={`sp${i}`} />
+            <div className="absolute right-3 bottom-3 opacity-90"><Spark data={c.s} color={c.c} id={`sp${i}`} /></div>
           </div>
         ))}
       </div>

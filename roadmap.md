@@ -8,4 +8,4 @@
 - [x] Real online checkout (Razorpay) — ₹49 for 1 month of Pro, verified on server
 - [x] USD pricing: monthly, yearly, student (admin-approved), lifetime (capped 100)
 - [x] Admin Revenue tab + Razorpay missed-payment sync; landing Pricing section; sidebar Go Pro card for free/trial users
-- [ ] Admin panel redesign to match reference (sidebar, stat cards w/ sparklines, page views chart, traffic sources, top pages, recent users/payments)
+- [x] Admin panel redesign to match reference (sidebar, stat cards w/ sparklines, page views chart, traffic sources, top pages, recent users/payments)
