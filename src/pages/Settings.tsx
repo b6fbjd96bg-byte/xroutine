@@ -44,6 +44,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useSubscription, PRO_PRICE_MONTHLY, TRIAL_DAYS } from "@/hooks/useSubscription";
+import { PRO_FEATURES } from "@/lib/plans";
 import { applyTheme, getTheme } from "@/lib/theme";
 import UpgradePrompt from "@/components/premium/UpgradePrompt";
 
@@ -358,27 +359,16 @@ const Settings = () => {
                 "px-3 py-1 rounded-full text-xs font-bold",
                 isPremium ? "bg-chart-yellow/20 text-chart-yellow" : "bg-secondary text-muted-foreground"
               )}>
-                {isTrial ? `FREE TRIAL · ${trialDaysLeft} day${trialDaysLeft === 1 ? "" : "s"} left` : isPremium ? "PRO" : "FREE PLAN"}
+                {isTrial ? `FREE TRIAL · ${trialDaysLeft} day${trialDaysLeft === 1 ? "" : "s"} left` : isPremium ? "PRO" : "TRIAL ENDED"}
               </div>
               {!(tier === "premium") && <span className="text-xs text-muted-foreground">Pro from ${PRO_PRICE_MONTHLY}/month</span>}
             </div>
-            <div className="space-y-2 mb-4">
-              {[
-                { label: "Daily habits", free: `Up to ${limits.maxDailyHabits}`, premium: "Unlimited" },
-                { label: "Weekly habits", free: `Up to ${limits.maxWeeklyHabits}`, premium: "Unlimited" },
-                { label: "Streak protections", free: "1/month", premium: "3/month" },
-                { label: "Deep analytics", free: "✗", premium: "✓" },
-                { label: "Weekly email reports", free: "✗", premium: "✓" },
-              ].map((row) => (
-                <div key={row.label} className="flex items-center justify-between py-1.5 text-xs sm:text-sm border-b border-border/20 last:border-0">
-                  <span className="text-muted-foreground">{row.label}</span>
-                  <span className={isPremium ? "text-chart-yellow font-medium" : "text-foreground"}>
-                    {isPremium ? row.premium : row.free}
-                  </span>
-                </div>
+            <ul className="space-y-1.5 mb-4 text-xs sm:text-sm">
+              {PRO_FEATURES.map((f) => (
+                <li key={f} className="flex gap-2"><Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />{f}</li>
               ))}
-            </div>
-            {isTrial && <p className="text-xs text-muted-foreground mb-3">You have every feature unlocked for your first {TRIAL_DAYS} days. After that the free plan allows 5 daily and 3 weekly habits.</p>}
+            </ul>
+            {isTrial && <p className="text-xs text-muted-foreground mb-3">Every Pro feature is unlocked for your first {TRIAL_DAYS} days. After that, pick a plan to keep using Superoutine.</p>}
             {tier === "premium" && !premiumUntil && <p className="text-xs text-muted-foreground mb-3">Pro active with no end date.</p>}
             {tier === "premium" && premiumUntil && <p className="text-xs text-muted-foreground mb-3">Pro active until {new Date(premiumUntil).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}. Pay again anytime to add more time.</p>}
             {(tier !== "premium" || !!premiumUntil) && (

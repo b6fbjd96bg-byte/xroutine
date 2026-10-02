@@ -11,7 +11,7 @@ const SidebarUpgrade = ({ compact }: { compact?: boolean }) => {
   const [open, setOpen] = useState(false);
   if (loading || tier === "premium") return null;
 
-  const line = isTrial ? `Trial: ${trialDaysLeft} day${trialDaysLeft === 1 ? "" : "s"} left` : "Free plan";
+  const line = isTrial ? `Trial: ${trialDaysLeft} day${trialDaysLeft === 1 ? "" : "s"} left` : "Trial ended";
 
   return (
     <>
@@ -30,7 +30,7 @@ const SidebarUpgrade = ({ compact }: { compact?: boolean }) => {
             <Crown className="w-4 h-4" /> {line}
           </div>
           <p className="text-xs text-muted-foreground mt-1.5">
-            Unlimited habits & full stats for just ${PLANS.yearly.price / 12 < 4 ? (PLANS.yearly.price / 12).toFixed(2) : PLANS.monthly.price}/month. Less than a coffee.
+            Unlimited habits, AI Coach & full stats for just ${PLANS.yearly.price / 12 < 4 ? (PLANS.yearly.price / 12).toFixed(2) : PLANS.monthly.price}/month. Less than a coffee.
           </p>
           <button
             onClick={() => setOpen(true)}

@@ -15,7 +15,8 @@ interface SubscriptionLimits {
   customEmojis: boolean;
 }
 
-export const TRIAL_DAYS = 7;
+import { TRIAL_DAYS } from "@/lib/plans";
+export { TRIAL_DAYS };
 export const PRO_PRICE_MONTHLY = 4.99; // USD per month (see src/lib/plans.ts)
 
 const FREE_LIMITS: SubscriptionLimits = {
@@ -48,6 +49,7 @@ export const useSubscription = () => {
   const [isStudent, setIsStudent] = useState(false);
   const [plan, setPlan] = useState<string | null>(null);
   const [reload, setReload] = useState(0);
+  const [loadedFor, setLoadedFor] = useState<string | null>(null);
   const refresh = useCallback(() => setReload((n) => n + 1), []);
 
   useEffect(() => {
@@ -68,6 +70,7 @@ export const useSubscription = () => {
         setPlan((data as any)?.plan ?? null);
         if (active) setTier("premium");
         else setTier("free");
+        setLoadedFor(user.id);
         setLoading(false);
       });
   }, [user, reload]);
@@ -78,6 +81,8 @@ export const useSubscription = () => {
   const isTrial = tier !== "premium" && trialDaysLeft > 0;
   // During the free trial everything is unlocked
   const isPremium = tier === "premium" || isTrial;
+  // After the trial a non-paying account is locked until it buys Pro
+  const trialExpired = !!user && loadedFor === user.id && tier !== "premium" && trialDaysLeft <= 0;
   const limits = isPremium ? PREMIUM_LIMITS : FREE_LIMITS;
 
   const canAccess = useCallback(
@@ -89,5 +94,5 @@ export const useSubscription = () => {
     [limits]
   );
 
-  return { tier, premiumUntil, isStudent, plan, refresh, isPremium, isTrial, trialDaysLeft, loading, limits, canAccess };
+  return { tier, trialExpired, premiumUntil, isStudent, plan, refresh, isPremium, isTrial, trialDaysLeft, loading: loading || (!!user && loadedFor !== user.id), limits, canAccess };
 };
