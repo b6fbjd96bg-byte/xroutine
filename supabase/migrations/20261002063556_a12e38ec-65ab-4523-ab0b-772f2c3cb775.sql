@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.lifetime_spots_left() FROM PUBLIC, anon, authenticated;
