@@ -16,7 +16,7 @@ interface SubscriptionLimits {
 }
 
 export const TRIAL_DAYS = 7;
-export const PRO_PRICE_MONTHLY = 49; // ₹ per month
+export const PRO_PRICE_MONTHLY = 4.99; // USD per month (see src/lib/plans.ts)
 
 const FREE_LIMITS: SubscriptionLimits = {
   maxDailyHabits: 5,
@@ -45,6 +45,8 @@ export const useSubscription = () => {
   const [tier, setTier] = useState<Tier>("free");
   const [loading, setLoading] = useState(true);
   const [premiumUntil, setPremiumUntil] = useState<string | null>(null);
+  const [isStudent, setIsStudent] = useState(false);
+  const [plan, setPlan] = useState<string | null>(null);
   const [reload, setReload] = useState(0);
   const refresh = useCallback(() => setReload((n) => n + 1), []);
 
@@ -56,12 +58,14 @@ export const useSubscription = () => {
 
     supabase
       .from("user_subscriptions")
-      .select("tier, premium_until")
+      .select("tier, premium_until, is_student, plan")
       .eq("user_id", user.id)
       .maybeSingle()
       .then(({ data }) => {
         const active = data?.tier === "premium" && (!data.premium_until || new Date(data.premium_until).getTime() > Date.now());
         setPremiumUntil(data?.premium_until ?? null);
+        setIsStudent(!!(data as any)?.is_student);
+        setPlan((data as any)?.plan ?? null);
         if (active) setTier("premium");
         else setTier("free");
         setLoading(false);
@@ -85,5 +89,5 @@ export const useSubscription = () => {
     [limits]
   );
 
-  return { tier, premiumUntil, refresh, isPremium, isTrial, trialDaysLeft, loading, limits, canAccess };
+  return { tier, premiumUntil, isStudent, plan, refresh, isPremium, isTrial, trialDaysLeft, loading, limits, canAccess };
 };
