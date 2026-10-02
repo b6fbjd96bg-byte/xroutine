@@ -88,7 +88,7 @@ const AdminDashboard = () => {
     demoteUser,
   } = useAdmin();
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState<"overview" | "revenue" | "users" | "money" | "traffic" | "waitlist">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "revenue" | "users" | "money" | "traffic" | "waitlist" | "content" | "notifications">("overview");
 
 
   useEffect(() => {
