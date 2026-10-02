@@ -23,6 +23,9 @@ const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const About = lazy(() => import("./pages/About"));
 const Contact = lazy(() => import("./pages/Contact"));
+const Routines = lazy(() => import("./pages/Routines"));
+const Learn = lazy(() => import("./pages/Learn"));
+const Notifications = lazy(() => import("./pages/Notifications"));
 const Earn = lazy(() => import("./pages/Earn"));
 const AICoach = lazy(() => import("./pages/AICoach"));
 const Terms = lazy(() => import("./pages/Legal").then((m) => ({ default: m.Terms })));
@@ -71,6 +74,9 @@ const App = () => (
             <Route path="/dashboard/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
             <Route path="/dashboard/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
             <Route path="/dashboard/coach" element={<ProtectedRoute><AICoach /></ProtectedRoute>} />
+            <Route path="/dashboard/routines" element={<ProtectedRoute><Routines /></ProtectedRoute>} />
+            <Route path="/dashboard/learn" element={<ProtectedRoute><Learn /></ProtectedRoute>} />
+            <Route path="/dashboard/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
             <Route path="/dashboard/todos" element={<ProtectedRoute><TodoCalendar /></ProtectedRoute>} />
             <Route path="/dashboard/refer" element={<ProtectedRoute><ReferEarn /></ProtectedRoute>} />
             <Route path="/dashboard/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />

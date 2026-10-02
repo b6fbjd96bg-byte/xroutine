@@ -18,7 +18,7 @@ const Notifications = () => {
   return (
     <div className="min-h-screen bg-background">
       <DashboardSidebar />
-      <main className="md:ml-20 p-4 pt-20 md:pt-10 sm:p-6 lg:p-10">
+      <main className="md:ml-20 p-4 sm:p-6 lg:p-10">
         <div className="max-w-3xl mx-auto space-y-6">
           <div className="flex items-center justify-between gap-3">
             <div>

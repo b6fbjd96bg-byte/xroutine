@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { LogOut, Menu, X, ListTodo, Gift, Bot } from "lucide-react";
+import { LogOut, Menu, X, ListTodo, Gift, Bot, Repeat, BookOpen, Bell } from "lucide-react";
+import { useNotifications } from "@/hooks/useNotifications";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,9 @@ const navItems = [
   { icon: DashIcon, label: "Dashboard", path: "/dashboard" },
   { icon: ListTodo, label: "To-Do Calendar", path: "/dashboard/todos" },
   { icon: Bot, label: "AI Coach", path: "/dashboard/coach" },
+  { icon: Repeat, label: "Routines", path: "/dashboard/routines" },
+  { icon: BookOpen, label: "Learn", path: "/dashboard/learn" },
+  { icon: Bell, label: "Notifications", path: "/dashboard/notifications" },
   { icon: CalIcon, label: "Calendar", path: "/dashboard/calendar" },
   { icon: StatsIcon, label: "Analytics", path: "/dashboard/analytics" },
   { icon: Gift, label: "Refer & Earn", path: "/dashboard/refer" },
@@ -23,6 +27,7 @@ const SidebarContent = ({ onNavigate, compact }: { onNavigate?: () => void; comp
   const location = useLocation();
   const navigate = useNavigate();
   const { signOut } = useAuth();
+  const { unread } = useNotifications();
 
   const handleSignOut = async () => {
     await signOut();
@@ -50,7 +55,10 @@ const SidebarContent = ({ onNavigate, compact }: { onNavigate?: () => void; comp
               compact && "justify-center px-0"
             )}
           >
-            <item.icon className="w-5 h-5" />
+            <span className="relative">
+              <item.icon className="w-5 h-5" />
+              {item.path === "/dashboard/notifications" && unread > 0 && <span className="absolute -top-1.5 -right-2 min-w-4 h-4 px-1 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold flex items-center justify-center">{unread > 9 ? "9+" : unread}</span>}
+            </span>
             {!compact && <span className="font-medium">{item.label}</span>}
           </Link>
         ))}
