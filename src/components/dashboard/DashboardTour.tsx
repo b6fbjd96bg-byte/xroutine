@@ -3,9 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
 const STEPS = [
-  { id: "tour-daily", title: "Add your first habit 👇", text: "This is your Daily Habits board. Click here to add your first habit and tick today's box." },
-  { id: "tour-trend", title: "Watch your trend grow 📈", text: "Your daily completion trend animates here as you tick habits off each day." },
-  { id: "tour-weekly", title: "Weekly habits 🗓️", text: "Add bigger goals you want to hit once a week, like a long run or a deep clean." },
+  { id: "tour-daily", title: "Add your first habit", text: "This is your Daily Habits board. Click here to add your first habit and tick today's box." },
+  { id: "tour-trend", title: "Watch your trend grow", text: "Your daily completion trend animates here as you tick habits off each day." },
+  { id: "tour-weekly", title: "Weekly habits", text: "Add bigger goals you want to hit once a week, like a long run or a deep clean." },
 ];
 
 const DashboardTour = ({ userId, createdAt }: { userId?: string; createdAt?: string }) => {

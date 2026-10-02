@@ -1,3 +1,4 @@
+import { EmojiIcon } from "@/components/ui/emoji-icon";
 import { Crown, Sparkles, Zap, Shield, BarChart3, Mail, Loader2, Check, GraduationCap, Infinity as InfinityIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -64,7 +65,7 @@ const UpgradePrompt = ({ open, onOpenChange, feature }: UpgradePromptProps) => {
       const res = await payForPro(selected);
       if (res === "paid") {
         setPaid(true);
-        toast({ title: "Welcome to Pro! 👑", description: `Your ${PLANS[selected].label.toLowerCase()} Pro plan is active.` });
+        toast({ title: "Welcome to Pro!", description: `Your ${PLANS[selected].label.toLowerCase()} Pro plan is active.` });
         setTimeout(() => window.location.reload(), 1200);
       }
     } catch (e: any) {
@@ -88,13 +89,13 @@ const UpgradePrompt = ({ open, onOpenChange, feature }: UpgradePromptProps) => {
 
         {feature && (
           <div className="rounded-xl bg-chart-yellow/10 border border-chart-yellow/20 p-3 text-sm">
-            <span className="font-medium text-chart-yellow">🔒 Pro Feature:</span>{" "}
+            <span className="font-medium text-chart-yellow"><EmojiIcon e="🔒" /> Pro Feature:</span>{" "}
             <span className="text-muted-foreground">{feature}</span>
           </div>
         )}
 
         {isLifetime ? (
-          <div className="rounded-2xl border border-primary/30 bg-primary/10 p-4 text-center text-sm">You have lifetime Pro. Nothing more to pay. 🎉</div>
+          <div className="rounded-2xl border border-primary/30 bg-primary/10 p-4 text-center text-sm">You have lifetime Pro. Nothing more to pay.</div>
         ) : (
           <>
             <div className="grid grid-cols-2 gap-2">

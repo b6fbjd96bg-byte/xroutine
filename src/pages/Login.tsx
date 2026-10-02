@@ -36,7 +36,7 @@ const Login = () => {
       return;
     }
 
-    toast({ title: "Welcome back! 👋", description: "Loading your dashboard..." });
+    toast({ title: "Welcome back!", description: "Loading your dashboard..." });
     navigate("/dashboard");
   };
 

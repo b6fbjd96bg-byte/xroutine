@@ -1,3 +1,4 @@
+import { EmojiIcon } from "@/components/ui/emoji-icon";
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Award, Share2, X } from "lucide-react";
@@ -48,7 +49,7 @@ const MilestoneShare = ({ habits, totalXP, maxStreak, currentDay }: MilestoneSha
   if (!latestMilestone) return null;
 
   const handleShare = async () => {
-    const text = `${latestMilestone.emoji} ${latestMilestone.title}\n${latestMilestone.description}\n\n🔥 ${maxStreak}-day streak | ⚡ ${totalXP} XP\n\nBuilding better habits with Superoutine!`;
+    const text = `${latestMilestone.title}\n${latestMilestone.description}\n\n${maxStreak}-day streak | ${totalXP} XP\n\nBuilding better habits with Superoutine!`;
     if (navigator.share) {
       try { await navigator.share({ text }); } catch {}
     } else {
@@ -76,7 +77,7 @@ const MilestoneShare = ({ habits, totalXP, maxStreak, currentDay }: MilestoneSha
 
         <div className="flex items-center gap-4 relative z-10">
           <div className="w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center text-2xl">
-            {latestMilestone.emoji}
+            <EmojiIcon e={latestMilestone.emoji} />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">

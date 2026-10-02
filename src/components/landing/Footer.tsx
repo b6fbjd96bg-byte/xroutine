@@ -1,3 +1,4 @@
+import { EmojiIcon } from "@/components/ui/emoji-icon";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -45,7 +46,7 @@ const Footer = () => {
             © {new Date().getFullYear()} Superoutine. All rights reserved.
           </p>
           <p className="text-sm text-muted-foreground">
-            Made with 💚 by <Link to="/about" className="text-primary hover:underline">Jatin Kumar</Link>
+            Made with <EmojiIcon e="💚" /> by <Link to="/about" className="text-primary hover:underline">Jatin Kumar</Link>
           </p>
         </div>
       </div>

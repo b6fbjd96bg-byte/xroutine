@@ -1,3 +1,4 @@
+import { EmojiIcon } from "@/components/ui/emoji-icon";
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { RefreshCw, Shield, Sparkles } from "lucide-react";
@@ -89,7 +90,7 @@ const ComebackScore = ({ habits, currentDay }: ComebackScoreProps) => {
 
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-xl">{emoji}</span>
+              <EmojiIcon e={emoji} className="h-6 w-6" />
               <span className="text-sm font-semibold">{comebacks} comeback{comebacks !== 1 ? "s" : ""}</span>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">{message}</p>

@@ -1,3 +1,4 @@
+import { EmojiIcon } from "@/components/ui/emoji-icon";
 import { motion, AnimatePresence } from "framer-motion";
 import { Flame, Gift, X } from "lucide-react";
 
@@ -49,7 +50,7 @@ const DailyLoginReward = ({ streakCount, xpClaimed, isNewLogin, onDismiss }: Dai
               </h3>
               {streakCount >= 7 && (
                 <span className="text-xs px-2 py-0.5 rounded-full bg-primary/20 text-primary font-medium">
-                  🔥 MAX
+                  <EmojiIcon e="🔥" /> MAX
                 </span>
               )}
             </div>

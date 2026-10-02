@@ -35,7 +35,7 @@ const WelcomeBack = ({ daysAway, onDismiss }: WelcomeBackProps) => {
           </motion.div>
 
           <div>
-            <h2 className="font-display font-bold text-xl mb-2">Welcome back! 👋</h2>
+            <h2 className="font-display font-bold text-xl mb-2">Welcome back!</h2>
             <p className="text-muted-foreground text-sm">
               You were away for <span className="text-foreground font-semibold">{daysAway} days</span>. 
               Your habits missed you!
@@ -48,12 +48,12 @@ const WelcomeBack = ({ daysAway, onDismiss }: WelcomeBackProps) => {
               <span>You could have earned ~<strong className="text-foreground">{missedXP} XP</strong></span>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              No worries — every day is a fresh start! 🌱
+              No worries — every day is a fresh start!
             </p>
           </div>
 
           <Button onClick={onDismiss} variant="hero" size="lg" className="w-full">
-            Jump Back In 🚀
+            Jump Back In
           </Button>
         </motion.div>
       </motion.div>

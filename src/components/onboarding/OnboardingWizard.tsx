@@ -1,3 +1,4 @@
+import { EmojiIcon } from "@/components/ui/emoji-icon";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -212,7 +213,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
                     whileTap={{ scale: 0.97 }}
                     onClick={() => {
                       toast({
-                        title: "You're on the waitlist! 🎉",
+                        title: "You're on the waitlist!",
                         description: "We'll notify you when Premium launches. Starting you on Free for now.",
                       });
                       setStep(3);
@@ -313,7 +314,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
                       <div className="text-xs text-muted-foreground">XP</div>
                     </div>
                     <div>
-                      <div className="text-xl font-bold text-chart-pink">0 🔥</div>
+                      <div className="text-xl font-bold text-chart-pink">0 <EmojiIcon e="🔥" /></div>
                       <div className="text-xs text-muted-foreground">Streak</div>
                     </div>
                   </div>

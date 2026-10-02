@@ -38,11 +38,11 @@ const TodaysFocus = ({ habits, currentDay, onToggleDay, tasksCompleted = 0, task
     focusTimerHabits.some(h => name.toLowerCase().includes(h));
 
   const getMotivationalMessage = () => {
-    if (completionPercentage === 100) return "🎉 Perfect day!";
-    if (completionPercentage >= 75) return "🔥 Almost there!";
-    if (completionPercentage >= 50) return "💪 Halfway done!";
-    if (completionPercentage >= 25) return "🌱 Good start!";
-    return "☀️ Let's go!";
+    if (completionPercentage === 100) return "Perfect day!";
+    if (completionPercentage >= 75) return "Almost there!";
+    if (completionPercentage >= 50) return "Halfway done!";
+    if (completionPercentage >= 25) return "Good start!";
+    return "Let's go!";
   };
 
   const getGreeting = () => {

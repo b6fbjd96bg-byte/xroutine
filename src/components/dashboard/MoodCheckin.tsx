@@ -1,3 +1,4 @@
+import { EmojiIcon } from "@/components/ui/emoji-icon";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart } from "lucide-react";
@@ -59,7 +60,7 @@ const MoodCheckin = ({ completedToday, totalHabits }: MoodCheckinProps) => {
         const updated = prev.filter(m => m.date !== today);
         return [{ mood, date: today }, ...updated].slice(0, 7);
       });
-      toast({ title: `${MOODS[mood - 1].emoji} Mood logged!`, description: "Keep tracking — patterns reveal insights!" });
+      toast({ title: "Mood logged!", description: "Keep tracking — patterns reveal insights!" });
     }
     setSaving(false);
   };
@@ -104,7 +105,7 @@ const MoodCheckin = ({ completedToday, totalHabits }: MoodCheckinProps) => {
                 : "hover:bg-secondary/50"
             }`}
           >
-            <span className="text-2xl">{m.emoji}</span>
+            <EmojiIcon e={m.emoji} className="h-7 w-7" />
             <span className="text-[10px] text-muted-foreground">{m.label}</span>
           </motion.button>
         ))}
@@ -120,7 +121,7 @@ const MoodCheckin = ({ completedToday, totalHabits }: MoodCheckinProps) => {
               className="w-6 h-6 rounded-full flex items-center justify-center text-sm"
               title={m.date}
             >
-              {MOODS[m.mood - 1]?.emoji}
+              <EmojiIcon e={MOODS[m.mood - 1]?.emoji ?? "🙂"} />
             </div>
           ))}
         </div>

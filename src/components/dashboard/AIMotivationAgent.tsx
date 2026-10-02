@@ -14,33 +14,33 @@ interface AIMotivationAgentProps {
 
 const motivationalMessages = {
   morning: [
-    "Rise and shine! 🌅 A new day means new opportunities to build great habits.",
+    "Rise and shine! A new day means new opportunities to build great habits.",
     "Good morning, champion! Every habit you complete today is a step toward your best self.",
     "The early bird gets the worm! Let's make today count.",
   ],
   lowProgress: [
     "Hey, I noticed you're a bit behind today. No worries! Start with just one small habit.",
     "Every expert was once a beginner. Pick one habit and crush it!",
-    "Remember: progress, not perfection. Let's get one win today! 💪",
+    "Remember: progress, not perfection. Let's get one win today!",
   ],
   midProgress: [
     "You're making great progress! Keep that momentum going!",
-    "Halfway there! You've got this. Finish strong today! 🔥",
+    "Halfway there! You've got this. Finish strong today!",
     "Your consistency is inspiring. Let's complete a few more!",
   ],
   highProgress: [
-    "WOW! You're on fire today! 🔥 Almost at 100%!",
+    "WOW! You're on fire today! Almost at 100%!",
     "Incredible work! You're building unstoppable momentum!",
     "You're crushing it! This is what champions look like!",
   ],
   complete: [
-    "🎉 AMAZING! You've completed all habits today! You're unstoppable!",
-    "100% completion! You're a habit-building machine! 🏆",
+    "AMAZING! You've completed all habits today! You're unstoppable!",
+    "100% completion! You're a habit-building machine!",
     "Perfect day! Your future self is going to thank you!",
   ],
   streak: [
     "Your {streak}-day streak is incredible! Keep it going!",
-    "Consistency is your superpower! {streak} days strong! 💪",
+    "Consistency is your superpower! {streak} days strong!",
     "{streak} days of dedication. You're rewriting your story!",
   ],
 };
@@ -227,7 +227,7 @@ const AIMotivationAgent = ({
                   <div className="flex-1">
                     <div className="glass-card p-3 rounded-2xl rounded-tl-sm">
                       <p className="text-sm">
-                        Hey {userName}! 👋
+                        Hey {userName}!
                       </p>
                     </div>
                   </div>
@@ -288,7 +288,7 @@ const AIMotivationAgent = ({
                 >
                   <currentTip.icon className={cn("w-5 h-5 flex-shrink-0 mt-0.5", currentTip.color)} />
                   <div>
-                    <p className="text-xs font-semibold text-foreground mb-1">💡 Pro Tip</p>
+                    <p className="text-xs font-semibold text-foreground mb-1">Pro Tip</p>
                     <p className="text-xs text-muted-foreground">{currentTip.text}</p>
                   </div>
                 </motion.div>

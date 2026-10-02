@@ -336,7 +336,7 @@ const CalendarPage = () => {
                           {habit.name}
                         </div>
                       ))}
-                      {getIncompleteHabits(selectedDayNumber).length === 0 && <p className="text-xs sm:text-sm text-muted-foreground">All habits completed! 🎉</p>}
+                      {getIncompleteHabits(selectedDayNumber).length === 0 && <p className="text-xs sm:text-sm text-muted-foreground">All habits completed!</p>}
                     </div>
                   </div>
                 </div>

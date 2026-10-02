@@ -1,3 +1,4 @@
+import { EmojiIcon } from "@/components/ui/emoji-icon";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, Plus, ChevronUp } from "lucide-react";
@@ -110,7 +111,7 @@ const WeeklyHabits = ({ habits, numberOfWeeks, onToggleWeek, onAddHabit, onEditH
               <Button variant="default" size="sm">
                 <Plus className="w-4 h-4" />
                 Add Weekly Habit
-                {atLimit && <span className="ml-1 text-chart-yellow text-[10px]">👑</span>}
+                {atLimit && <EmojiIcon e="👑" className="ml-1 h-3 w-3" />}
               </Button>
             </DialogTrigger>
             <DialogContent className="bg-card border-border">
