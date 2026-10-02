@@ -3,3 +3,4 @@
 - Plan prices live in src/lib/plans.ts (UI) and the razorpay edge function (charged amount); the server is authoritative, keep both in sync. Why: client can't change what is charged.
 - Signed-in pages load lazily per route and big libraries are split into separate chunks; why: fast first load of the home page.
 - Trial lock is enforced in ProtectedRoute (paywall) and in the ai-coach function; why: unpaid accounts after the trial can't use the app.
+- Razorpay auto-renew uses Razorpay Subscriptions; first charge is verified by the razorpay function, renewals arrive only via the razorpay-webhook function (subscription.charged); both use supabase/functions/_shared/grant.ts. Why: one grant path, renewals need no user action.
