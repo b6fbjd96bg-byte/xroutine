@@ -42,6 +42,59 @@ Deno.serve(async (req) => {
     const { data: { user } } = await userClient.auth.getUser();
     if (!user) return json({ error: "Unauthorized" }, 401);
     const rzAuth = "Basic " + btoa(`${keyId}:${keySecret}`);
+
+    // Records a captured payment once and extends the payer's Pro. Returns true if newly recorded.
+    const grant = async (uid: string, planKey: string, pay: any, orderId: string) => {
+      const p = PLANS[planKey];
+      const { data: existing } = await admin.from("payments").select("id").eq("razorpay_payment_id", pay.id).maybeSingle();
+      if (existing) return false;
+      const { data: s } = await admin.from("user_subscriptions").select("premium_until").eq("user_id", uid).maybeSingle();
+      const { error } = await admin.from("payments").insert({
+        user_id: uid, amount: pay.amount / 100, currency: "USD", plan: p.label, note: "Razorpay",
+        razorpay_order_id: orderId, razorpay_payment_id: pay.id,
+      });
+      if (error) { if (error.code === "23505") return false; throw error; }
+      const now = Date.now();
+      let until: string | null = null;
+      if (p.days !== null) {
+        const base = s?.premium_until && new Date(s.premium_until).getTime() > now ? new Date(s.premium_until).getTime() : now;
+        until = new Date(base + p.days * 86400000).toISOString();
+      }
+      const row = { tier: "premium", premium_until: until, plan: planKey };
+      if (s) await admin.from("user_subscriptions").update(row).eq("user_id", uid);
+      else await admin.from("user_subscriptions").insert({ user_id: uid, ...row });
+      return true;
+    };
+
+    // Admin: pull recent Razorpay payments and grant Pro for any the app missed
+    if (body.action === "admin-sync") {
+      const { data: isAdmin } = await admin.rpc("has_role", { _user_id: user.id, _role: "admin" });
+      if (!isAdmin) return json({ error: "Forbidden" }, 403);
+      const r = await fetch("https://api.razorpay.com/v1/payments?count=100", { headers: { Authorization: rzAuth } });
+      const list = await r.json();
+      if (!r.ok) return json({ error: list?.error?.description || "Could not reach Razorpay" }, 502);
+      let added = 0, checked = 0;
+      for (const pay of list.items || []) {
+        if (!pay.order_id || !["captured", "authorized"].includes(pay.status)) continue;
+        checked++;
+        const { data: ex } = await admin.from("payments").select("id").eq("razorpay_payment_id", pay.id).maybeSingle();
+        if (ex) continue;
+        const or = await fetch(`https://api.razorpay.com/v1/orders/${pay.order_id}`, { headers: { Authorization: rzAuth } });
+        const order = await or.json();
+        const planKey = order?.notes?.plan, uid = order?.notes?.user_id;
+        if (!or.ok || !uid || !PLANS[planKey] || order.amount !== PLANS[planKey].cents || order.currency !== "USD") continue;
+        if (pay.status === "authorized") {
+          const c = await fetch(`https://api.razorpay.com/v1/payments/${pay.id}/capture`, {
+            method: "POST", headers: { Authorization: rzAuth, "Content-Type": "application/json" },
+            body: JSON.stringify({ amount: pay.amount, currency: pay.currency }),
+          });
+          if (!c.ok) continue;
+        }
+        if (await grant(uid, planKey, pay, pay.order_id)) added++;
+      }
+      return json({ success: true, checked, added });
+    }
+
     const { data: sub } = await admin.from("user_subscriptions").select("tier, premium_until, is_student, plan").eq("user_id", user.id).maybeSingle();
 
     const checkAllowed = async (planKey: string) => {
@@ -87,25 +140,7 @@ Deno.serve(async (req) => {
         });
       } else if (pay.status !== "captured") return json({ error: `Payment is ${pay.status}` }, 400);
 
-      const { data: existing } = await admin.from("payments").select("id").eq("razorpay_payment_id", paymentId).maybeSingle();
-      if (!existing) {
-        const { error } = await admin.from("payments").insert({
-          user_id: user.id, amount: pay.amount / 100, currency: "USD", plan: p.label, note: "Razorpay",
-          razorpay_order_id: orderId, razorpay_payment_id: paymentId,
-        });
-        if (error && error.code !== "23505") throw error;
-        if (!error) {
-          const now = Date.now();
-          let until: string | null = null;
-          if (p.days !== null) {
-            const base = sub?.premium_until && new Date(sub.premium_until).getTime() > now ? new Date(sub.premium_until).getTime() : now;
-            until = new Date(base + p.days * 86400000).toISOString();
-          }
-          const row = { tier: "premium", premium_until: until, plan: planKey };
-          if (sub) await admin.from("user_subscriptions").update(row).eq("user_id", user.id);
-          else await admin.from("user_subscriptions").insert({ user_id: user.id, ...row });
-        }
-      }
+      await grant(user.id, planKey, pay, orderId);
       return json({ success: true });
     }
     return json({ error: "Unknown action" }, 400);
