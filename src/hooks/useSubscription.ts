@@ -60,7 +60,7 @@ export const useSubscription = () => {
 
     supabase
       .from("user_subscriptions")
-      .select("tier, premium_until, is_student, plan")
+      .select("tier, premium_until, is_student, plan, auto_renew")
       .eq("user_id", user.id)
       .maybeSingle()
       .then(({ data }) => {
@@ -68,6 +68,7 @@ export const useSubscription = () => {
         setPremiumUntil(data?.premium_until ?? null);
         setIsStudent(!!(data as any)?.is_student);
         setPlan((data as any)?.plan ?? null);
+        setAutoRenew(!!(data as any)?.auto_renew);
         if (active) setTier("premium");
         else setTier("free");
         setLoadedFor(user.id);
