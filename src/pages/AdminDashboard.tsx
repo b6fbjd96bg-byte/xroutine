@@ -51,6 +51,8 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import AdminMoney from "@/components/admin/AdminMoney";
 import AdminLogin from "@/components/admin/AdminLogin";
+import AdminRevenue from "@/components/admin/AdminRevenue";
+import AdminOverview from "@/components/admin/AdminOverview";
 import {
   AreaChart,
   Area,
@@ -84,7 +86,7 @@ const AdminDashboard = () => {
     demoteUser,
   } = useAdmin();
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState<"overview" | "users" | "money" | "traffic" | "waitlist">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "revenue" | "users" | "money" | "traffic" | "waitlist">("overview");
 
 
   useEffect(() => {
@@ -169,171 +171,71 @@ const AdminDashboard = () => {
     { title: "Total XP", value: stats?.totalXP?.toLocaleString() || "0", icon: Zap, color: "text-chart-green", bg: "bg-chart-green/10" },
   ];
 
+  const NAV = [
+    { k: "overview", label: "Overview", icon: BarChart3 },
+    { k: "users", label: "Users", icon: Users },
+    { k: "revenue", label: "Plans & Payments", icon: Crown },
+    { k: "money", label: "Referrals & Payouts", icon: TrendingUp },
+    { k: "traffic", label: "Analytics", icon: Globe },
+    { k: "waitlist", label: "Waitlist", icon: ClipboardList },
+  ] as const;
+  const refreshAll = () => { fetchStats(); fetchUsers(); fetchTraffic(); fetchWaitlist(); };
+  const initials = (user?.email || "A").slice(0, 2).toUpperCase();
+
   return (
-    <div className="min-h-screen bg-background">
-      {/* Top Bar */}
-      <header className="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-destructive/10 flex items-center justify-center">
-              <Shield className="w-5 h-5 text-destructive" />
-            </div>
-            <div>
-              <h1 className="text-lg font-bold font-display flex items-center gap-2">Admin Panel <span className="flex items-center gap-1 text-[10px] font-semibold text-primary"><span className="w-2 h-2 rounded-full bg-primary animate-pulse" />LIVE</span></h1>
-              <p className="text-xs text-muted-foreground">{user?.email}</p>
-            </div>
+    <div className="min-h-screen bg-background flex">
+      <aside className="hidden lg:flex w-60 shrink-0 flex-col border-r border-border/60 bg-card/40 p-4 sticky top-0 h-screen">
+        <div className="flex items-center gap-2 px-2 mb-8">
+          <img src="/logo.png" alt="Superoutine" className="w-8 h-8 rounded-lg" />
+          <span className="font-bold font-display text-lg">Superoutine</span>
+        </div>
+        <nav className="space-y-1 flex-1">
+          {NAV.map(n => (
+            <button key={n.k} onClick={() => setActiveTab(n.k)}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${activeTab === n.k ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"}`}>
+              <n.icon className="w-5 h-5" />{n.label}
+            </button>
+          ))}
+        </nav>
+        <div className="rounded-xl border border-border/60 bg-secondary/30 p-4 text-center">
+          <Shield className="w-5 h-5 text-primary mx-auto" />
+          <p className="text-sm font-semibold mt-2">Admin access</p>
+          <p className="text-xs text-muted-foreground mt-1">Data refreshes every 30 seconds</p>
+          <Button size="sm" variant="outline" className="w-full mt-3" onClick={refreshAll}><RefreshCw className="w-3.5 h-3.5 mr-1.5" />Refresh now</Button>
+        </div>
+      </aside>
+
+      <div className="flex-1 min-w-0">
+      <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl">
+        <div className="px-4 sm:px-6 py-3 flex items-center gap-3">
+          <span className="hidden sm:inline-flex text-xs font-semibold px-2.5 py-1 rounded-md bg-primary/15 text-primary border border-primary/30">Admin Panel</span>
+          <span className="flex items-center gap-1 text-[10px] font-semibold text-primary"><span className="w-2 h-2 rounded-full bg-primary animate-pulse" />LIVE</span>
+          <div className="relative flex-1 max-w-xl mx-auto">
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Input value={search} onChange={(e) => { setSearch(e.target.value); if (e.target.value) setActiveTab("users"); }} placeholder="Search users or emails..." className="pl-9 bg-card/60" />
           </div>
+          <span className="hidden md:inline-flex items-center gap-2 text-sm px-3 py-2 rounded-lg border border-border/60"><Calendar className="w-4 h-4" />Last 30 Days</span>
           <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                fetchStats();
-                fetchUsers();
-                fetchTraffic();
-                fetchWaitlist();
-              }}
-            >
-              <RefreshCw className="w-4 h-4" />
-            </Button>
-            <Button variant="ghost" size="sm" onClick={handleSignOut}>
-              <LogOut className="w-4 h-4 mr-1" />
-              Sign Out
-            </Button>
+            <span className="w-9 h-9 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">{initials}</span>
+            <div className="hidden xl:block leading-tight"><p className="text-sm font-medium">Jatin</p><p className="text-xs text-muted-foreground">Admin</p></div>
+            <Button variant="ghost" size="icon" onClick={handleSignOut} title="Sign out"><LogOut className="w-4 h-4" /></Button>
           </div>
         </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
-        {/* Tab Navigation */}
-        <div className="flex gap-1 p-1 rounded-lg bg-secondary/50 w-fit">
-          {(["overview", "users", "money", "traffic", "waitlist"] as const).map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors capitalize ${
-                activeTab === tab
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <span className="inline-flex items-center gap-1.5"><EmojiIcon e={({ overview: "📊", users: "👥", money: "💰", traffic: "🌐" } as Record<string, string>)[tab] ?? "👑"} />{tab === "overview" ? "Overview" : tab === "users" ? "Users" : tab === "money" ? "Money & Referrals" : tab === "traffic" ? "Traffic" : "Waitlist"}</span>
+        <div className="lg:hidden flex gap-1 px-3 pb-2 overflow-x-auto">
+          {NAV.map(n => (
+            <button key={n.k} onClick={() => setActiveTab(n.k)} className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium ${activeTab === n.k ? "bg-primary text-primary-foreground" : "text-muted-foreground bg-secondary/40"}`}>
+              <n.icon className="w-3.5 h-3.5" />{n.label}
             </button>
           ))}
         </div>
+      </header>
+
+      <main className="px-4 sm:px-6 py-6 space-y-6 max-w-[1600px]">
+        {activeTab === "overview" && <AdminOverview users={users} traffic={traffic} onGo={setActiveTab} />}
+
+        {activeTab === "revenue" && <AdminRevenue onChanged={() => { fetchUsers(); fetchStats(); }} />}
 
         {activeTab === "money" && <AdminMoney users={users.map(u => ({ id: u.id, email: u.email }))} onChanged={() => { fetchUsers(); fetchStats(); }} />}
-
-        {activeTab === "overview" && (
-          <>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
-              {statCards.map((stat, i) => (
-                <motion.div
-                  key={stat.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                >
-                  <Card className="border-border/50">
-                    <CardContent className="p-4">
-                      <div className={`w-8 h-8 rounded-lg ${stat.bg} flex items-center justify-center mb-3`}>
-                        <stat.icon className={`w-4 h-4 ${stat.color}`} />
-                      </div>
-                      <div className="text-2xl font-bold font-display">
-                        {statsLoading ? "..." : stat.value}
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1">{stat.title}</div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Signup Chart */}
-            <Card className="border-border/50">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base font-display">
-                  <Calendar className="w-4 h-4 text-primary" />
-                  User Signups — Last 30 Days
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {statsLoading ? (
-                  <div className="h-64 flex items-center justify-center text-muted-foreground">Loading chart...</div>
-                ) : (
-                  <ResponsiveContainer width="100%" height={280}>
-                    <AreaChart data={stats?.signupsByDay || []}>
-                      <defs>
-                        <linearGradient id="signupGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="hsl(158, 45%, 50%)" stopOpacity={0.3} />
-                          <stop offset="95%" stopColor="hsl(158, 45%, 50%)" stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(225, 15%, 22%)" />
-                      <XAxis dataKey="date" tick={{ fill: "hsl(220, 12%, 55%)", fontSize: 11 }} tickFormatter={(v) => v.slice(5)} />
-                      <YAxis tick={{ fill: "hsl(220, 12%, 55%)", fontSize: 11 }} />
-                      <Tooltip contentStyle={{ background: "hsl(225, 20%, 15%)", border: "1px solid hsl(225, 15%, 22%)", borderRadius: "8px", color: "hsl(220, 20%, 90%)" }} />
-                      <Area type="monotone" dataKey="count" stroke="hsl(158, 45%, 50%)" fill="url(#signupGradient)" strokeWidth={2} />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Quick User Table */}
-            <Card className="border-border/50">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base font-display">
-                  <Users className="w-4 h-4 text-primary" />
-                  Recent Users
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>User</TableHead>
-                      <TableHead>Joined</TableHead>
-                      <TableHead>Tier</TableHead>
-                      <TableHead>XP</TableHead>
-                      <TableHead>Status</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {users.slice(0, 5).map((u) => (
-                      <TableRow key={u.id}>
-                        <TableCell>
-                          <div>
-                            <div className="font-medium text-sm">{u.display_name}</div>
-                            <div className="text-xs text-muted-foreground">{u.email}</div>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-sm text-muted-foreground">
-                          {new Date(u.created_at).toLocaleDateString()}
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant={u.tier === "premium" ? "default" : "secondary"} className="text-xs">
-                            {u.tier === "premium" && <Crown className="w-3 h-3 mr-1" />}
-                            {u.tier === "premium" ? "Premium" : "Free"}
-                          </Badge>
-                          {u.tier === "premium" && <div className="text-[10px] text-muted-foreground mt-1">{(u as any).premium_until ? `until ${new Date((u as any).premium_until).toLocaleDateString()}` : "no expiry"}</div>}
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="secondary" className="text-xs">{u.total_xp} XP</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant={u.email_confirmed ? "default" : "destructive"} className="text-xs">
-                            {u.email_confirmed ? "Verified" : "Unverified"}
-                          </Badge>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-          </>
-        )}
 
         {activeTab === "users" && (
           <Card className="border-border/50">
@@ -665,6 +567,7 @@ const AdminDashboard = () => {
           </Card>
         )}
       </main>
+      </div>
     </div>
   );
 };

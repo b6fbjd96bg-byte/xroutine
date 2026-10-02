@@ -5,6 +5,7 @@ import HowItWorks from "@/components/landing/HowItWorks";
 import CTASection from "@/components/landing/CTASection";
 import ReferPromo from "@/components/landing/ReferPromo";
 import Footer from "@/components/landing/Footer";
+import Pricing from "@/components/landing/Pricing";
 
 const Landing = () => {
   return (
@@ -14,6 +15,7 @@ const Landing = () => {
         <Hero />
         <Features />
         <HowItWorks />
+        <Pricing />
         <ReferPromo />
         <CTASection />
       </main>

@@ -30,6 +30,7 @@ const Navbar = () => {
 
           <div className="hidden md:flex items-center gap-6">
             <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Features</a>
+            <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Pricing</a>
           </div>
 
           {/* Desktop buttons */}
@@ -69,6 +70,9 @@ const Navbar = () => {
                   onClick={() => setMobileOpen(false)}
                 >
                   Features
+                </a>
+                <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors py-2" onClick={() => setMobileOpen(false)}>
+                  Pricing
                 </a>
                 <Link to="/login" onClick={() => setMobileOpen(false)}>
                   <Button variant="ghost" size="sm" className="w-full justify-start">Sign In</Button>

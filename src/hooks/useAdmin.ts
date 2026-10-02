@@ -37,6 +37,8 @@ interface TrafficData {
   totalViews: number;
   todayViews: number;
   uniqueVisitors: number;
+  prevViews: number;
+  sources: { name: string; value: number }[];
 }
 
 interface WaitlistEntry {
@@ -124,16 +126,27 @@ export const useAdmin = () => {
   const fetchTraffic = async () => {
     setTrafficLoading(true);
     try {
-      const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+      const thirtyDaysAgo = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString();
+      const cut30 = Date.now() - 30 * 24 * 60 * 60 * 1000;
       const today = new Date().toISOString().split("T")[0];
 
-      const { data: views, error } = await supabase
+      const { data: allViews, error } = await supabase
         .from("page_views")
-        .select("path, session_id, created_at")
+        .select("path, session_id, created_at, referrer")
         .gte("created_at", thirtyDaysAgo)
         .order("created_at", { ascending: true });
 
       if (error) throw error;
+      const prevViews = (allViews || []).filter((v) => new Date(v.created_at).getTime() < cut30).length;
+      const views = (allViews || []).filter((v) => new Date(v.created_at).getTime() >= cut30);
+      const src: Record<string, number> = { Direct: 0, Google: 0, "Social media": 0, "Other sites": 0 };
+      views.forEach((v) => {
+        const r = (v.referrer || "").toLowerCase();
+        if (!r || r.includes(window.location.host)) src.Direct++;
+        else if (/google\.|bing\.|duckduckgo|yahoo/.test(r)) src.Google++;
+        else if (/facebook|instagram|t\.co|twitter|x\.com|linkedin|whatsapp|youtube|reddit|telegram/.test(r)) src["Social media"]++;
+        else src["Other sites"]++;
+      });
 
       const byDay: Record<string, { views: number; sessions: Set<string> }> = {};
       for (let i = 0; i < 30; i++) {
@@ -173,6 +186,8 @@ export const useAdmin = () => {
         totalViews: views?.length || 0,
         todayViews: todayCount,
         uniqueVisitors: allSessions.size,
+        prevViews,
+        sources: Object.entries(src).map(([name, value]) => ({ name, value })),
       });
     } catch (err) {
       console.error("Failed to fetch traffic:", err);
