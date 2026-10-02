@@ -1,3 +1,4 @@
+import { EmojiIcon } from "@/components/ui/emoji-icon";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdmin } from "@/hooks/useAdmin";
@@ -208,7 +209,7 @@ const AdminDashboard = () => {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {tab === "overview" ? "📊 Overview" : tab === "users" ? "👥 Users" : tab === "money" ? "💰 Money & Referrals" : tab === "traffic" ? "🌐 Traffic" : "👑 Waitlist"}
+              <span className="inline-flex items-center gap-1.5"><EmojiIcon e={({ overview: "📊", users: "👥", money: "💰", traffic: "🌐" } as Record<string, string>)[tab] ?? "👑"} />{tab === "overview" ? "Overview" : tab === "users" ? "Users" : tab === "money" ? "Money & Referrals" : tab === "traffic" ? "Traffic" : "Waitlist"}</span>
             </button>
           ))}
         </div>

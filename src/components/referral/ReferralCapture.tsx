@@ -21,7 +21,7 @@ const ReferralCapture = () => {
     if (!user || !code) return;
     supabase.rpc("claim_referral", { _code: code }).then(({ data }) => {
       localStorage.removeItem(KEY);
-      if (data === "ok") toast.success("You joined with a friend's invite — grow together! 🌱");
+      if (data === "ok") toast.success("You joined with a friend's invite — grow together!");
     });
   }, [user]);
 

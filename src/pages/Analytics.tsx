@@ -229,7 +229,7 @@ const Analytics = () => {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-    toast({ title: "Export Successful! 📊", description: `Your analytics data has been downloaded as ${format.toUpperCase()}.` });
+    toast({ title: "Export Successful!", description: `Your analytics data has been downloaded as ${format.toUpperCase()}.` });
   };
 
   const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.08 } } };

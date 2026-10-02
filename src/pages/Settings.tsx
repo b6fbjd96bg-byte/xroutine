@@ -78,7 +78,7 @@ const Settings = () => {
     const url = URL.createObjectURL(new Blob([JSON.stringify(out, null, 2)], { type: "application/json" }));
     const a = document.createElement("a"); a.href = url; a.download = `superoutine-data-${new Date().toISOString().slice(0, 10)}.json`; a.click();
     URL.revokeObjectURL(url);
-    toast({ title: "Your data is downloading ✅" });
+    toast({ title: "Your data is downloading" });
   };
 
   const deleteAllData = async () => {
@@ -142,7 +142,7 @@ const Settings = () => {
       setWeeklyEmailEnabled(!newVal);
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
-      toast({ title: newVal ? "Weekly emails enabled ✅" : "Weekly emails disabled" });
+      toast({ title: newVal ? "Weekly emails enabled" : "Weekly emails disabled" });
     }
   };
 
@@ -159,7 +159,7 @@ const Settings = () => {
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
-      toast({ title: "Profile updated ✅", description: "Your display name has been saved." });
+      toast({ title: "Profile updated", description: "Your display name has been saved." });
     }
   };
 
@@ -178,7 +178,7 @@ const Settings = () => {
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
-      toast({ title: "Password updated ✅", description: "Your password has been changed." });
+      toast({ title: "Password updated", description: "Your password has been changed." });
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
@@ -358,7 +358,7 @@ const Settings = () => {
                 "px-3 py-1 rounded-full text-xs font-bold",
                 isPremium ? "bg-chart-yellow/20 text-chart-yellow" : "bg-secondary text-muted-foreground"
               )}>
-                {isTrial ? `FREE TRIAL · ${trialDaysLeft} day${trialDaysLeft === 1 ? "" : "s"} left` : isPremium ? "👑 PRO" : "FREE PLAN"}
+                {isTrial ? `FREE TRIAL · ${trialDaysLeft} day${trialDaysLeft === 1 ? "" : "s"} left` : isPremium ? "PRO" : "FREE PLAN"}
               </div>
               {!(tier === "premium") && <span className="text-xs text-muted-foreground">Pro from ${PRO_PRICE_MONTHLY}/month</span>}
             </div>

@@ -58,7 +58,7 @@ const ResetPassword = () => {
       return;
     }
 
-    toast({ title: "Password updated! ✅", description: "You can now sign in with your new password." });
+    toast({ title: "Password updated!", description: "You can now sign in with your new password." });
     navigate("/dashboard");
   };
 

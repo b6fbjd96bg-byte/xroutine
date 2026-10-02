@@ -40,7 +40,7 @@ const ReferEarn = () => {
   useEffect(() => { load(); }, [load]);
 
   const link = code ? `${window.location.origin}/signup?ref=${code}` : "";
-  const message = `Let's build better habits together! 🌱 Join me on Superoutine — we can keep each other on track every day. ${link}`;
+  const message = `Let's build better habits together! Join me on Superoutine — we can keep each other on track every day. ${link}`;
   const available = Math.max(0, (wallet?.unlocked || 0) - (wallet?.withdrawn || 0));
 
   const copy = async (t: string) => { await navigator.clipboard.writeText(t); toast.success("Copied!"); };

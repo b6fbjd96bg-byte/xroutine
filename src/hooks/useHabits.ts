@@ -105,7 +105,7 @@ export const useHabits = (viewMonth: Date = new Date()) => {
       id: data.id, name: data.name, goal: data.goal,
       completedDays: data.completed_days || [], linkedTo: data.linked_to || undefined,
     }]);
-    toast({ title: "Habit created! 🌱", description: `"${name}" has been added` });
+    toast({ title: "Habit created!", description: `"${name}" has been added` });
   }, [user, toast]);
 
   const editHabit = useCallback(async (id: string, name: string, goal: number) => {
@@ -120,7 +120,7 @@ export const useHabits = (viewMonth: Date = new Date()) => {
     }
 
     setHabits((prev) => prev.map((h) => (h.id === id ? { ...h, name, goal } : h)));
-    toast({ title: "Habit updated! ✏️", description: "Changes saved" });
+    toast({ title: "Habit updated!", description: "Changes saved" });
   }, [toast]);
 
   const deleteHabit = useCallback(async (id: string) => {
@@ -181,7 +181,7 @@ export const useHabits = (viewMonth: Date = new Date()) => {
       id: data.id, name: data.name, goal: data.goal,
       completedWeeks: data.completed_weeks || [],
     }]);
-    toast({ title: "Weekly habit created! 📅", description: `"${name}" has been added` });
+    toast({ title: "Weekly habit created!", description: `"${name}" has been added` });
   }, [user, toast]);
 
   const editWeeklyHabit = useCallback(async (id: string, name: string, goal: number) => {
@@ -196,7 +196,7 @@ export const useHabits = (viewMonth: Date = new Date()) => {
     }
 
     setWeeklyHabits((prev) => prev.map((h) => (h.id === id ? { ...h, name, goal } : h)));
-    toast({ title: "Habit updated! ✏️", description: "Changes saved" });
+    toast({ title: "Habit updated!", description: "Changes saved" });
   }, [toast]);
 
   const deleteWeeklyHabit = useCallback(async (id: string) => {

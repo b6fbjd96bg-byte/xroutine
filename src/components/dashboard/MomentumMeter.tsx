@@ -1,3 +1,4 @@
+import { EmojiIcon } from "@/components/ui/emoji-icon";
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { TrendingUp, TrendingDown, Minus, Flame, Sparkles } from "lucide-react";
@@ -63,7 +64,7 @@ const MomentumMeter = ({ habits, currentDay }: MomentumMeterProps) => {
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <span className="text-2xl">{emoji}</span>
+            <EmojiIcon e={emoji} className="h-7 w-7" />
             <div>
               <h3 className="font-bold font-display text-base">Momentum</h3>
               <p className="text-xs text-muted-foreground">{momentumLabel}</p>

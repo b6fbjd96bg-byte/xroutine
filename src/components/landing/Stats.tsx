@@ -4,7 +4,7 @@ const stats = [
   { value: "10K+", label: "Active Users" },
   { value: "2.5M", label: "Habits Completed" },
   { value: "94%", label: "Streak Retention" },
-  { value: "4.9★", label: "User Rating" },
+  { value: "4.9", label: "User Rating" },
 ];
 
 const Stats = () => {

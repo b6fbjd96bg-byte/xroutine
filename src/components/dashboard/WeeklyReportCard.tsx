@@ -1,3 +1,4 @@
+import { EmojiIcon } from "@/components/ui/emoji-icon";
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { Trophy, Share2 } from "lucide-react";
@@ -36,12 +37,12 @@ const WeeklyReportCard = ({ habits, totalXP, currentDay, maxStreak }: WeeklyRepo
 
     let grade: string;
     let message: string;
-    if (percentage >= 95) { grade = "A+"; message = "Absolutely unstoppable! 🏆"; }
-    else if (percentage >= 85) { grade = "A"; message = "Crushing it! Keep going! 💪"; }
-    else if (percentage >= 75) { grade = "B+"; message = "Great week! You're building momentum! 🚀"; }
-    else if (percentage >= 65) { grade = "B"; message = "Solid effort! Room to grow! 🌱"; }
-    else if (percentage >= 50) { grade = "C"; message = "Halfway there! Push harder this week! ⚡"; }
-    else { grade = "D"; message = "Fresh start this week! You've got this! 💫"; }
+    if (percentage >= 95) { grade = "A+"; message = "Absolutely unstoppable!"; }
+    else if (percentage >= 85) { grade = "A"; message = "Crushing it! Keep going!"; }
+    else if (percentage >= 75) { grade = "B+"; message = "Great week! You're building momentum!"; }
+    else if (percentage >= 65) { grade = "B"; message = "Solid effort! Room to grow!"; }
+    else if (percentage >= 50) { grade = "C"; message = "Halfway there! Push harder this week!"; }
+    else { grade = "D"; message = "Fresh start this week! You've got this!"; }
 
     return { completed, total, percentage, grade, message };
   }, [habits, currentDay, isReportDay]);
@@ -49,7 +50,7 @@ const WeeklyReportCard = ({ habits, totalXP, currentDay, maxStreak }: WeeklyRepo
   if (!report) return null;
 
   const handleShare = async () => {
-    const text = `📊 My Weekly Habit Report Card: ${report.grade} (${report.percentage}%)\n🔥 ${maxStreak}-day streak | ⚡ ${totalXP} XP\n\nTracking my habits with Superoutine!`;
+    const text = ` My Weekly Habit Report Card: ${report.grade} (${report.percentage}%)\n ${maxStreak}-day streak | ${totalXP} XP\n\nTracking my habits with Superoutine!`;
     
     if (navigator.share) {
       try {
@@ -87,8 +88,8 @@ const WeeklyReportCard = ({ habits, totalXP, currentDay, maxStreak }: WeeklyRepo
             {report.completed}/{report.total} habits completed ({report.percentage}%)
           </p>
           <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
-            <span>🔥 {maxStreak}-day streak</span>
-            <span>⚡ {totalXP} XP</span>
+            <span className="flex items-center gap-1"><EmojiIcon e="🔥" /> {maxStreak}-day streak</span>
+            <span className="flex items-center gap-1"><EmojiIcon e="⚡" /> {totalXP} XP</span>
           </div>
         </div>
       </div>

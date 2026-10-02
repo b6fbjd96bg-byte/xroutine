@@ -49,11 +49,11 @@ const CommitmentCard = () => {
 
     setCommitment(draft.trim());
     setEditing(false);
-    toast({ title: "Commitment saved! 🎯", description: "You've made a promise to yourself." });
+    toast({ title: "Commitment saved!", description: "You've made a promise to yourself." });
   };
 
   const handleShare = async () => {
-    const text = `🎯 My Commitment: "${commitment}"\n\nHolding myself accountable with Superoutine!`;
+    const text = ` My Commitment: "${commitment}"\n\nHolding myself accountable with Superoutine!`;
     if (navigator.share) {
       try { await navigator.share({ text }); } catch {}
     } else {

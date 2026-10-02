@@ -1,3 +1,4 @@
+import { EmojiIcon } from "@/components/ui/emoji-icon";
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Save, BookOpen } from "lucide-react";
@@ -53,7 +54,7 @@ const DailyJournal = () => {
 
     setSavedContent(content);
     setSaving(false);
-    toast({ title: "📝 Saved!", description: "Journal entry updated" });
+    toast({ title: " Saved!", description: "Journal entry updated" });
   };
 
   return (
@@ -86,7 +87,7 @@ const DailyJournal = () => {
           animate={{ opacity: 1 }}
           className="text-xs text-muted-foreground mt-2"
         >
-          ✅ Saved for today
+          <EmojiIcon e="✨" className="text-primary" /> Saved for today
         </motion.p>
       )}
     </div>

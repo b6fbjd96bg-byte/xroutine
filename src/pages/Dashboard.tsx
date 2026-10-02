@@ -1,3 +1,4 @@
+import { EmojiIcon } from "@/components/ui/emoji-icon";
 import { BarChart3, CheckCircle2, TrendingUp, CalendarDays, Target, Flame, type LucideIcon } from "lucide-react";
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -172,7 +173,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (habits.length > 0 && completedToday === habits.length && prevCompletedToday.current < habits.length) {
       triggerConfetti();
-      toast({ title: "🎉 Perfect Day!", description: "You completed all your habits! Amazing work!" });
+      toast({ title: " Perfect Day!", description: "You completed all your habits! Amazing work!" });
     }
     prevCompletedToday.current = completedToday;
   }, [completedToday, habits.length, triggerConfetti, toast]);
@@ -182,7 +183,7 @@ const Dashboard = () => {
       await addHabit(h.name, h.goal);
     }
     setShowOnboarding(false);
-    toast({ title: "🚀 Dashboard ready!", description: `${selectedHabits.length} habits loaded. Start checking them off!` });
+    toast({ title: " Dashboard ready!", description: `${selectedHabits.length} habits loaded. Start checking them off!` });
   }, [addHabit, toast]);
 
   if (loading) {
@@ -326,17 +327,17 @@ const Dashboard = () => {
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Link to="/dashboard/calendar" className="glass-card p-4 text-center hover:scale-[1.02] transition-transform group">
-              <div className="text-3xl mb-2">📅</div>
+              <div className="mb-2 flex justify-center"><EmojiIcon e="📅" className="h-8 w-8" /></div>
               <h3 className="font-bold font-display group-hover:text-primary transition-colors">Calendar</h3>
               <p className="text-sm text-muted-foreground">View history</p>
             </Link>
             <Link to="/dashboard/analytics" className="glass-card p-4 text-center hover:scale-[1.02] transition-transform group">
-              <div className="text-3xl mb-2">📊</div>
+              <div className="mb-2 flex justify-center"><EmojiIcon e="📊" className="h-8 w-8" /></div>
               <h3 className="font-bold font-display group-hover:text-primary transition-colors">Analytics</h3>
               <p className="text-sm text-muted-foreground">Deep insights</p>
             </Link>
             <Link to="/dashboard/settings" className="glass-card p-4 text-center hover:scale-[1.02] transition-transform group">
-              <div className="text-3xl mb-2">⚙️</div>
+              <div className="mb-2 flex justify-center"><EmojiIcon e="⚙️" className="h-8 w-8" /></div>
               <h3 className="font-bold font-display group-hover:text-primary transition-colors">Settings</h3>
               <p className="text-sm text-muted-foreground">Customize app</p>
             </Link>
