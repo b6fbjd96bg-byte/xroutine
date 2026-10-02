@@ -194,6 +194,7 @@ export type Database = {
         Row: {
           amount: number
           created_at: string
+          currency: string
           id: string
           note: string | null
           plan: string
@@ -204,6 +205,7 @@ export type Database = {
         Insert: {
           amount: number
           created_at?: string
+          currency?: string
           id?: string
           note?: string | null
           plan?: string
@@ -214,6 +216,7 @@ export type Database = {
         Update: {
           amount?: number
           created_at?: string
+          currency?: string
           id?: string
           note?: string | null
           plan?: string
@@ -363,6 +366,39 @@ export type Database = {
         }
         Relationships: []
       }
+      student_requests: {
+        Row: {
+          admin_note: string | null
+          created_at: string
+          id: string
+          processed_at: string | null
+          school: string
+          status: string
+          student_id: string | null
+          user_id: string
+        }
+        Insert: {
+          admin_note?: string | null
+          created_at?: string
+          id?: string
+          processed_at?: string | null
+          school: string
+          status?: string
+          student_id?: string | null
+          user_id: string
+        }
+        Update: {
+          admin_note?: string | null
+          created_at?: string
+          id?: string
+          processed_at?: string | null
+          school?: string
+          status?: string
+          student_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       todos: {
         Row: {
           completed: boolean
@@ -474,6 +510,8 @@ export type Database = {
       user_subscriptions: {
         Row: {
           id: string
+          is_student: boolean
+          plan: string | null
           premium_until: string | null
           started_at: string
           tier: string
@@ -482,6 +520,8 @@ export type Database = {
         }
         Insert: {
           id?: string
+          is_student?: boolean
+          plan?: string | null
           premium_until?: string | null
           started_at?: string
           tier?: string
@@ -490,6 +530,8 @@ export type Database = {
         }
         Update: {
           id?: string
+          is_student?: boolean
+          plan?: string | null
           premium_until?: string | null
           started_at?: string
           tier?: string
@@ -542,6 +584,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      lifetime_spots_left: { Args: never; Returns: number }
       request_payout: {
         Args: {
           _account: string
