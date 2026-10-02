@@ -31,8 +31,14 @@ const invoke = async (body: Record<string, unknown>, fallback: string) => {
 /** Opens Razorpay checkout. Monthly/yearly auto-renew by default. Resolves "paid" | "cancelled", throws on error. */
 export async function payForPro(plan: PlanKey = "monthly", autoRenew = true, name?: string): Promise<"paid" | "cancelled"> {
   if (!(await loadScript())) throw new Error("Could not load payment window. Check your internet.");
-  const recurring = autoRenew && plan !== "lifetime";
-  const data = await invoke({ action: recurring ? "create-subscription" : "create-order", plan }, "Could not start payment");
+  let recurring = autoRenew && plan !== "lifetime";
+  let data: any;
+  if (recurring) {
+    // If Razorpay hasn't enabled dollar auto-renew on the account yet, fall back to a one-time payment
+    try { data = await invoke({ action: "create-subscription", plan }, "Could not start auto-renew"); }
+    catch (e: any) { if (/already have auto-renew/i.test(e.message)) throw e; recurring = false; }
+  }
+  if (!recurring) data = await invoke({ action: "create-order", plan }, "Could not start payment");
 
   return new Promise((resolve, reject) => {
     const rzp = new window.Razorpay({
