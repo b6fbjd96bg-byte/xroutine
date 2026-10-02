@@ -9,10 +9,10 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
 type Wallet = { total_earned: number; unlocked: number; locked: number; withdrawn: number; invited: number; paying_friends: number };
-const inr = (n: number) => `₹${Number(n || 0).toFixed(2)}`;
+const inr = (n: number) => `$${Number(n || 0).toFixed(2)}`;
 
 const errors: Record<string, string> = {
-  min_500: "Minimum payout is ₹500.",
+  min_10: "Minimum payout is $10.",
   invalid_bank: "Check the account holder name, account number (digits only) and IFSC code.",
   insufficient: "You don't have that much unlocked balance yet.",
 };
@@ -102,7 +102,7 @@ const ReferEarn = () => {
           <div className="glass-card p-6">
             <h2 className="font-display font-bold text-lg mb-4">How it works</h2>
             <div className="grid sm:grid-cols-3 gap-4 text-sm">
-              {[["1", "Share your link", "Send it to your partner, friend or gym buddy."], ["2", "They join & go Pro", "You both keep each other accountable."], ["3", "You earn 10%", "Of every payment they make. Cash out after 30 days (min ₹500)."]].map(([n, t, d]) => (
+              {[["1", "Share your link", "Send it to your partner, friend or gym buddy."], ["2", "They join & go Pro", "You both keep each other accountable."], ["3", "You earn 10%", "Of every payment they make. Cash out after 30 days (min $10)."]].map(([n, t, d]) => (
                 <div key={n} className="flex gap-3"><div className="w-8 h-8 shrink-0 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">{n}</div><div><div className="font-semibold">{t}</div><div className="text-muted-foreground">{d}</div></div></div>
               ))}
             </div>
@@ -111,12 +111,12 @@ const ReferEarn = () => {
           <div className="grid lg:grid-cols-2 gap-6">
             <div className="glass-card p-6 space-y-3">
               <h2 className="font-display font-bold text-lg flex items-center gap-2"><Landmark className="w-5 h-5 text-primary" />Cash out to your bank</h2>
-              <p className="text-xs text-muted-foreground">Available: <b className="text-foreground">{inr(available)}</b> · Minimum ₹500</p>
-              <Input placeholder="Amount (₹)" type="number" value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} />
+              <p className="text-xs text-muted-foreground">Available: <b className="text-foreground">{inr(available)}</b> · Minimum $10</p>
+              <Input placeholder="Amount ($)" type="number" value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} />
               <Input placeholder="Account holder name" value={form.holder} onChange={e => setForm({ ...form, holder: e.target.value })} />
               <Input placeholder="Account number" value={form.account} onChange={e => setForm({ ...form, account: e.target.value })} />
               <Input placeholder="IFSC code" value={form.ifsc} onChange={e => setForm({ ...form, ifsc: e.target.value.toUpperCase() })} />
-              <Button className="w-full" onClick={requestPayout} disabled={busy || available < 500}>{available < 500 ? "Reach ₹500 to cash out" : "Request payout"}</Button>
+              <Button className="w-full" onClick={requestPayout} disabled={busy || available < 10}>{available < 10 ? "Reach $10 to cash out" : "Request payout"}</Button>
             </div>
             <div className="glass-card p-6">
               <h2 className="font-display font-bold text-lg mb-3">Payout history</h2>

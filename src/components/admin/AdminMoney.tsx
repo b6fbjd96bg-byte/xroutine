@@ -21,7 +21,7 @@ const call = async (action: string, body?: object) => {
   return json;
 };
 
-const inr = (n: number) => `₹${Number(n || 0).toFixed(2)}`;
+const inr = (n: number) => `$${Number(n || 0).toFixed(2)}`;
 const d = (s: string) => new Date(s).toLocaleString();
 
 const AdminMoney = ({ users, onChanged }: { users: { id: string; email: string }[]; onChanged: () => void }) => {
@@ -64,14 +64,14 @@ const AdminMoney = ({ users, onChanged }: { users: { id: string; email: string }
       </div>
 
       <Card className="border-border/50">
-        <CardHeader><CardTitle className="text-base">Record an offline payment (gives 1 month of Pro, inviter gets 10%). Razorpay payments appear automatically.</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">Record an offline payment (in USD — gives 1 month of Pro, inviter gets 10%). Razorpay payments appear automatically.</CardTitle></CardHeader>
         <CardContent className="flex flex-col md:flex-row gap-2">
           <select value={userId} onChange={e => setUserId(e.target.value)} className="h-10 rounded-md border border-input bg-background px-3 text-sm flex-1">
             <option value="">Select user…</option>
             {users.map(u => <option key={u.id} value={u.id}>{u.email}</option>)}
           </select>
           <Input value={plan} onChange={e => setPlan(e.target.value)} placeholder="Plan" className="md:w-40" />
-          <Input value={amount} onChange={e => setAmount(e.target.value)} placeholder="Amount ₹" type="number" className="md:w-32" />
+          <Input value={amount} onChange={e => setAmount(e.target.value)} placeholder="Amount $" type="number" className="md:w-32" />
           <Button onClick={record}>Record payment</Button>
         </CardContent>
       </Card>
