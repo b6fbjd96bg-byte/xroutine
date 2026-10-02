@@ -7,6 +7,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { DashIcon, CalIcon, StatsIcon, GearIcon } from "./NavIcons";
+import SidebarUpgrade from "@/components/premium/SidebarUpgrade";
 
 const navItems = [
   { icon: DashIcon, label: "Dashboard", path: "/dashboard" },
@@ -53,6 +54,8 @@ const SidebarContent = ({ onNavigate, compact }: { onNavigate?: () => void; comp
           </Link>
         ))}
       </nav>
+
+      <SidebarUpgrade compact={compact} />
 
       <button
         onClick={handleSignOut}
