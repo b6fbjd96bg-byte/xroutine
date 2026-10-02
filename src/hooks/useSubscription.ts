@@ -48,6 +48,7 @@ export const useSubscription = () => {
   const [premiumUntil, setPremiumUntil] = useState<string | null>(null);
   const [isStudent, setIsStudent] = useState(false);
   const [plan, setPlan] = useState<string | null>(null);
+  const [autoRenew, setAutoRenew] = useState(false);
   const [reload, setReload] = useState(0);
   const [loadedFor, setLoadedFor] = useState<string | null>(null);
   const refresh = useCallback(() => setReload((n) => n + 1), []);
@@ -95,5 +96,5 @@ export const useSubscription = () => {
     [limits]
   );
 
-  return { tier, trialExpired, premiumUntil, isStudent, plan, refresh, isPremium, isTrial, trialDaysLeft, loading: loading || (!!user && loadedFor !== user.id), limits, canAccess };
+  return { tier, autoRenew, trialExpired, premiumUntil, isStudent, plan, refresh, isPremium, isTrial, trialDaysLeft, loading: loading || (!!user && loadedFor !== user.id), limits, canAccess };
 };

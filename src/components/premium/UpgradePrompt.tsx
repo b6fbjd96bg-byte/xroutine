@@ -21,6 +21,7 @@ export const PlanPicker = ({ onPaid }: { onPaid?: () => void }) => {
   const [selected, setSelected] = useState<PlanKey>("yearly");
   const [loading, setLoading] = useState(false);
   const [paid, setPaid] = useState(false);
+  const [autoRenew, setAutoRenew] = useState(true);
   const [spots, setSpots] = useState<number | null>(null);
 
   useEffect(() => { getLifetimeSpotsLeft().then(setSpots).catch(() => {}); }, []);
@@ -31,7 +32,7 @@ export const PlanPicker = ({ onPaid }: { onPaid?: () => void }) => {
   const handlePay = async () => {
     setLoading(true);
     try {
-      const res = await payForPro(selected);
+      const res = await payForPro(selected, autoRenew);
       if (res === "paid") {
         setPaid(true);
         toast({ title: "Welcome to Pro!", description: `Your ${PLANS[selected].label.toLowerCase()} Pro plan is active.` });
@@ -85,11 +86,17 @@ export const PlanPicker = ({ onPaid }: { onPaid?: () => void }) => {
       </ul>
 
       <div className="space-y-2">
+        {selected !== "lifetime" && (
+          <label className="flex items-center gap-2 text-xs cursor-pointer select-none">
+            <input type="checkbox" checked={autoRenew} onChange={(e) => setAutoRenew(e.target.checked)} className="accent-primary w-4 h-4" />
+            Auto-renew every {selected === "monthly" ? "month" : "year"} (cancel anytime in Settings)
+          </label>
+        )}
         <Button variant="hero" size="lg" className="w-full gap-2" onClick={handlePay} disabled={loading || paid || (selected === "lifetime" && soldOut)}>
           {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : paid ? <Check className="w-5 h-5" /> : <Crown className="w-5 h-5" />}
           {paid ? "You're Pro!" : `Pay $${p.price} — ${p.label}`}
         </Button>
-        <p className="text-xs text-center text-muted-foreground">Secure payment by Razorpay in US dollars. No auto-renewal — pay again when you want more time.</p>
+        <p className="text-xs text-center text-muted-foreground">Secure payment by Razorpay in US dollars. {selected === "lifetime" ? "One payment, Pro forever." : autoRenew ? "Renews automatically. Turn it off anytime in Settings." : "One-time payment. Pay again when you want more time."}</p>
       </div>
     </div>
   );

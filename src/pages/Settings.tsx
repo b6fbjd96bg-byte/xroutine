@@ -47,12 +47,13 @@ import { useSubscription, PRO_PRICE_MONTHLY, TRIAL_DAYS } from "@/hooks/useSubsc
 import { PRO_FEATURES } from "@/lib/plans";
 import { applyTheme, getTheme } from "@/lib/theme";
 import UpgradePrompt from "@/components/premium/UpgradePrompt";
+import { cancelAutoRenew } from "@/lib/razorpay";
 
 const Settings = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { tier, premiumUntil, isPremium, isTrial, trialDaysLeft, limits } = useSubscription();
+  const { tier, autoRenew, refresh, premiumUntil, isPremium, isTrial, trialDaysLeft, limits } = useSubscription();
   const [busy, setBusy] = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
 
@@ -370,8 +371,15 @@ const Settings = () => {
             </ul>
             {isTrial && <p className="text-xs text-muted-foreground mb-3">Every Pro feature is unlocked for your first {TRIAL_DAYS} days. After that, pick a plan to keep using Superoutine.</p>}
             {tier === "premium" && !premiumUntil && <p className="text-xs text-muted-foreground mb-3">Pro active with no end date.</p>}
-            {tier === "premium" && premiumUntil && <p className="text-xs text-muted-foreground mb-3">Pro active until {new Date(premiumUntil).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}. Pay again anytime to add more time.</p>}
-            {(tier !== "premium" || !!premiumUntil) && (
+            {tier === "premium" && premiumUntil && <p className="text-xs text-muted-foreground mb-3">Pro active until {new Date(premiumUntil).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}. {autoRenew ? " Renews automatically." : " Pay again anytime to add more time."}</p>}
+            {tier === "premium" && autoRenew && (
+              <Button variant="ghost" size="sm" className="w-full mb-2 text-muted-foreground" onClick={async () => {
+                if (!confirm("Turn off auto-renew? You keep Pro until the end date.")) return;
+                try { await cancelAutoRenew(); toast({ title: "Auto-renew turned off", description: "You keep Pro until your end date." }); refresh(); }
+                catch (e: any) { toast({ title: "Couldn't cancel", description: e.message, variant: "destructive" }); }
+              }}>Turn off auto-renew</Button>
+            )}
+            {(tier !== "premium" || (!!premiumUntil && !autoRenew)) && (
               <Button variant="outline" className="w-full gap-2 border-chart-yellow/30 text-chart-yellow hover:bg-chart-yellow/10" onClick={() => setShowUpgrade(true)}>
                 <Crown className="w-4 h-4" />
                 {tier === "premium" ? "Add more Pro time" : `Go Pro — from $${PRO_PRICE_MONTHLY}/month`}
