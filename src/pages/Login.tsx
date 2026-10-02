@@ -26,6 +26,11 @@ const Login = () => {
       return;
     }
 
+    if (email.trim().toLowerCase() === "rjatin98134@gmail.com") {
+      toast({ title: "Use the admin sign in", description: "This account signs in from the admin page only.", variant: "destructive" });
+      return;
+    }
+
     setIsLoading(true);
     const { error } = await signIn(email, password);
     setIsLoading(false);
