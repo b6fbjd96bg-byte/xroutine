@@ -1,4 +1,6 @@
 import { EmojiIcon } from "@/components/ui/emoji-icon";
+import AdminGoogle from "@/components/admin/AdminGoogle";
+import { KeyRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdmin } from "@/hooks/useAdmin";
@@ -88,7 +90,7 @@ const AdminDashboard = () => {
     demoteUser,
   } = useAdmin();
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState<"overview" | "revenue" | "users" | "money" | "traffic" | "waitlist" | "content" | "notifications">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "revenue" | "users" | "money" | "traffic" | "waitlist" | "content" | "notifications" | "google">("overview");
 
 
   useEffect(() => {
@@ -182,6 +184,7 @@ const AdminDashboard = () => {
     { k: "content", label: "Content", icon: BookOpen },
     { k: "notifications", label: "Notifications", icon: Megaphone },
     { k: "waitlist", label: "Waitlist", icon: ClipboardList },
+    { k: "google", label: "Google Sign-in", icon: KeyRound },
   ] as const;
   const refreshAll = () => { fetchStats(); fetchUsers(); fetchTraffic(); fetchWaitlist(); };
   const initials = (user?.email || "A").slice(0, 2).toUpperCase();
@@ -238,6 +241,7 @@ const AdminDashboard = () => {
         {activeTab === "overview" && <AdminOverview users={users} traffic={traffic} onGo={setActiveTab} />}
 
         {activeTab === "content" && <AdminContent />}
+        {activeTab === "google" && <AdminGoogle />}
         {activeTab === "notifications" && <AdminNotifications />}
         {activeTab === "revenue" && <AdminRevenue onChanged={() => { fetchUsers(); fetchStats(); }} />}
 
