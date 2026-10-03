@@ -3,4 +3,4 @@ Allow: /
 Disallow: /dashboard
 Disallow: /RajputAdMin
 
-Sitemap: https://routine-bloom-web.lovable.app/sitemap.xml
+Sitemap: https://superoutine.pro/sitemap.xml

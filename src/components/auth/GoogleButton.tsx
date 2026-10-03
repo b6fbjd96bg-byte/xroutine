@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { lovable } from "@/integrations/lovable/index";
+import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 const GoogleButton = ({ label = "Continue with Google" }: { label?: string }) => {
@@ -12,6 +13,18 @@ const GoogleButton = ({ label = "Continue with Google" }: { label?: string }) =>
   const go = async () => {
     setLoading(true);
     sessionStorage.setItem("post_auth_redirect", "/dashboard");
+    // Lovable hosting has the managed Google broker; other hosts (e.g. Vercel) use your own Google keys directly.
+    const host = window.location.hostname;
+    const onLovable = host.endsWith("lovable.app") || host.endsWith("lovableproject.com") || host === "localhost";
+    if (!onLovable) {
+      const { error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.origin } });
+      if (error) {
+        setLoading(false);
+        sessionStorage.removeItem("post_auth_redirect");
+        toast({ title: "Google sign-in failed", description: error.message, variant: "destructive" });
+      }
+      return;
+    }
     const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
     if (result.error) {
       setLoading(false);
