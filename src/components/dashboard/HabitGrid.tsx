@@ -281,14 +281,13 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
                     const isFuture = false; // every day of the month can be ticked
 
                     return (
-                      <motion.button
+                      <button
+                        type="button"
                         key={day}
-                        whileHover={!isFuture ? { scale: 1.15 } : {}}
-                        whileTap={!isFuture ? { scale: 0.9 } : {}}
                         onClick={(e) => !isFuture && onToggleDay(habit.id, day, e)}
                         disabled={isFuture}
                         className={cn(
-                          "w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-300",
+                          "w-7 h-7 rounded-lg flex items-center justify-center transition-colors duration-150 touch-manipulation select-none active:scale-90 [-webkit-tap-highlight-color:transparent]",
                           isCompleted && cn(color.bg, "text-background shadow-md"),
                           !isCompleted && (isPast || day > currentDay) && "bg-secondary/50 hover:bg-secondary border border-border/50",
                           !isCompleted && isToday && "bg-secondary ring-2 ring-primary/50 hover:bg-primary/20",
@@ -304,7 +303,7 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
                             <Check className="w-4 h-4" />
                           </motion.div>
                         )}
-                      </motion.button>
+                      </button>
                     );
                   })}
                 </motion.div>
