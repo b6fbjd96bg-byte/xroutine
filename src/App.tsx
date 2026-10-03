@@ -27,6 +27,7 @@ const Routines = lazy(() => import("./pages/Routines"));
 const Learn = lazy(() => import("./pages/Learn"));
 const Notifications = lazy(() => import("./pages/Notifications"));
 const Earn = lazy(() => import("./pages/Earn"));
+const GoogleCallback = lazy(() => import("./pages/GoogleCallback"));
 const AICoach = lazy(() => import("./pages/AICoach"));
 const Terms = lazy(() => import("./pages/Legal").then((m) => ({ default: m.Terms })));
 const Privacy = lazy(() => import("./pages/Legal").then((m) => ({ default: m.Privacy })));
@@ -63,6 +64,7 @@ const App = () => (
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/earn" element={<Earn />} />
+            <Route path="/auth/google" element={<GoogleCallback />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/terms" element={<Terms />} />
