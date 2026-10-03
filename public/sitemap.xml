@@ -1,8 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://superoutine.in/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://superoutine.in/earn</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://superoutine.in/about</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://superoutine.in/contact</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://superoutine.in/signup</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://superoutine.in/</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/pricing</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/features</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/ai-coach</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/about</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/faq</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/blog</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/blog/how-to-build-a-habit-that-sticks</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/blog/habit-stacking-beginners-guide</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/blog/best-habit-trackers-2026</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/compare/superoutine-vs-habitica</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/compare/superoutine-vs-streaks</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/compare/superoutine-vs-habitify</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/compare/superoutine-vs-fabulous</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/use-cases/adhd-routine-app</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/use-cases/morning-routine-app</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/use-cases/habit-tracker-for-students</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/use-cases/fitness-habit-tracker</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/privacy</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/terms</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/refunds</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/shipping</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/contact</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://superoutine.in/earn</loc><lastmod>2026-10-03</lastmod></url>
 </urlset>

@@ -5,51 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" />
-    <link rel="icon" href="/logo.png" type="image/png" />
-    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
 
-    <title>Superoutine (Super Routine) — AI Habit Tracker | Best Affordable Routine App</title>
-    <meta name="description" content="Superoutine (Super Routine) is the AI habit tracker and routine planner that helps you build better habits and a better life. XP, streaks, AI coach and analytics from $4.99/mo. 15-day free trial." />
-    <meta name="keywords" content="super routine, superoutine, routine habit tracker, habit tracker, AI habit tracker, AI habit tracking, best habit tracker, cheapest habit tracker, affordable habit tracker, daily routine app, routine planner, gamified habit tracker, streak tracker, improve your life, self improvement app" />
+    <title>Superoutine – AI Habit Tracker &amp; Routine Planner</title>
+    <meta name="description" content="Build better habits with Superoutine's AI coach, XP levels, streaks and analytics. Plans from $4.99/mo. Start your 15-day free trial." />
     <meta name="author" content="Superoutine" />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-    <link rel="canonical" href="https://superoutine.in/" />
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://superoutine.in/" />
-    <meta property="og:title" content="Superoutine — AI Habit Tracker & Routine Planner" />
+    <meta property="og:title" content="Superoutine – AI Habit Tracker &amp; Routine Planner" />
+    <meta property="og:image" content="https://superoutine.in/og-image.png" />
     <meta property="og:description" content="Build better habits with an AI coach, XP levels, streaks and smart analytics. From $4.99/mo with a 15-day free trial." />
     <meta property="og:site_name" content="Superoutine" />
     <meta property="og:locale" content="en_US" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Superoutine — AI Habit Tracker & Routine Planner" />
+    <meta name="twitter:title" content="Superoutine – AI Habit Tracker &amp; Routine Planner" />
+    <meta name="twitter:image" content="https://superoutine.in/og-image.png" />
     <meta name="twitter:description" content="Build better habits with an AI coach, XP levels, streaks and analytics. 15-day free trial." />
 
     <meta name="theme-color" content="#0b0f1a" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Superoutine" />
-
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "Superoutine",
-      "alternateName": ["Super Routine", "SuperRoutine", "Superoutine Habit Tracker"],
-      "url": "https://superoutine.in/",
-      "description": "AI habit tracker and daily routine planner with XP levels, streak protection, an AI coach and smart analytics.",
-      "applicationCategory": "LifestyleApplication",
-      "operatingSystem": "Web, Android, iOS (browser)",
-      "offers": [
-        { "@type": "Offer", "name": "Monthly", "price": "4.99", "priceCurrency": "USD" },
-        { "@type": "Offer", "name": "Yearly", "price": "39", "priceCurrency": "USD" },
-        { "@type": "Offer", "name": "Lifetime", "price": "79", "priceCurrency": "USD" }
-      ],
-      "featureList": ["AI Habit Coach", "XP & Levels", "Streak Protection", "Routines", "To-Do Calendar", "Habit Analytics", "Daily AI Lessons", "Focus Timer"]
-    }
-    </script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -66,17 +49,23 @@
       "name": "Superoutine",
       "alternateName": "Super Routine",
       "url": "https://superoutine.in/",
-      "logo": "https://superoutine.in/logo.png"
+      "logo": "https://superoutine.in/logo.png",
+      "email": "support@superoutine.pro",
+      "sameAs": []
     }
     </script>
   </head>
 
   <body>
     <div id="root"></div>
-    <noscript>
-      <h1>Superoutine — AI Habit Tracker and Routine Planner</h1>
-      <p>Superoutine (Super Routine) is an affordable AI habit tracker that helps you build better daily routines, keep streaks and improve your life. Plans from $4.99 per month with a 15-day free trial.</p>
-    </noscript>
+    <script>
+      // Private routes fall back to this file; clear any prerendered page so it never flashes.
+      (function () {
+        var p = location.pathname.replace(/\/$/, "") || "/";
+        var pub = /^\/(pricing|features|ai-coach|about|faq|blog|compare|use-cases|privacy|terms|refunds|shipping|contact|earn)(\/|$)/;
+        if (p !== "/" && !pub.test(p)) { var r = document.getElementById("root"); if (r) r.innerHTML = ""; }
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

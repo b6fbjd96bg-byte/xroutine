@@ -1,54 +1,41 @@
 import { Link } from "react-router-dom";
 
-const Footer = () => {
-  return (
-    <footer className="py-16 px-4 border-t border-border/50">
-      <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-          {/* Brand */}
-          <div className="col-span-2">
-            <div className="flex items-center gap-2 mb-4">
-              <img src="/logo.png" alt="Superoutine" className="w-8 h-8 rounded-lg" />
-              <span className="text-xl font-bold font-display">Superoutine</span>
-            </div>
-            <p className="text-muted-foreground text-sm max-w-xs leading-relaxed">
-              The gamified habit tracker that turns your daily routines into lasting behavioral change. Built with psychology, powered by design.
-            </p>
-          </div>
+const cols: { title: string; links: [string, string][] }[] = [
+  { title: "Product", links: [["/features", "Features"], ["/pricing", "Pricing"], ["/ai-coach", "AI Coach"], ["/faq", "FAQ"], ["/signup", "Start free trial"]] },
+  { title: "Use cases", links: [["/use-cases/adhd-routine-app", "ADHD routines"], ["/use-cases/morning-routine-app", "Morning routine"], ["/use-cases/habit-tracker-for-students", "For students"], ["/use-cases/fitness-habit-tracker", "Fitness habits"]] },
+  { title: "Compare", links: [["/compare/superoutine-vs-habitica", "vs Habitica"], ["/compare/superoutine-vs-streaks", "vs Streaks"], ["/compare/superoutine-vs-habitify", "vs Habitify"], ["/compare/superoutine-vs-fabulous", "vs Fabulous"], ["/blog", "Blog"]] },
+  { title: "Company", links: [["/about", "About"], ["/contact", "Contact"], ["/earn", "Refer & Earn"], ["/privacy", "Privacy Policy"], ["/terms", "Terms"], ["/refunds", "Cancellation & Refunds"], ["/shipping", "Shipping Policy"]] },
+];
 
-          {/* Product */}
-          <div>
-            <h4 className="font-display font-semibold mb-4 text-sm">Product</h4>
-            <ul className="space-y-2">
-              <li><a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Features</a></li>
-              <li><Link to="/signup" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Get Started</Link></li>
-              <li><Link to="/login" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Sign In</Link></li>
-            </ul>
+const Footer = () => (
+  <footer className="py-16 px-4 border-t border-border/50">
+    <div className="max-w-6xl mx-auto">
+      <div className="grid grid-cols-2 md:grid-cols-6 gap-8 mb-12">
+        <div className="col-span-2">
+          <div className="flex items-center gap-2 mb-4">
+            <img src="/logo.png" alt="Superoutine logo" width={32} height={32} loading="lazy" className="w-8 h-8 rounded-lg" />
+            <span className="text-xl font-bold font-display">Superoutine</span>
           </div>
-
-          {/* Company */}
-          <div>
-            <h4 className="font-display font-semibold mb-4 text-sm">Company</h4>
-            <ul className="space-y-2">
-              <li><Link to="/earn" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Refer & Earn</Link></li>
-              <li><Link to="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">About / Creator</Link></li>
-              <li><Link to="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Contact Us</Link></li>
-              <li><Link to="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Terms and Conditions</Link></li>
-              <li><Link to="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/shipping" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Shipping Policy</Link></li>
-              <li><Link to="/refunds" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Cancellation and Refunds</Link></li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="border-t border-border/30 pt-8 flex flex-col md:flex-row items-center justify-center gap-4">
-          <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Superoutine. All rights reserved.
+          <p className="text-muted-foreground text-sm max-w-xs leading-relaxed">
+            Superoutine is an AI habit tracker and routine planner with XP, streaks and an AI coach. From $4.99/month after a 15-day free trial.
           </p>
         </div>
+        {cols.map((c) => (
+          <nav key={c.title} aria-label={c.title}>
+            <h2 className="font-display font-semibold mb-4 text-sm">{c.title}</h2>
+            <ul className="space-y-2">
+              {c.links.map(([to, label]) => (
+                <li key={to}><Link to={to} className="text-sm text-muted-foreground hover:text-foreground transition-colors">{label}</Link></li>
+              ))}
+            </ul>
+          </nav>
+        ))}
       </div>
-    </footer>
-  );
-};
+      <div className="border-t border-border/30 pt-8 text-center">
+        <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} Superoutine. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+);
 
 export default Footer;

@@ -3,7 +3,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { NoIndex } from "@/seo/Seo";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import ReferralCapture from "@/components/referral/ReferralCapture";
@@ -21,7 +22,16 @@ const ReferEarn = lazy(() => import("./pages/ReferEarn"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
-const About = lazy(() => import("./pages/About"));
+const M = () => import("./pages/marketing");
+const PricingPage = lazy(() => M().then((m) => ({ default: m.PricingPage })));
+const FeaturesPage = lazy(() => M().then((m) => ({ default: m.FeaturesPage })));
+const AICoachPage = lazy(() => M().then((m) => ({ default: m.AICoachPage })));
+const About = lazy(() => M().then((m) => ({ default: m.AboutPage })));
+const FAQPage = lazy(() => M().then((m) => ({ default: m.FAQPage })));
+const BlogIndexPage = lazy(() => M().then((m) => ({ default: m.BlogIndexPage })));
+const BlogPostPage = lazy(() => M().then((m) => ({ default: m.BlogPostPage })));
+const ComparePage = lazy(() => M().then((m) => ({ default: m.ComparePage })));
+const UseCasePage = lazy(() => M().then((m) => ({ default: m.UseCasePage })));
 const Contact = lazy(() => import("./pages/Contact"));
 const Routines = lazy(() => import("./pages/Routines"));
 const Learn = lazy(() => import("./pages/Learn"));
@@ -42,9 +52,11 @@ const PageLoader = () => (
   </div>
 );
 
+const PRIVATE = ["/dashboard", "/login", "/signup", "/forgot-password", "/reset-password", "/RajputAdMin", "/auth", "/app"];
 const PageTracker = () => {
   usePageTracking();
-  return null;
+  const { pathname } = useLocation();
+  return PRIVATE.some((p) => pathname.startsWith(p)) ? <NoIndex /> : null;
 };
 
 const App = () => (
@@ -66,6 +78,14 @@ const App = () => (
             <Route path="/earn" element={<Earn />} />
             <Route path="/auth/google" element={<GoogleCallback />} />
             <Route path="/about" element={<About />} />
+            <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/features" element={<FeaturesPage />} />
+            <Route path="/ai-coach" element={<AICoachPage />} />
+            <Route path="/faq" element={<FAQPage />} />
+            <Route path="/blog" element={<BlogIndexPage />} />
+            <Route path="/blog/:slug" element={<BlogPostPage />} />
+            <Route path="/compare/:slug" element={<ComparePage />} />
+            <Route path="/use-cases/:slug" element={<UseCasePage />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />

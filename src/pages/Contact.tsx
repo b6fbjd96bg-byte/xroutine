@@ -1,3 +1,4 @@
+import Seo from "@/seo/Seo";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -35,6 +36,7 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Seo title="Contact Superoutine – Support & Questions" description="Contact the Superoutine team for help with your account, billing, the AI Coach or feature ideas. Email support@superoutine.pro or send us a message here." path="/contact" crumbs={[{ name: "Contact Superoutine", path: "/contact" }]} />
       {/* Navigation */}
       <div className="fixed top-0 left-0 right-0 z-50 px-4 py-4">
         <div className="max-w-4xl mx-auto">

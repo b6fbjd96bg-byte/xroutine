@@ -20,7 +20,7 @@ const Pricing = () => {
     <section id="pricing" className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold font-display">Cheaper than a coffee</h2>
+          <h2 className="text-3xl md:text-4xl font-bold font-display">How much does Superoutine cost?</h2>
           <p className="text-muted-foreground mt-3">Try everything free for {TRIAL_DAYS} days. After that, keep going with Pro from just ${PLANS.monthly.price}/month.</p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto gap-4">
@@ -47,7 +47,7 @@ const Pricing = () => {
             );
           })}
         </div>
-        <p className="text-center text-xs text-muted-foreground mt-6">Secure payment by Razorpay. No auto-renew — you're never charged without paying yourself.</p>
+        <p className="text-center text-xs text-muted-foreground mt-6">Secure payment by Razorpay in USD. Monthly and yearly plans can be cancelled anytime in Settings.</p>
       </div>
       <UpgradePrompt open={open} onOpenChange={setOpen} />
     </section>

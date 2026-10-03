@@ -1,0 +1,29 @@
+# Superoutine
+
+> Superoutine (also searched as "Super Routine") is an AI habit tracker and routine planner. It helps people build daily routines with XP levels, streaks, an AI coach and progress analytics.
+
+- Price: Pro is $4.99/month, $39/year, or $79 one-time lifetime (first 100 buyers). Prices in USD.
+- Trial: 15-day free trial with every feature, no card needed. After the trial the app is locked until a plan is chosen; data is kept.
+- Platforms: Web app for any modern browser on desktop, iPhone and Android. No native app-store apps.
+- Key features: daily 31-day habit grid, weekly habits, XP and levels, streaks with 3 streak protections a month, AI Coach chat that reads your progress, daily AI lessons, routines with 5 ready-made packs, to-do list, focus timer, Momentum Meter, Comeback Score, notifications inbox, 3-level referral program (10% / 2% / 0.5%).
+
+## Main pages
+- [Home](https://superoutine.in/)
+- [Features](https://superoutine.in/features)
+- [Pricing](https://superoutine.in/pricing)
+- [AI Coach](https://superoutine.in/ai-coach)
+- [FAQ](https://superoutine.in/faq)
+- [About](https://superoutine.in/about)
+- [Blog](https://superoutine.in/blog)
+
+## Comparisons
+- [Superoutine vs Habitica](https://superoutine.in/compare/superoutine-vs-habitica)
+- [Superoutine vs Streaks](https://superoutine.in/compare/superoutine-vs-streaks)
+- [Superoutine vs Habitify](https://superoutine.in/compare/superoutine-vs-habitify)
+- [Superoutine vs Fabulous](https://superoutine.in/compare/superoutine-vs-fabulous)
+
+## Use cases
+- [ADHD routine app](https://superoutine.in/use-cases/adhd-routine-app)
+- [Morning routine app](https://superoutine.in/use-cases/morning-routine-app)
+- [Habit tracker for students](https://superoutine.in/use-cases/habit-tracker-for-students)
+- [Fitness habit tracker](https://superoutine.in/use-cases/fitness-habit-tracker)
