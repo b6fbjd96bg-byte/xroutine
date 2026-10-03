@@ -27,6 +27,7 @@ import StreakProtection from "@/components/gamification/StreakProtection";
 import ConfettiCelebration from "@/components/gamification/ConfettiCelebration";
 import OnboardingWizard from "@/components/onboarding/OnboardingWizard";
 import DailyLoginReward from "@/components/dashboard/DailyLoginReward";
+import TrialNudge from "@/components/premium/TrialNudge";
 import WelcomeBack from "@/components/dashboard/WelcomeBack";
 import WeeklyReportCard from "@/components/dashboard/WeeklyReportCard";
 import CommitmentCard from "@/components/dashboard/CommitmentCard";
@@ -235,6 +236,8 @@ const Dashboard = () => {
             isNewLogin={isNewLogin}
             onDismiss={dismissNewLogin}
           />
+
+          <TrialNudge />
 
           {/* Header */}
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
