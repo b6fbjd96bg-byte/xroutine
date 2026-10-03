@@ -55,6 +55,32 @@ Deno.serve(async (req) => {
     const action = url.searchParams.get("action");
 
     switch (action) {
+      case "google-config": {
+        const { data } = await adminClient.from("app_settings").select("key,value").in("key", ["google_client_id", "google_client_secret"]);
+        const m = Object.fromEntries((data || []).map((r: { key: string; value: string }) => [r.key, r.value]));
+        const sec = m.google_client_secret || "";
+        return new Response(JSON.stringify({
+          clientId: m.google_client_id || "",
+          secretSaved: !!sec,
+          secretHint: sec ? `••••${sec.slice(-4)}` : "",
+        }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+
+      case "save-google-config": {
+        const body = await req.json();
+        const clientId = String(body.clientId || "").trim();
+        const clientSecret = String(body.clientSecret || "").trim();
+        if (!/^[0-9]+-[a-z0-9]+\.apps\.googleusercontent\.com$/i.test(clientId)) throw new Error("Client ID should look like 1234-abc.apps.googleusercontent.com");
+        const rows = [{ key: "google_client_id", value: clientId, updated_at: new Date().toISOString() }];
+        if (clientSecret) {
+          if (clientSecret.length < 10) throw new Error("Client Secret looks too short");
+          rows.push({ key: "google_client_secret", value: clientSecret, updated_at: new Date().toISOString() });
+        }
+        const { error } = await adminClient.from("app_settings").upsert(rows);
+        if (error) throw error;
+        return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+
       case "list-users": {
         const page = parseInt(url.searchParams.get("page") || "1");
         const perPage = 1000;
