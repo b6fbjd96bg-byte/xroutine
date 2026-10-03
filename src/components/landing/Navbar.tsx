@@ -21,7 +21,7 @@ const Navbar = () => {
       transition={{ duration: 0.5 }}
       className={`fixed top-0 left-0 right-0 z-50 px-4 py-4 transition-all duration-300 ${scrolled ? "py-2" : ""}`}
     >
-      <div className={`max-w-6xl mx-auto glass-card !bg-background/90 backdrop-blur-md px-4 sm:px-6 py-3 transition-all duration-300 ${scrolled ? "shadow-lg shadow-primary/5" : ""}`}>
+      <div className={`max-w-6xl mx-auto rounded-2xl border border-border/60 bg-background/95 backdrop-blur-md px-4 sm:px-6 py-3 transition-all duration-300 ${scrolled ? "shadow-lg shadow-primary/5" : ""}`}>
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <img src="/logo.png" alt="Superoutine" className="w-8 h-8 rounded-lg" />
