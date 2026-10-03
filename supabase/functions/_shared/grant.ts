@@ -35,14 +35,12 @@ export async function grant(admin: any, uid: string, planKey: string, pay: any, 
   else await admin.from("user_subscriptions").insert({ user_id: uid, ...row });
   if (until && p.period) {
     const date = new Date(until).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
-    const renews = row.auto_renew || s?.auto_renew;
     await admin.from("notifications").insert({
       user_id: uid, kind: "payment",
       title: `${p.label} payment confirmed`,
       body: `We received $${(pay.amount / 100).toFixed(2)}. Your Pro is active until ${date}.` + (opts.subscriptionId ? ` It renews automatically on ${date}.` : " Renew before then to keep Pro."),
       link: "/dashboard/settings",
     });
-    void renews;
   }
   return true;
 }
