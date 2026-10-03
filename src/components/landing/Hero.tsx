@@ -11,7 +11,7 @@ const Hero = () => {
   const [w, setW] = useState(0);
   useEffect(() => { const t = setInterval(() => setW((i) => (i + 1) % WORDS.length), 2200); return () => clearInterval(t); }, []);
   return (
-    <section aria-label="Hero" className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 py-20">
+    <section aria-label="Hero" className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 pt-28 pb-16 sm:py-20">
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-48 sm:w-96 h-48 sm:h-96 bg-primary/10 rounded-full blur-3xl animate-float" />
@@ -61,20 +61,20 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 justify-center mb-12"
+          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 justify-center mb-10 sm:mb-12 max-w-xs sm:max-w-none mx-auto"
         >
           <Link to="/signup">
-            <Button variant="hero" size="xl" className="group">
+            <Button variant="hero" size="xl" className="group w-full">
               Start Free
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
           <Link to="/login">
-            <Button variant="heroOutline" size="xl">
+            <Button variant="heroOutline" size="xl" className="w-full">
               Sign In
             </Button>
           </Link>
-          <div className="flex items-center">
+          <div className="hidden sm:flex items-center">
             <button
               onClick={async () => {
                 const shareText = `I'm using Superoutine — stop tracking, start transforming. Try it!`;
@@ -99,7 +99,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="flex flex-wrap gap-3 sm:gap-6 justify-center mb-12 sm:mb-16 px-2"
+          className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-6 justify-center mb-12 sm:mb-16 px-1"
         >
           {[
             { icon: Zap, text: "Earn XP & Level Up" },
@@ -109,10 +109,10 @@ const Hero = () => {
           ].map(({ icon: Icon, text }) => (
             <div
               key={text}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-card/50 border border-border/50"
+              className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg bg-card/50 border border-border/50"
             >
               <Icon className="w-4 h-4 text-primary" />
-              <span className="text-sm text-muted-foreground">{text}</span>
+              <span className="text-xs sm:text-sm text-muted-foreground text-left">{text}</span>
             </div>
           ))}
         </motion.div>
