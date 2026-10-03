@@ -13,7 +13,6 @@ export const PRO_FEATURES = [
   "Unlimited daily & weekly habits",
   "AI Coach chat that knows your progress",
   "Full analytics & trends",
-  "To-Do calendar & daily planner",
+  "To-do list & daily planner",
   "3 streak protections a month",
-  "Weekly email report card",
 ];

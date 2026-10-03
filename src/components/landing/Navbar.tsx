@@ -24,13 +24,16 @@ const Navbar = () => {
       <div className={`max-w-6xl mx-auto rounded-2xl border border-border/60 bg-background/95 backdrop-blur-md px-4 sm:px-6 py-3 transition-all duration-300 ${scrolled ? "shadow-lg shadow-primary/5" : ""}`}>
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <img src="/logo.png" alt="Superoutine" className="w-8 h-8 rounded-lg" />
+            <img src="/logo.png" alt="Superoutine logo" width={32} height={32} className="w-8 h-8 rounded-lg" />
             <span className="text-xl font-bold font-display">Superoutine</span>
           </Link>
 
           <div className="hidden md:flex items-center gap-6">
-            <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Features</a>
-            <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Pricing</a>
+            <Link to="/features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Features</Link>
+            <Link to="/pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Pricing</Link>
+            <Link to="/ai-coach" className="text-sm text-muted-foreground hover:text-foreground transition-colors">AI Coach</Link>
+            <Link to="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Blog</Link>
+            <Link to="/faq" className="text-sm text-muted-foreground hover:text-foreground transition-colors">FAQ</Link>
             <Link to="/earn" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Earn</Link>
           </div>
 
@@ -65,16 +68,9 @@ const Navbar = () => {
               className="overflow-hidden sm:hidden"
             >
               <div className="flex flex-col gap-3 pt-4 pb-2 border-t border-border/30 mt-3">
-                <a
-                  href="#features"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Features
-                </a>
-                <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors py-2" onClick={() => setMobileOpen(false)}>
-                  Pricing
-                </a>
+                {[["/features", "Features"], ["/pricing", "Pricing"], ["/ai-coach", "AI Coach"], ["/blog", "Blog"], ["/faq", "FAQ"], ["/earn", "Earn"]].map(([to, label]) => (
+                  <Link key={to} to={to} className="text-sm text-muted-foreground hover:text-foreground transition-colors py-2" onClick={() => setMobileOpen(false)}>{label}</Link>
+                ))}
                 <Link to="/login" onClick={() => setMobileOpen(false)}>
                   <Button variant="ghost" size="sm" className="w-full justify-start">Sign In</Button>
                 </Link>

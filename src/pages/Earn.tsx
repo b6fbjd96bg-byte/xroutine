@@ -1,3 +1,4 @@
+import Seo from "@/seo/Seo";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Users, Percent, Wallet, Repeat, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,7 @@ const Earn = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Seo title="Refer & Earn – Superoutine Referral Program" description="Earn 10% of every payment your invited friends make on Superoutine, plus 2% and 0.5% from the next two levels. Payouts from $10, 30 days after each payment." path="/earn" crumbs={[{ name: "Refer & Earn", path: "/earn" }]} />
       <div className="px-4 py-4 max-w-5xl mx-auto">
         <Link to="/"><Button variant="ghost" size="sm" className="gap-2"><ArrowLeft className="w-4 h-4" />Back to Home</Button></Link>
       </div>
