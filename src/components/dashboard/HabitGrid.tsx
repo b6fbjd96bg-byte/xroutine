@@ -181,7 +181,7 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
             <div className="min-w-[900px] px-6 pb-6">
               {/* Header */}
               <div className="grid grid-cols-[150px_60px_repeat(31,32px)] gap-1 mb-2">
-                <div className="text-sm font-medium text-muted-foreground">Habit</div>
+                <div className="text-sm font-medium text-muted-foreground sticky left-0 z-20 bg-card -ml-6 pl-6 -my-1 py-1 flex items-center">Habit</div>
                 <div className="text-sm font-medium text-muted-foreground text-center">Goal</div>
                 {days.map((day) => (
                   <div
@@ -206,7 +206,7 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
 
               {/* Week indicators */}
               <div className="grid grid-cols-[150px_60px_repeat(31,32px)] gap-1 mb-4">
-                <div></div>
+                <div className="sticky left-0 z-20 bg-card -ml-6 pl-6 self-stretch"></div>
                 <div></div>
                 {days.map((day) => (
                   <div key={day} className="flex justify-center">
@@ -232,7 +232,7 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
                   transition={{ delay: index * 0.03, duration: 0.3 }}
                   className="grid grid-cols-[150px_60px_repeat(31,32px)] gap-1 py-2 border-t border-border/30 group"
                 >
-                  <div className="text-sm font-medium truncate flex items-center gap-1">
+                  <div className="text-sm font-medium truncate flex items-center gap-1 sticky left-0 z-20 bg-card -ml-6 pl-6 -my-2 py-2 shadow-[6px_0_8px_-6px_hsl(var(--background))]">
                     <div className="flex flex-col flex-1 min-w-0">
                       <div className="flex items-center gap-1">
                         <span className={cn("w-2.5 h-2.5 rounded-full shrink-0", color.dot)} />
