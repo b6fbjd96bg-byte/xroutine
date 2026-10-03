@@ -18,13 +18,17 @@ const GoogleButton = ({ label = "Continue with Google" }: { label?: string }) =>
 
   const go = async () => {
     setLoading(true);
-    // Google sign-in only runs on Lovable hosting; other hosts (e.g. Vercel) hand off to it.
+    sessionStorage.setItem("post_auth_redirect", "/dashboard");
+    // Own domain (e.g. superoutine.in on Vercel): use your own Google keys so users stay on your domain.
     if (!isLovableHost()) {
-      const ref = new URLSearchParams(window.location.search).get("ref");
-      window.location.href = `${LOVABLE_SITE}${window.location.pathname === "/signup" ? "/signup" : "/login"}?google=1${ref ? `&ref=${encodeURIComponent(ref)}` : ""}`;
+      const { error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.origin } });
+      if (error) {
+        setLoading(false);
+        sessionStorage.removeItem("post_auth_redirect");
+        toast({ title: "Google sign-in failed", description: error.message, variant: "destructive" });
+      }
       return;
     }
-    sessionStorage.setItem("post_auth_redirect", "/dashboard");
     const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
     if (result.error) {
       setLoading(false);
