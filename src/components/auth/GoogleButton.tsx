@@ -37,6 +37,14 @@ const GoogleButton = ({ label = "Continue with Google" }: { label?: string }) =>
     navigate("/dashboard");
   };
 
+  useEffect(() => {
+    if (autoRan.current || !isLovableHost()) return;
+    if (new URLSearchParams(window.location.search).get("google") !== "1") return;
+    autoRan.current = true;
+    go();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Button type="button" variant="outline" size="lg" className="w-full gap-3" onClick={go} disabled={loading}>
       <svg viewBox="0 0 24 24" className="w-5 h-5" aria-hidden>
