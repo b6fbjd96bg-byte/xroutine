@@ -14,19 +14,11 @@ const Hero = () => {
     <section aria-label="Hero" className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 pt-28 pb-16 sm:py-20">
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-48 sm:w-96 h-48 sm:h-96 bg-primary/10 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-1/4 right-1/4 w-40 sm:w-80 h-40 sm:h-80 bg-chart-purple/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-1/4 left-1/4 w-48 sm:w-96 h-48 sm:h-96 bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-40 sm:w-80 h-40 sm:h-80 bg-chart-purple/10 rounded-full blur-3xl" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-gradient-radial from-primary/5 to-transparent rounded-full" />
-        <div className="hidden sm:block absolute top-10 right-10 w-64 h-64 bg-chart-blue/8 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }} />
-      </div>
+              </div>
 
-      {/* Floating particles */}
-      <div className="absolute inset-0 pointer-events-none">
-        {Array.from({ length: 18 }).map((_, i) => (
-          <motion.span key={i} className="absolute w-1.5 h-1.5 rounded-full bg-primary/60" style={{ left: `${(i * 53) % 100}%`, bottom: -10 }}
-            animate={{ y: [0, -900], opacity: [0, 1, 0] }} transition={{ duration: 8 + (i % 5), repeat: Infinity, delay: i * 0.6, ease: "linear" }} />
-        ))}
-      </div>
 
       {/* Grid Pattern */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(45,212,191,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(45,212,191,0.03)_1px,transparent_1px)] bg-[size:64px_64px]" />
@@ -124,13 +116,11 @@ const Hero = () => {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="mt-4 relative"
         >
-          <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        >
+          <div>
           <div className="glass-card p-3 md:p-6 rounded-2xl overflow-hidden max-w-full">
             <LiveDashboardDemo />
           </div>
-          
-          </motion.div>
+          </div>
           {/* Glow Effect */}
           <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/20 via-transparent to-transparent blur-3xl" />
         </motion.div>
