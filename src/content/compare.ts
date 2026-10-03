@@ -50,7 +50,7 @@ export const COMPARE: Record<string, ContentPageData> = Object.fromEntries(
     {
       path: `/compare/superoutine-vs-${c.slug}`,
       title: `Superoutine vs ${c.name}: Habit Tracker Comparison`.slice(0, 60),
-      description: `Superoutine vs ${c.name}: an honest comparison of features, price and platforms, plus who should choose which habit tracker. Updated October 2026.`,
+      description: `Superoutine vs ${c.name}: an honest comparison of features, price and platforms, plus who should choose which habit tracker app. Updated October 2026.`,
       crumb: `Superoutine vs ${c.name}`,
       h1: `Superoutine vs ${c.name}`,
       intro: c.summary,

@@ -36,7 +36,7 @@ export const PAGES: Record<string, ContentPageData> = {
   pricing: {
     path: "/pricing",
     title: "Superoutine Pricing – Plans from $4.99/mo",
-    description: "Superoutine pricing: Pro is $4.99/month, $39/year or $79 lifetime. Every account starts with a 15-day free trial with every feature. Cancel anytime.",
+    description: "Superoutine pricing: Pro is $4.99/month, $39/year or $79 lifetime. Every new account starts with a 15-day free trial with every feature. Cancel anytime.",
     crumb: "Pricing",
     h1: "Superoutine pricing",
     intro: "Superoutine Pro costs $4.99 per month, $39 per year, or $79 once for lifetime access. Every new account starts with a 15-day free trial that includes every feature, so you can test the whole app before paying.",
@@ -94,7 +94,7 @@ export const PAGES: Record<string, ContentPageData> = {
   features: {
     path: "/features",
     title: "Superoutine Features – XP, Streaks & AI Coach",
-    description: "Explore Superoutine features: XP levels, streaks, an AI coach, routines, to-do list, analytics, reminders and referrals. Try it free for 15 days.",
+    description: "Explore Superoutine features: XP levels, streaks, an AI coach, routines, to-do list, analytics, reminders and referrals. Try every feature free for 15 days.",
     crumb: "Features",
     h1: "Superoutine features",
     intro: "Superoutine combines a habit tracker, a routine planner and an AI coach in one web app. You earn XP for every habit you complete, protect your streaks, and see clear analytics on how your routines are going.",
@@ -250,7 +250,7 @@ export const PAGES: Record<string, ContentPageData> = {
   faq: {
     path: "/faq",
     title: "Superoutine FAQ – Habit Tracker Questions",
-    description: "Answers about Superoutine: pricing, the 15-day free trial, AI Coach, XP and streaks, devices, routines, privacy and referrals. Short answers first.",
+    description: "Answers about Superoutine: pricing, the 15-day free trial, AI Coach, XP and streaks, devices, routines, privacy and referrals. Short answers come first.",
     crumb: "FAQ",
     h1: "Superoutine frequently asked questions",
     intro: "Superoutine is an AI habit tracker that costs $4.99 per month after a 15-day free trial. Below are short, direct answers to the most common questions, with more detail where it helps.",

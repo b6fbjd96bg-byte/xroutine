@@ -7,7 +7,7 @@ export const POSTS: Record<string, ContentPageData> = {
   "how-to-build-a-habit-that-sticks": {
     path: "/blog/how-to-build-a-habit-that-sticks",
     title: "How to Build a Habit That Sticks",
-    description: "A practical guide to building a habit that sticks: start tiny, attach it to a cue, track it daily and plan for missed days. Steps you can use today.",
+    description: "A practical guide to building a habit that sticks: start tiny, attach it to a cue, track it daily and plan for missed days. Simple steps you can use today.",
     crumb: "How to build a habit that sticks",
     h1: "How to build a habit that sticks",
     intro: "To build a habit that sticks, make it tiny, attach it to something you already do, track it every day and plan in advance for the days you miss. Consistency matters far more than intensity.",
@@ -25,7 +25,7 @@ export const POSTS: Record<string, ContentPageData> = {
   "habit-stacking-beginners-guide": {
     path: "/blog/habit-stacking-beginners-guide",
     title: "Habit Stacking: A Beginner's Guide",
-    description: "Habit stacking means linking a new habit to one you already do. Learn the formula, see 10 example stacks and avoid the mistakes beginners make.",
+    description: "Habit stacking means linking a new habit to one you already do. Learn the formula, see 10 example stacks and avoid the common mistakes beginners make.",
     crumb: "Habit stacking guide",
     h1: "Habit stacking: a beginner's guide",
     intro: "Habit stacking means attaching a new habit to one you already do every day, using the formula \"After I [current habit], I will [new habit].\" The existing habit becomes a reliable reminder.",
@@ -42,7 +42,7 @@ export const POSTS: Record<string, ContentPageData> = {
   "best-habit-trackers-2026": {
     path: "/blog/best-habit-trackers-2026",
     title: "Best Habit Trackers in 2026 (Compared)",
-    description: "We compare five popular habit trackers in 2026 – Superoutine, Habitica, Streaks, Habitify and Fabulous – on features, platforms and price.",
+    description: "We compare five popular habit trackers in 2026 – Superoutine, Habitica, Streaks, Habitify and Fabulous – on features, platforms and price to help you choose.",
     crumb: "Best habit trackers in 2026",
     h1: "Best habit trackers in 2026 (compared)",
     intro: "The best habit tracker depends on what motivates you: Habitica suits gamers, Streaks suits Apple-only users, Habitify suits data lovers, Fabulous suits guided self-care, and Superoutine suits people who want gamification plus an AI coach. We make Superoutine, so weigh our view accordingly.",

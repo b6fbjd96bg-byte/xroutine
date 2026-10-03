@@ -4,7 +4,7 @@ export const USE_CASES: Record<string, ContentPageData> = {
   "adhd-routine-app": {
     path: "/use-cases/adhd-routine-app",
     title: "Superoutine for ADHD – A Routine App That Helps",
-    description: "How Superoutine helps people with ADHD keep routines: small visible steps, quick XP rewards, streak protection and an AI coach. Free for 15 days.",
+    description: "How Superoutine helps people with ADHD keep routines: small visible steps, quick XP rewards, streak protection and an AI coach. Try it free for 15 days.",
     crumb: "ADHD routine app",
     h1: "A routine app for ADHD brains",
     intro: "Superoutine helps people with ADHD keep routines by making each step small, visible and instantly rewarding. You tick a box, earn XP right away, and a missed day never wipes out your progress.",
@@ -34,7 +34,7 @@ export const USE_CASES: Record<string, ContentPageData> = {
   "habit-tracker-for-students": {
     path: "/use-cases/habit-tracker-for-students",
     title: "Habit Tracker for Students – Superoutine",
-    description: "Superoutine is a habit tracker for students: a study routine pack, focus timer, to-do list with priorities and an AI coach for exams. Try it free for 15 days.",
+    description: "Superoutine is a habit tracker for students: a study routine pack, focus timer, to-do list with priorities and an AI coach for exams. Free for 15 days.",
     crumb: "Habit tracker for students",
     h1: "A habit tracker for students",
     intro: "Superoutine helps students build study habits with a ready-made study pack, a focus timer, a prioritized to-do list and an AI coach that helps plan busy exam weeks.",
@@ -49,7 +49,7 @@ export const USE_CASES: Record<string, ContentPageData> = {
   "fitness-habit-tracker": {
     path: "/use-cases/fitness-habit-tracker",
     title: "Fitness Habit Tracker – Superoutine",
-    description: "Track workouts, steps and healthy eating with Superoutine, a fitness habit tracker with a fitness routine pack, weekly habits and streaks. Free for 15 days.",
+    description: "Track workouts, steps and healthy eating with Superoutine, a fitness habit tracker with a fitness routine pack, weekly habits and streaks. Free 15 days.",
     crumb: "Fitness habit tracker",
     h1: "A fitness habit tracker that rewards consistency",
     intro: "Superoutine works as a fitness habit tracker: log workouts, steps and healthy meals as daily or weekly habits, follow the fitness routine pack, and earn XP for every session.",

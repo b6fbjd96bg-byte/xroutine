@@ -29,7 +29,7 @@ export const Privacy = () => (
 );
 
 export const Shipping = () => (
-  <LegalPage title="Shipping Policy" path="/shipping" description="Superoutine is a digital web app, so nothing is shipped. Pro access is delivered instantly to your account after payment. Read the shipping policy." updated={UPDATED} sections={[
+  <LegalPage title="Shipping Policy" path="/shipping" description="Superoutine is a digital web app, so nothing is shipped. Pro access is delivered instantly to your account after payment. Read the full shipping policy." updated={UPDATED} sections={[
     { heading: "Digital Service Only", body: ["Superoutine is a fully digital product. No physical goods are shipped."] },
     { heading: "Delivery of Service", body: ["Premium features are activated on your account instantly after successful payment, usually within a few minutes. Access is available worldwide wherever the website can be reached."] },
     { heading: "Delays", body: [`If your premium access is not activated within 24 hours of payment, contact us at ${EMAIL} with your payment reference and we will resolve it promptly.`] },

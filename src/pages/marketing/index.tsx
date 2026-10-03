@@ -33,14 +33,14 @@ export const BlogIndexPage = () => (
   <MarketingShell>
     <Seo
       title="Superoutine Blog – Habit Building Guides"
-      description="Practical guides on building habits, habit stacking and choosing a habit tracker, written by the team behind the Superoutine AI habit tracker."
+      description="Practical, honest guides on building habits, habit stacking and choosing a habit tracker, written by the team behind the Superoutine AI habit tracker."
       path="/blog"
       crumbs={[{ name: "Blog", path: "/blog" }]}
     />
     <div className="max-w-3xl mx-auto">
       <Breadcrumbs crumbs={[{ name: "Blog", path: "/blog" }]} />
       <h1 className="text-3xl sm:text-5xl font-bold font-display mb-4">Superoutine blog</h1>
-      <p className="text-lg text-muted-foreground mb-10">Practical guides on building habits that last, from the team behind the Superoutine AI habit tracker.</p>
+      <p className="text-lg text-muted-foreground mb-10">Practical, honest guides on building habits that last, from the team behind the Superoutine AI habit tracker.</p>
       <div className="space-y-4">
         {Object.values(POSTS).map((p) => (
           <Link key={p.path} to={p.path} className="block glass-card p-6 hover:border-primary/50 transition-colors">
