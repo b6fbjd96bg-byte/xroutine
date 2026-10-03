@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { lovable } from "@/integrations/lovable/index";
+import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
-const LOVABLE_SITE = "https://routine-bloom-web.lovable.app";
 const isLovableHost = () => {
   const h = window.location.hostname;
   return h.endsWith("lovable.app") || h.endsWith("lovableproject.com") || h === "localhost";
