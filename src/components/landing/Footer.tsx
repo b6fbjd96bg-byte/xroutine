@@ -1,4 +1,3 @@
-import { EmojiIcon } from "@/components/ui/emoji-icon";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -42,12 +41,9 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-border/30 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="border-t border-border/30 pt-8 flex flex-col md:flex-row items-center justify-center gap-4">
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} Superoutine. All rights reserved.
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Made with <EmojiIcon e="💚" /> by <Link to="/about" className="text-primary hover:underline">Jatin Kumar</Link>
           </p>
         </div>
       </div>
