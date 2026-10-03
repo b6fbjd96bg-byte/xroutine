@@ -33,7 +33,7 @@ export const BlogIndexPage = () => (
   <MarketingShell>
     <Seo
       title="Superoutine Blog – Habit Building Guides"
-      description="Practical, research-informed guides on building habits, habit stacking and choosing a habit tracker, written by the team behind the Superoutine AI habit tracker."
+      description="Practical guides on building habits, habit stacking and choosing a habit tracker, written by the team behind the Superoutine AI habit tracker."
       path="/blog"
       crumbs={[{ name: "Blog", path: "/blog" }]}
     />

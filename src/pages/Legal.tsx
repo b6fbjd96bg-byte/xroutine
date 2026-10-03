@@ -17,7 +17,7 @@ export const Terms = () => (
 );
 
 export const Privacy = () => (
-  <LegalPage title="Privacy Policy" path="/privacy" description="How Superoutine collects, uses and protects your data. Each account can only read its own habits and tasks, and passwords are never stored in readable form." updated={UPDATED} sections={[
+  <LegalPage title="Privacy Policy" path="/privacy" description="How Superoutine collects, uses and guards your data. Each account can only read its own habits and tasks, and passwords are never stored in readable form." updated={UPDATED} sections={[
     { heading: "1. Information We Collect", body: ["We collect your name, email address and the habit, journal and progress data you enter. We also collect basic usage data such as pages visited."] },
     { heading: "2. How We Use It", body: ["Your data is used to provide and improve the service, show your progress, send service emails such as weekly reports, and process payments."] },
     { heading: "3. Payments", body: ["Payments are handled by secure third-party payment providers. We do not store your card or bank details on our servers."] },
@@ -29,7 +29,7 @@ export const Privacy = () => (
 );
 
 export const Shipping = () => (
-  <LegalPage title="Shipping Policy" path="/shipping" description="Superoutine is a digital web app, so nothing is shipped. Pro access is delivered instantly to your account after payment. Read the full shipping policy here." updated={UPDATED} sections={[
+  <LegalPage title="Shipping Policy" path="/shipping" description="Superoutine is a digital web app, so nothing is shipped. Pro access is delivered instantly to your account after payment. Read the shipping policy." updated={UPDATED} sections={[
     { heading: "Digital Service Only", body: ["Superoutine is a fully digital product. No physical goods are shipped."] },
     { heading: "Delivery of Service", body: ["Premium features are activated on your account instantly after successful payment, usually within a few minutes. Access is available worldwide wherever the website can be reached."] },
     { heading: "Delays", body: [`If your premium access is not activated within 24 hours of payment, contact us at ${EMAIL} with your payment reference and we will resolve it promptly.`] },
@@ -37,7 +37,7 @@ export const Shipping = () => (
 );
 
 export const Refunds = () => (
-  <LegalPage title="Cancellation and Refunds" path="/refunds" description="How to cancel a Superoutine Pro plan and request a refund. Monthly and yearly plans can be cancelled anytime in Settings; you keep Pro until the period ends." updated={UPDATED} sections={[
+  <LegalPage title="Cancellation and Refunds" path="/refunds" description="How to cancel a Superoutine plan and request a refund. Monthly and yearly plans can be cancelled anytime in Settings; you keep Pro until the period ends." updated={UPDATED} sections={[
     { heading: "Cancellation", body: ["You can cancel your premium subscription at any time. After cancellation, premium access continues until the end of the current billing period and will not renew."] },
     { heading: "Refund Eligibility", body: ["Refund requests made within 7 days of the first purchase are eligible for a full refund. Renewals and requests after 7 days are generally not refundable, except in cases of duplicate or failed-but-charged payments."] },
     { heading: "How to Request", body: [`Email ${EMAIL} with your registered email and payment reference. Approved refunds are processed within 5–7 business days to the original payment method.`] },
