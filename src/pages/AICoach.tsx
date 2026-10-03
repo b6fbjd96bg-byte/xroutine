@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Bot, Loader2, Send, Sparkles } from "lucide-react";
+import { Bot, Loader2, Send } from "lucide-react";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -59,7 +59,7 @@ const AICoach = () => {
           <div className="flex-1 overflow-y-auto space-y-3 pr-1">
             {messages.length === 0 && (
               <div className="py-8 text-center space-y-4">
-                <Sparkles className="mx-auto h-8 w-8 text-primary" />
+                
                 <p className="text-sm text-muted-foreground">Ask anything about your habits. Try one of these:</p>
                 <div className="grid sm:grid-cols-2 gap-2">
                   {STARTERS.map((s) => (

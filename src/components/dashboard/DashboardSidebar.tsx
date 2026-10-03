@@ -12,7 +12,7 @@ import SidebarUpgrade from "@/components/premium/SidebarUpgrade";
 
 const navItems = [
   { icon: DashIcon, label: "Dashboard", path: "/dashboard" },
-  { icon: ListTodo, label: "To-Do Calendar", path: "/dashboard/todos" },
+  { icon: ListTodo, label: "To-Do", path: "/dashboard/todos" },
   { icon: Bot, label: "AI Coach", path: "/dashboard/coach" },
   { icon: Repeat, label: "Routines", path: "/dashboard/routines" },
   { icon: BookOpen, label: "Learn", path: "/dashboard/learn" },

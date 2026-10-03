@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Plus, Trash2, Sun, Moon, Clock, Check, Package, X } from "lucide-react";
+import { Plus, Trash2, Sun, Moon, Clock, Check, Package, X, Sunrise, Dumbbell, BookOpen, Brain, type LucideIcon } from "lucide-react";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -8,6 +8,14 @@ import { Input } from "@/components/ui/input";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+const PACK_STYLES: Record<string, { icon: LucideIcon; card: string; glow: string; badge: string; text: string; chip: string }> = {
+  morning: { icon: Sunrise, card: "border-chart-yellow/40 bg-gradient-to-br from-chart-yellow/15 to-transparent", glow: "bg-chart-yellow", badge: "bg-chart-yellow", text: "text-chart-yellow", chip: "border-chart-yellow/40 text-chart-yellow" },
+  evening: { icon: Moon, card: "border-chart-purple/40 bg-gradient-to-br from-chart-purple/15 to-transparent", glow: "bg-chart-purple", badge: "bg-chart-purple", text: "text-chart-purple", chip: "border-chart-purple/40 text-chart-purple" },
+  fitness: { icon: Dumbbell, card: "border-chart-pink/40 bg-gradient-to-br from-chart-pink/15 to-transparent", glow: "bg-chart-pink", badge: "bg-chart-pink", text: "text-chart-pink", chip: "border-chart-pink/40 text-chart-pink" },
+  study: { icon: BookOpen, card: "border-chart-blue/40 bg-gradient-to-br from-chart-blue/15 to-transparent", glow: "bg-chart-blue", badge: "bg-chart-blue", text: "text-chart-blue", chip: "border-chart-blue/40 text-chart-blue" },
+  mind: { icon: Brain, card: "border-chart-cyan/40 bg-gradient-to-br from-chart-cyan/15 to-transparent", glow: "bg-chart-cyan", badge: "bg-chart-cyan", text: "text-chart-cyan", chip: "border-chart-cyan/40 text-chart-cyan" },
+};
+
 import { TEMPLATES, newStep, type RoutineStep, type Template } from "@/lib/routineTemplates";
 
 type Routine = { id: string; name: string; time_of_day: string; steps: RoutineStep[] };
@@ -86,13 +94,28 @@ const Routines = () => {
           <div className="glass-card p-4 sm:p-6">
             <h2 className="font-display font-bold mb-3 flex items-center gap-2"><Package className="w-5 h-5 text-primary" />Ready-made packs</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {TEMPLATES.map((t) => (
-                <div key={t.key} className="rounded-xl border border-border/50 bg-secondary/30 p-4 flex flex-col">
-                  <div className="font-semibold">{t.name}</div>
-                  <div className="text-xs text-muted-foreground mb-2">{t.steps.length} steps · adds habits: {t.habits.join(", ")}</div>
-                  <Button size="sm" variant="secondary" className="mt-auto" onClick={() => addPack(t)}><Plus className="w-4 h-4 mr-1" />Add pack</Button>
+              {TEMPLATES.map((t, i) => {
+                const st = PACK_STYLES[t.key] || PACK_STYLES.morning;
+                const Icon = st.icon;
+                return (
+                <div key={t.key} className={cn("relative overflow-hidden rounded-2xl border p-4 flex flex-col transition-transform duration-200 hover:-translate-y-1", st.card)}>
+                  <div className={cn("absolute -right-8 -top-8 w-28 h-28 rounded-full blur-2xl opacity-40", st.glow)} />
+                  <div className="relative flex items-center gap-3 mb-3">
+                    <div className={cn("w-11 h-11 rounded-xl flex items-center justify-center shadow-lg", st.badge)}><Icon className="w-5 h-5 text-background" /></div>
+                    <div>
+                      <div className="font-display font-bold">{t.name}</div>
+                      <div className={cn("text-xs font-semibold", st.text)}>{t.steps.length} steps · {t.time}</div>
+                    </div>
+                  </div>
+                  <ul className="relative space-y-1 mb-3">
+                    {t.steps.map((s) => <li key={s} className="text-xs text-muted-foreground flex items-center gap-2"><span className={cn("w-1.5 h-1.5 rounded-full shrink-0", st.badge)} />{s}</li>)}
+                  </ul>
+                  <div className="relative flex flex-wrap gap-1 mb-3">
+                    {t.habits.map((h) => <span key={h} className={cn("text-[10px] px-2 py-0.5 rounded-full border", st.chip)}>{h}</span>)}
+                  </div>
+                  <Button size="sm" className={cn("relative mt-auto border-0 text-background hover:opacity-90", st.badge)} onClick={() => addPack(t)}><Plus className="w-4 h-4 mr-1" />Add pack</Button>
                 </div>
-              ))}
+              );})}
             </div>
           </div>
 
