@@ -19,6 +19,7 @@ function prerender(): Plugin {
       const { createServer } = await import("vite");
       const server = await createServer({
         configFile: false,
+        mode: "production",
         root: __dirname,
         logLevel: "error",
         appType: "custom",
