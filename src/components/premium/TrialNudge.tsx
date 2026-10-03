@@ -39,7 +39,7 @@ const TrialNudge = () => {
             {built && (
               <p className="text-sm text-muted-foreground flex items-center gap-1.5">
                 <Flame className="w-4 h-4 text-chart-orange shrink-0" />
-                In {inv!.days} days you built {inv!.habits} habits, {inv!.checkIns} check-ins{inv!.tasksDone ? `, ${inv!.tasksDone} finished tasks` : ""} and {inv!.xp} XP. Pro keeps all of it going.
+                In {inv!.days} days you built {inv!.habits} habits, {inv!.checkIns} check-ins{inv!.tasksDone ? `, ${inv!.tasksDone} finished task${inv!.tasksDone === 1 ? "" : "s"}` : ""} and {inv!.xp} XP. Pro keeps all of it going.
               </p>
             )}
             <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
