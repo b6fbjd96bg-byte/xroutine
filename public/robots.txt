@@ -3,4 +3,4 @@ Allow: /
 Disallow: /dashboard
 Disallow: /RajputAdMin
 
-Sitemap: https://superoutine.pro/sitemap.xml
+Sitemap: https://superoutine.in/sitemap.xml
