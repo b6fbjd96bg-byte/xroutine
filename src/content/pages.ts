@@ -94,7 +94,7 @@ export const PAGES: Record<string, ContentPageData> = {
   features: {
     path: "/features",
     title: "Superoutine Features – XP, Streaks & AI Coach",
-    description: "Explore Superoutine features: XP levels, streaks, an AI coach, routines, to-do list, analytics, reminders and referrals. Try every feature free 15 days.",
+    description: "Explore Superoutine features: XP levels, streaks, an AI coach, routines, to-do list, analytics, reminders and referrals. Try all of it free for 15 days.",
     crumb: "Features",
     h1: "Superoutine features",
     intro: "Superoutine combines a habit tracker, a routine planner and an AI coach in one web app. You earn XP for every habit you complete, protect your streaks, and see clear analytics on how your routines are going.",
