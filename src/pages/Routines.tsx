@@ -116,7 +116,6 @@ const Routines = () => {
                   <Button size="sm" className={cn("relative mt-auto border-0 text-background hover:opacity-90", st.badge)} onClick={() => addPack(t)}><Plus className="w-4 h-4 mr-1" />Add pack</Button>
                 </div>
               );})}
-              ))}
             </div>
           </div>
 
