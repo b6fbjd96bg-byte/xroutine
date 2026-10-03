@@ -90,10 +90,10 @@ const WeeklyHabits = ({ habits, numberOfWeeks, onToggleWeek, onAddHabit, onEditH
     >
       {/* Header */}
       <div 
-        className="flex items-center justify-between p-6 cursor-pointer hover:bg-secondary/20 transition-colors"
+        className="flex flex-wrap items-center justify-between gap-3 p-4 sm:p-6 cursor-pointer hover:bg-secondary/20 transition-colors"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
           <h2 className="text-xl font-bold font-display">Weekly Habits</h2>
           <span className="text-sm text-muted-foreground">
             {habits.length} habits • {numberOfWeeks} weeks
@@ -164,9 +164,10 @@ const WeeklyHabits = ({ habits, numberOfWeeks, onToggleWeek, onAddHabit, onEditH
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="px-6 pb-6">
+            <div className="overflow-x-auto">
+            <div className="min-w-[560px] px-4 sm:px-6 pb-6">
               {/* Week Headers */}
-              <div className="grid grid-cols-[180px_60px_repeat(5,1fr)_100px] gap-3 mb-4">
+              <div className="grid grid-cols-[120px_40px_repeat(5,minmax(44px,1fr))_90px] sm:grid-cols-[180px_60px_repeat(5,1fr)_100px] gap-2 sm:gap-3 mb-4">
                 <div className="text-sm font-medium text-muted-foreground">Habit</div>
                 <div className="text-sm font-medium text-muted-foreground text-center">Goal</div>
                 {weeks.map((week, index) => (
@@ -175,7 +176,7 @@ const WeeklyHabits = ({ habits, numberOfWeeks, onToggleWeek, onAddHabit, onEditH
                     className="text-center"
                   >
                     <div className={cn(
-                      "text-xs font-bold py-1 px-2 rounded-full inline-block",
+                      "text-[10px] sm:text-xs font-bold py-1 px-2 rounded-full inline-block whitespace-nowrap",
                       weekColors[index % weekColors.length],
                       "text-background"
                     )}>
@@ -197,7 +198,7 @@ const WeeklyHabits = ({ habits, numberOfWeeks, onToggleWeek, onAddHabit, onEditH
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05, duration: 0.3 }}
-                    className="grid grid-cols-[180px_60px_repeat(5,1fr)_100px] gap-3 py-3 border-t border-border/30 items-center group"
+                    className="grid grid-cols-[120px_40px_repeat(5,minmax(44px,1fr))_90px] sm:grid-cols-[180px_60px_repeat(5,1fr)_100px] gap-2 sm:gap-3 py-3 border-t border-border/30 items-center group select-none"
                   >
                     <div className="text-sm font-medium truncate flex items-center gap-1">
                       <span className="truncate">{habit.name}</span>
@@ -215,12 +216,11 @@ const WeeklyHabits = ({ habits, numberOfWeeks, onToggleWeek, onAddHabit, onEditH
 
                       return (
                         <div key={week} className="flex justify-center">
-                          <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.95 }}
+                          <button
+                            type="button"
                             onClick={(e) => onToggleWeek(habit.id, week, e)}
                             className={cn(
-                              "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300",
+                              "w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition-colors duration-150 touch-manipulation active:scale-95",
                               isCompleted 
                                 ? `${weekColors[weekIndex % weekColors.length]} shadow-lg`
                                 : `bg-secondary/50 border-2 ${weekBorderColors[weekIndex % weekBorderColors.length]} border-opacity-30 hover:border-opacity-100`
@@ -235,7 +235,7 @@ const WeeklyHabits = ({ habits, numberOfWeeks, onToggleWeek, onAddHabit, onEditH
                                 <Check className="w-5 h-5 text-background" />
                               </motion.div>
                             )}
-                          </motion.button>
+                          </button>
                         </div>
                       );
                     })}
@@ -268,7 +268,7 @@ const WeeklyHabits = ({ habits, numberOfWeeks, onToggleWeek, onAddHabit, onEditH
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3 }}
-                  className="grid grid-cols-[180px_60px_repeat(5,1fr)_100px] gap-3 pt-4 mt-4 border-t-2 border-border/50"
+                  className="grid grid-cols-[120px_40px_repeat(5,minmax(44px,1fr))_90px] sm:grid-cols-[180px_60px_repeat(5,1fr)_100px] gap-2 sm:gap-3 pt-4 mt-4 border-t-2 border-border/50"
                 >
                   <div className="text-sm font-bold">Weekly Progress</div>
                   <div></div>
@@ -281,6 +281,7 @@ const WeeklyHabits = ({ habits, numberOfWeeks, onToggleWeek, onAddHabit, onEditH
                   <div></div>
                 </motion.div>
               )}
+            </div>
             </div>
           </motion.div>
         )}
