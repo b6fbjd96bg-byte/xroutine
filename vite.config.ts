@@ -25,7 +25,8 @@ function prerender(): Plugin {
         appType: "custom",
         server: { middlewareMode: true, hmr: false, watch: null },
         resolve: { alias: { "@": path.resolve(__dirname, "./src") } },
-        plugins: [react()],
+        plugins: [],
+        esbuild: { jsx: "automatic", jsxDev: false },
         optimizeDeps: { noDiscovery: true, include: [] },
         ssr: { noExternal: ["react-helmet-async"] },
       });
