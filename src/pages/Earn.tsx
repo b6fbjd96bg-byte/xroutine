@@ -19,7 +19,7 @@ const Earn = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Seo title="Refer & Earn – Superoutine Referral Program" description="Earn 10% of every payment your invited friends make on Superoutine, plus 2% and 0.5% from the next two levels. Payouts start from $10 after 30 days." path="/earn" crumbs={[{ name: "Refer & Earn", path: "/earn" }]} />
+      <Seo title="Refer & Earn – Superoutine Referral Program" description="Earn 10% of every payment your invited friends make on Superoutine, plus 2% and 0.5% from the next two levels. Payouts start from just $10 after 30 days." path="/earn" crumbs={[{ name: "Refer & Earn", path: "/earn" }]} />
       <div className="px-4 py-4 max-w-5xl mx-auto">
         <Link to="/"><Button variant="ghost" size="sm" className="gap-2"><ArrowLeft className="w-4 h-4" />Back to Home</Button></Link>
       </div>

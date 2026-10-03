@@ -42,7 +42,7 @@ export const POSTS: Record<string, ContentPageData> = {
   "best-habit-trackers-2026": {
     path: "/blog/best-habit-trackers-2026",
     title: "Best Habit Trackers in 2026 (Compared)",
-    description: "We compare five popular habit trackers in 2026 – Superoutine, Habitica, Streaks, Habitify and Fabulous – on features, platforms and price to help you choose.",
+    description: "We compare five popular habit trackers in 2026 – Superoutine, Habitica, Streaks, Habitify and Fabulous – on features, platforms and price to help you pick.",
     crumb: "Best habit trackers in 2026",
     h1: "Best habit trackers in 2026 (compared)",
     intro: "The best habit tracker depends on what motivates you: Habitica suits gamers, Streaks suits Apple-only users, Habitify suits data lovers, Fabulous suits guided self-care, and Superoutine suits people who want gamification plus an AI coach. We make Superoutine, so weigh our view accordingly.",
