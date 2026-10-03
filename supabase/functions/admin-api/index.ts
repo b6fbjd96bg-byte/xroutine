@@ -359,6 +359,37 @@ Deno.serve(async (req) => {
         });
       }
 
+      case "export-all": {
+        const TABLES = ["profiles", "user_roles", "user_subscriptions", "user_gamification", "habits", "weekly_habits", "todos", "journal_entries", "mood_checkins", "daily_logins", "user_commitments", "email_preferences", "routines", "routine_checks", "articles", "daily_lessons", "notifications", "notification_reads", "payments", "referrals", "referral_earnings", "payout_requests", "student_requests", "premium_waitlist", "page_views"];
+        const tables: Record<string, unknown[]> = {};
+        for (const t of TABLES) {
+          const rows: unknown[] = [];
+          for (let from = 0; ; from += 1000) {
+            const { data, error } = await adminClient.from(t).select("*").range(from, from + 999);
+            if (error) throw new Error(`${t}: ${error.message}`);
+            rows.push(...(data || []));
+            if (!data || data.length < 1000) break;
+          }
+          tables[t] = rows;
+        }
+        const authUsers: unknown[] = [];
+        for (let page = 1; ; page++) {
+          const { data, error } = await adminClient.auth.admin.listUsers({ page, perPage: 1000 });
+          if (error) throw error;
+          authUsers.push(...data.users.map((u) => ({
+            id: u.id, email: u.email, phone: u.phone, created_at: u.created_at, last_sign_in_at: u.last_sign_in_at,
+            email_confirmed_at: u.email_confirmed_at, providers: u.app_metadata?.providers, user_metadata: u.user_metadata,
+          })));
+          if (data.users.length < 1000) break;
+        }
+        return new Response(JSON.stringify({
+          exported_at: new Date().toISOString(),
+          note: "Passwords and private keys are never exported. Users sign in on the new server with Forgot password or Google.",
+          auth_users: authUsers,
+          tables,
+        }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+
       default:
         return new Response(JSON.stringify({ error: "Unknown action" }), {
           status: 400,
