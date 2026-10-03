@@ -26,6 +26,7 @@ function prerender(): Plugin {
         resolve: { alias: { "@": path.resolve(__dirname, "./src") } },
         plugins: [react()],
         optimizeDeps: { noDiscovery: true, include: [] },
+        ssr: { noExternal: ["react-helmet-async"] },
       });
       try {
         const mod = await server.ssrLoadModule("/src/seo/prerender.tsx");
