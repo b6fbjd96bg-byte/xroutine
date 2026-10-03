@@ -1,53 +1,23 @@
-import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { lovable } from "@/integrations/lovable/index";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { getGoogleClientId, startGoogleSignIn } from "@/lib/googleAuth";
 
-const isLovableHost = () => {
-  const h = window.location.hostname;
-  return h.endsWith("lovable.app") || h.endsWith("lovableproject.com") || h === "localhost";
-};
-
+/** Google sign-in with the admin's own Google keys — users never leave this site's domain. */
 const GoogleButton = ({ label = "Continue with Google" }: { label?: string }) => {
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const { toast } = useToast();
-  const autoRan = useRef(false);
 
   const go = async () => {
     setLoading(true);
-    sessionStorage.setItem("post_auth_redirect", "/dashboard");
-    // Own domain (e.g. superoutine.in on Vercel): use your own Google keys so users stay on your domain.
-    if (!isLovableHost()) {
-      const { error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.origin } });
-      if (error) {
-        setLoading(false);
-        sessionStorage.removeItem("post_auth_redirect");
-        toast({ title: "Google sign-in failed", description: error.message, variant: "destructive" });
-      }
-      return;
-    }
-    const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-    if (result.error) {
+    const clientId = await getGoogleClientId();
+    if (!clientId) {
       setLoading(false);
-      sessionStorage.removeItem("post_auth_redirect");
-      toast({ title: "Google sign-in failed", description: result.error.message, variant: "destructive" });
+      toast({ title: "Google sign-in isn't ready", description: "Please use email for now.", variant: "destructive" });
       return;
     }
-    if (result.redirected) return;
-    sessionStorage.removeItem("post_auth_redirect");
-    navigate("/dashboard");
+    startGoogleSignIn(clientId);
   };
-
-  useEffect(() => {
-    if (autoRan.current || !isLovableHost()) return;
-    if (new URLSearchParams(window.location.search).get("google") !== "1") return;
-    autoRan.current = true;
-    go();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <Button type="button" variant="outline" size="lg" className="w-full gap-3" onClick={go} disabled={loading}>
