@@ -37,6 +37,16 @@ function prerender(): Plugin {
           .replace(/<title>[\s\S]*?<\/title>/, "")
           .replace(/<meta\s+(name="description"|property="og:[^"]*"|name="twitter:[^"]*")[^>]*>\s*/g, "")
           .replace(/<link rel="canonical"[^>]*>\s*/g, "");
+        // App-only pages get a plain copy of the app shell so direct links work on any host.
+        const APP_ROUTES = ["/auth/google", "/login", "/signup", "/forgot-password", "/reset-password", "/RajputAdMin",
+          "/dashboard", "/dashboard/analytics", "/dashboard/calendar", "/dashboard/coach", "/dashboard/routines",
+          "/dashboard/learn", "/dashboard/notifications", "/dashboard/todos", "/dashboard/refer", "/dashboard/settings"];
+        for (const url of APP_ROUTES) {
+          const f = path.join(outDir, url.slice(1), "index.html");
+          fs.mkdirSync(path.dirname(f), { recursive: true });
+          fs.writeFileSync(f, tpl);
+          fs.writeFileSync(path.join(outDir, `${url.slice(1)}.html`), tpl);
+        }
         let ok = 0;
         for (const url of mod.ROUTES as string[]) {
           try {
