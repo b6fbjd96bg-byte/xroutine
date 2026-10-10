@@ -323,7 +323,7 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
             </div>
 
               {habits.length > 0 && (
-                <div className="p-3 sm:p-4 border-t border-border/30 min-w-0" data-testid="habit-trend">
+                <div id="tour-trend" className="p-3 sm:p-4 border-t border-border/30 min-w-0" data-testid="habit-trend">
                   <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                     <span className="text-sm font-semibold text-foreground">Completion trend</span>
                     <span className="text-xs text-muted-foreground">Live — updates as you tick</span>

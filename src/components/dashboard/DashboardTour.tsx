@@ -52,7 +52,7 @@ const DashboardTour = ({ userId, createdAt }: { userId?: string; createdAt?: str
         <motion.div
           key={`card-${step}`}
           initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}
-          className="absolute left-1/2 -translate-x-1/2 w-[min(92vw,380px)] glass-card bg-card p-5 pointer-events-auto"
+          className="absolute inset-x-0 mx-auto w-[min(92vw,380px)] glass-card bg-card p-5 pointer-events-auto"
           style={{ top: cardTop }}
         >
           <p className="text-xs text-primary font-semibold mb-1">Step {step + 1} of {STEPS.length}</p>
