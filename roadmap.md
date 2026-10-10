@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Align dashboard habit ticks and graph across browser sizes; verify real signed-in flow.
+- [x] Align dashboard habit ticks and graph across browser sizes; verify real signed-in flow.
 - [ ] Send Razorpay USD recurring request — blocked until an email sending account is connected.
 - [ ] Verify monthly/yearly renewal after charge — requires Razorpay USD recurring approval and real renewal events.
 - [ ] Send expiry reminders with payment links — requires owned sender domain setup.
