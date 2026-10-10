@@ -36,13 +36,13 @@ const SidebarContent = ({ onNavigate, compact }: { onNavigate?: () => void; comp
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <Link to="/" className={cn("flex items-center gap-3 mb-8", compact && "justify-center")} onClick={onNavigate} title="Superoutine">
+    <div className="flex flex-col h-full min-h-0 overflow-y-auto">
+      <Link to="/" className={cn("flex shrink-0 items-center gap-3 mb-4", compact && "justify-center")} onClick={onNavigate} title="Superoutine">
         <img src="/logo.png" alt="Superoutine" className="w-9 h-9 rounded-xl" />
         {!compact && <span className="text-xl font-bold font-display">Superoutine</span>}
       </Link>
 
-      <nav className="flex-1 space-y-2">
+      <nav className="flex-1 space-y-1">
         {navItems.map((item) => (
           <Link
             key={item.path}
