@@ -110,10 +110,10 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
   };
 
   return (
-    <div className="glass-card overflow-hidden">
+    <div className="glass-card min-w-0 overflow-hidden">
       {/* Header */}
       <div 
-        className="flex items-center justify-between gap-3 p-4 sm:p-6 cursor-pointer hover:bg-secondary/20 transition-colors"
+        className="flex items-center justify-between gap-2 p-3 sm:p-4 cursor-pointer hover:bg-secondary/20 transition-colors"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-4 min-w-0">
@@ -176,9 +176,10 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="overflow-x-auto"
+            className="min-w-0"
           >
-            <div className="min-w-[900px] px-6 pb-6">
+            <div className="max-h-[280px] overflow-auto overscroll-x-contain" data-testid="habit-scroll">
+            <div className="w-max min-w-full px-6 pb-3">
               {/* Header */}
               <div className="grid grid-cols-[150px_60px_repeat(31,32px)] gap-1 mb-2">
                 <div className="text-sm font-medium text-muted-foreground sticky left-0 z-20 bg-card -ml-6 pl-6 -my-1 py-1 flex items-center">Habit</div>
@@ -284,6 +285,8 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
                       <button
                         type="button"
                         key={day}
+                        aria-label={`${habit.name}, day ${day}`}
+                        aria-pressed={isCompleted}
                         onClick={(e) => !isFuture && onToggleDay(habit.id, day, e)}
                         disabled={isFuture}
                         className={cn(
@@ -311,13 +314,21 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
               })}
               </TooltipProvider>
 
+              {habits.length === 0 && (
+                <div className="text-center py-8 text-muted-foreground border-t border-border/30">
+                  <p>No habits yet. Add your first habit to get started!</p>
+                </div>
+              )}
+            </div>
+            </div>
+
               {habits.length > 0 && (
-                <div className="pt-4 mt-1 border-t border-border/30 sticky left-0 w-[min(100%,calc(100vw-8rem))]">
-                  <div className="flex items-center justify-between mb-3">
+                <div id="tour-trend" className="p-3 sm:p-4 border-t border-border/30 min-w-0" data-testid="habit-trend">
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                     <span className="text-sm font-semibold text-foreground">Completion trend</span>
                     <span className="text-xs text-muted-foreground">Live — updates as you tick</span>
                   </div>
-                  <div className="h-64 w-full">
+                  <div className="h-40 sm:h-44 w-full min-w-0">
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart data={Array.from({ length: daysInMonth }, (_, i) => ({ day: i + 1, pct: Math.round((habits.filter((h) => h.completedDays.includes(i + 1)).length / habits.length) * 100) }))} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
                         <defs>
@@ -330,19 +341,13 @@ const HabitGrid = ({ habits, daysInMonth, currentDay, onToggleDay, onAddHabit, o
                         <XAxis dataKey="day" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} tickLine={false} axisLine={false} interval={daysInMonth > 20 ? 1 : 0} />
                         <YAxis domain={[0, 100]} ticks={[0, 25, 50, 75, 100]} tickFormatter={(v: number) => `${v}%`} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} tickLine={false} axisLine={false} />
                         <RTooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8 }} labelFormatter={(d) => `Day ${d}`} formatter={(v: number) => [`${v}%`, "Completed"]} />
-                        <Area type="linear" dataKey="pct" stroke="hsl(var(--primary))" strokeWidth={3} fill="url(#liveTrendFill)" dot={false} activeDot={{ r: 5 }} isAnimationActive animationDuration={400} />
+                        <Area type="linear" dataKey="pct" stroke="hsl(var(--primary))" strokeWidth={3} fill="url(#liveTrendFill)" dot={false} activeDot={{ r: 5 }} isAnimationActive={false} />
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
               )}
 
-              {habits.length === 0 && (
-                <div className="text-center py-12 text-muted-foreground border-t border-border/30">
-                  <p>No habits yet. Add your first habit to get started!</p>
-                </div>
-              )}
-            </div>
           </motion.div>
         )}
       </AnimatePresence>

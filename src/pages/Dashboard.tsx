@@ -7,7 +7,6 @@ import { ChevronDown } from "lucide-react";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import HabitGrid from "@/components/dashboard/HabitGrid";
 import MonthSelector from "@/components/dashboard/MonthSelector";
-import TrendLineChart from "@/components/dashboard/TrendLineChart";
 import WeeklyHabits from "@/components/dashboard/WeeklyHabits";
 import AIMotivationAgent from "@/components/dashboard/AIMotivationAgent";
 import TodaysFocus from "@/components/dashboard/TodaysFocus";
@@ -106,18 +105,6 @@ const Dashboard = () => {
 
   const completedToday = habits.filter((h) => h.completedDays.includes(currentDay)).length;
   const dailyCompletedForWeek = weeklyHabits.filter(h => h.completedWeeks.includes(Math.ceil(currentDay / 7))).length;
-
-  const trendData = useMemo(() => {
-    return Array.from({ length: Math.min(currentDay, daysInMonth) }, (_, i) => {
-      const day = i + 1;
-      const isToday = day === currentDay;
-      const habitDone = habits.filter((h) => h.completedDays.includes(day)).length;
-      const completed = habitDone + (isToday ? taskStats.completed : 0);
-      const total = habits.length + (isToday ? taskStats.total : 0);
-      const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
-      return { day, completed, percentage };
-    });
-  }, [habits, currentDay, daysInMonth, taskStats]);
 
   const weeklyProgress = useMemo(() => {
     const weeks: { week: number; completed: number; goal: number; percentage: number }[] = [];
@@ -227,8 +214,8 @@ const Dashboard = () => {
       <ConfettiCelebration trigger={showConfetti} onComplete={resetConfetti} />
       <DashboardSidebar />
 
-      <main className="md:ml-20 p-4 sm:p-6 lg:p-10 relative bg-[radial-gradient(60%_40%_at_70%_0%,hsl(var(--primary)/0.08),transparent),radial-gradient(40%_30%_at_10%_20%,hsl(var(--chart-purple)/0.06),transparent)]">
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="max-w-[1400px] mx-auto space-y-5 sm:space-y-8">
+      <main className="md:ml-20 min-w-0 p-3 sm:p-5 lg:p-6 relative">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="max-w-[1400px] min-w-0 mx-auto space-y-4 sm:space-y-5">
           {/* Daily Login Reward */}
           <DailyLoginReward
             streakCount={streakCount}
@@ -242,7 +229,7 @@ const Dashboard = () => {
           {/* Header */}
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-4xl font-bold font-display mb-2">
+              <h1 className="text-2xl sm:text-3xl font-bold font-display mb-2">
                 <span className="text-gradient">{habits.length === 0 ? `Hey ${userName}!` : "Habit Tracker"}</span>
               </h1>
               <p className="text-muted-foreground">{habits.length === 0 ? "Add your first habit to get started" : "Track your daily habits and build better routines"}</p>
@@ -254,20 +241,12 @@ const Dashboard = () => {
           {engaged && <PushNotificationPrompt canPrompt={canPrompt} onAccept={requestPermission} onDismiss={dismissPrompt} />}
 
 
-          {engaged && <>
-          <SectionTitle icon={BarChart3} title="Your Stats" colorClass="from-chart-cyan to-chart-blue" />
-          <QuickStats totalHabits={habits.length} completedToday={completedToday} currentStreak={maxStreak} weeklyProgress={avgWeeklyProgress} monthlyProgress={monthlyProgress} bestDay={bestDay} />
-          </>}
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
-            <div id="tour-daily" className="lg:col-span-12 space-y-4">
-              <SectionTitle icon={CheckCircle2} title="Daily Habits" colorClass="from-primary to-chart-cyan" />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 [&>div]:min-w-0">
+            <div id="tour-daily" className="lg:col-span-12">
               <HabitGrid habits={habits} daysInMonth={daysInMonth} currentDay={currentDay} onToggleDay={handleToggleDay} onAddHabit={addHabit} onEditHabit={editHabit} onDeleteHabit={deleteHabit} />
             </div>
 
-            <div id="tour-trend" className="lg:col-span-12"><SectionTitle icon={TrendingUp} title="Daily Completion Trend" colorClass="from-chart-purple to-chart-pink" /></div>
-            <div className={habitStats.length > 0 ? "lg:col-span-8" : "lg:col-span-12"}><TrendLineChart data={trendData} /></div>
-            {habitStats.length > 0 && <div className="lg:col-span-4"><TopHabits habits={habitStats} /></div>}
+            {engaged && <div className="lg:col-span-12"><QuickStats totalHabits={habits.length} completedToday={completedToday} currentStreak={maxStreak} weeklyProgress={avgWeeklyProgress} monthlyProgress={monthlyProgress} bestDay={bestDay} /></div>}
 
             {<>
               <div className="lg:col-span-12"><SectionTitle icon={Target} title="Today's Plan & Focus — daily completion" colorClass="from-chart-blue to-primary" /></div>
@@ -320,6 +299,7 @@ const Dashboard = () => {
                       <MomentumMeter habits={habits} currentDay={currentDay} />
                       <ComebackScore habits={habits} currentDay={currentDay} />
                     </div>
+                    {habitStats.length > 0 && <TopHabits habits={habitStats} />}
                     <MoodCheckin completedToday={completedToday} totalHabits={habits.length} />
                     <AchievementBadges habits={habits} currentDay={currentDay} totalXP={totalXP} maxStreak={maxStreak} />
                   </div>
@@ -356,9 +336,9 @@ const Dashboard = () => {
 };
 
 const SectionTitle = ({ icon: Icon, title, colorClass }: { icon: LucideIcon; title: string; colorClass: string }) => (
-  <div className="flex items-center gap-3 pt-4">
-    <span className="w-9 h-9 rounded-lg bg-primary/15 border border-primary/30 flex items-center justify-center"><Icon className="w-5 h-5 text-primary" strokeWidth={2.25} /></span>
-    <h2 className="text-lg sm:text-xl font-semibold font-display tracking-tight text-foreground">{title}</h2>
+  <div className="flex min-w-0 items-center gap-3 pt-2">
+    <span className="w-9 h-9 shrink-0 rounded-lg bg-primary/15 border border-primary/30 flex items-center justify-center"><Icon className="w-5 h-5 text-primary" strokeWidth={2.25} /></span>
+    <h2 className="min-w-0 text-lg sm:text-xl font-semibold font-display text-foreground">{title}</h2>
     <div className="flex-1 h-px bg-border" />
   </div>
 );
