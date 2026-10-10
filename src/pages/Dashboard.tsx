@@ -7,7 +7,6 @@ import { ChevronDown } from "lucide-react";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import HabitGrid from "@/components/dashboard/HabitGrid";
 import MonthSelector from "@/components/dashboard/MonthSelector";
-import TrendLineChart from "@/components/dashboard/TrendLineChart";
 import WeeklyHabits from "@/components/dashboard/WeeklyHabits";
 import AIMotivationAgent from "@/components/dashboard/AIMotivationAgent";
 import TodaysFocus from "@/components/dashboard/TodaysFocus";
@@ -106,18 +105,6 @@ const Dashboard = () => {
 
   const completedToday = habits.filter((h) => h.completedDays.includes(currentDay)).length;
   const dailyCompletedForWeek = weeklyHabits.filter(h => h.completedWeeks.includes(Math.ceil(currentDay / 7))).length;
-
-  const trendData = useMemo(() => {
-    return Array.from({ length: Math.min(currentDay, daysInMonth) }, (_, i) => {
-      const day = i + 1;
-      const isToday = day === currentDay;
-      const habitDone = habits.filter((h) => h.completedDays.includes(day)).length;
-      const completed = habitDone + (isToday ? taskStats.completed : 0);
-      const total = habits.length + (isToday ? taskStats.total : 0);
-      const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
-      return { day, completed, percentage };
-    });
-  }, [habits, currentDay, daysInMonth, taskStats]);
 
   const weeklyProgress = useMemo(() => {
     const weeks: { week: number; completed: number; goal: number; percentage: number }[] = [];

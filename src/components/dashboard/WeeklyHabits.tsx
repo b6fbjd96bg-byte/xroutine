@@ -165,10 +165,10 @@ const WeeklyHabits = ({ habits, numberOfWeeks, onToggleWeek, onAddHabit, onEditH
             className="overflow-hidden"
           >
             <div className="overflow-x-auto">
-            <div className="min-w-[560px] px-4 sm:px-6 pb-6">
+            <div className="min-w-[580px] sm:min-w-[760px] px-4 sm:px-6 pb-6">
               {/* Week Headers */}
               <div className="grid grid-cols-[120px_40px_repeat(5,minmax(44px,1fr))_90px] sm:grid-cols-[180px_60px_repeat(5,1fr)_100px] gap-2 sm:gap-3 mb-4">
-                <div className="text-sm font-medium text-muted-foreground">Habit</div>
+                <div className="text-sm font-medium text-muted-foreground sticky left-0 z-20 bg-card">Habit</div>
                 <div className="text-sm font-medium text-muted-foreground text-center">Goal</div>
                 {weeks.map((week, index) => (
                   <div 
@@ -200,7 +200,7 @@ const WeeklyHabits = ({ habits, numberOfWeeks, onToggleWeek, onAddHabit, onEditH
                     transition={{ delay: index * 0.05, duration: 0.3 }}
                     className="grid grid-cols-[120px_40px_repeat(5,minmax(44px,1fr))_90px] sm:grid-cols-[180px_60px_repeat(5,1fr)_100px] gap-2 sm:gap-3 py-3 border-t border-border/30 items-center group select-none"
                   >
-                    <div className="text-sm font-medium truncate flex items-center gap-1">
+                    <div className="text-sm font-medium truncate flex items-center gap-1 sticky left-0 z-20 bg-card">
                       <span className="truncate">{habit.name}</span>
                       <HabitActions
                         habitId={habit.id}
@@ -270,7 +270,7 @@ const WeeklyHabits = ({ habits, numberOfWeeks, onToggleWeek, onAddHabit, onEditH
                   transition={{ delay: 0.3 }}
                   className="grid grid-cols-[120px_40px_repeat(5,minmax(44px,1fr))_90px] sm:grid-cols-[180px_60px_repeat(5,1fr)_100px] gap-2 sm:gap-3 pt-4 mt-4 border-t-2 border-border/50"
                 >
-                  <div className="text-sm font-bold">Weekly Progress</div>
+                  <div className="text-sm font-bold sticky left-0 z-20 bg-card">Weekly Progress</div>
                   <div></div>
                   {weeklyProgress.map((wp, index) => (
                     <div key={wp.week} className="text-center">
