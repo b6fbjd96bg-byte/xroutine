@@ -4,7 +4,7 @@ export const USE_CASES: Record<string, ContentPageData> = {
   "adhd-routine-app": {
     path: "/use-cases/adhd-routine-app",
     title: "Superoutine for ADHD – A Routine App That Helps",
-    description: "How Superoutine helps people with ADHD keep routines: small visible steps, quick XP rewards, streak protection and an AI coach. Try it free for 15 days.",
+    description: "How Superoutine helps people with ADHD keep routines: small visible steps, quick XP rewards, streak protection and an AI coach. Try it free for 21 days.",
     crumb: "ADHD routine app",
     h1: "A routine app for ADHD brains",
     intro: "Superoutine helps people with ADHD keep routines by making each step small, visible and instantly rewarding. You tick a box, earn XP right away, and a missed day never wipes out your progress.",
@@ -19,7 +19,7 @@ export const USE_CASES: Record<string, ContentPageData> = {
   "morning-routine-app": {
     path: "/use-cases/morning-routine-app",
     title: "Morning Routine App – Build Your Morning",
-    description: "Use Superoutine as a morning routine app: a ready-made morning pack, step-by-step checklists, XP per step and streaks that keep you going. Free 15 days.",
+    description: "Use Superoutine as a morning routine app: a ready-made morning pack, step-by-step checklists, XP per step and streaks that keep you going. Free 21 days.",
     crumb: "Morning routine app",
     h1: "A morning routine app that keeps you consistent",
     intro: "Superoutine works as a morning routine app with a ready-made morning pack, step-by-step checklists and XP for every step. You can start a routine in one click and tick it off each morning.",
@@ -34,7 +34,7 @@ export const USE_CASES: Record<string, ContentPageData> = {
   "habit-tracker-for-students": {
     path: "/use-cases/habit-tracker-for-students",
     title: "Habit Tracker for Students – Superoutine",
-    description: "Superoutine is a habit tracker for students: a study routine pack, focus timer, to-do list with priorities and an AI coach for exams. Free for 15 days.",
+    description: "Superoutine is a habit tracker for students: a study routine pack, focus timer, to-do list with priorities and an AI coach for exams. Free for 21 days.",
     crumb: "Habit tracker for students",
     h1: "A habit tracker for students",
     intro: "Superoutine helps students build study habits with a ready-made study pack, a focus timer, a prioritized to-do list and an AI coach that helps plan busy exam weeks.",
@@ -43,14 +43,14 @@ export const USE_CASES: Record<string, ContentPageData> = {
       { h2: "What does the study pack include?", answer: "The Study pack has four steps and adds three habits.", bullets: ["Clear the desk", "Phone in another room", "Two 25-minute focus blocks", "Review notes for 10 minutes"], body: ["It adds the habits \"Study 1 hour\", \"Review notes\" and \"Read 20 pages\" to your grid."] },
       { h2: "How does Superoutine help in exam weeks?", answer: "Use the to-do list for each day's topics and ask the AI Coach to help balance them with your habits.", body: ["The focus timer helps you work in short sessions, and streak protection covers days when exams take over."] },
       { h2: "How do I set up Superoutine as a student?", answer: "Add the Study pack, keep three to five daily habits, and plan each day's topics in the to-do list.", body: ["Check in at the same time each evening to tick off habits and set tomorrow's top tasks. Use weekly habits for things like a weekly review or a long reading session, and ask the AI Coach when a habit keeps slipping during busy weeks.", "The Momentum Meter shows whether your last seven days are trending up or down, which is an early warning before exams pile up."] },
-      { h2: "How much does it cost for students?", answer: "Superoutine is free for 15 days, then $4.99 per month or $39 per year, which works out to about $3.25 a month.", body: ["There is no separate student plan. The yearly plan is the lowest monthly cost."] },
+      { h2: "How much does it cost for students?", answer: "Superoutine is free for 21 days, then $4.99 per month or $39 per year, which works out to about $3.25 a month.", body: ["There is no separate student plan. The yearly plan is the lowest monthly cost."] },
     ],
     related: [{ to: "/pricing", label: "Pricing" }, { to: "/blog/habit-stacking-beginners-guide", label: "Habit stacking guide" }, { to: "/use-cases/adhd-routine-app", label: "ADHD routine app" }],
   },
   "fitness-habit-tracker": {
     path: "/use-cases/fitness-habit-tracker",
     title: "Fitness Habit Tracker – Superoutine",
-    description: "Track workouts, steps and healthy eating with Superoutine, a fitness habit tracker with a fitness routine pack, weekly habits and streaks. Free 15 days.",
+    description: "Track workouts, steps and healthy eating with Superoutine, a fitness habit tracker with a fitness routine pack, weekly habits and streaks. Free 21 days.",
     crumb: "Fitness habit tracker",
     h1: "A fitness habit tracker that rewards consistency",
     intro: "Superoutine works as a fitness habit tracker: log workouts, steps and healthy meals as daily or weekly habits, follow the fitness routine pack, and earn XP for every session.",

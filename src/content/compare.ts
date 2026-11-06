@@ -4,7 +4,7 @@ type Comp = { slug: string; name: string; summary: string; platforms: string; pr
 
 const BASE_ROWS = (c: Comp): string[][] => [
   ["Price", "$4.99/mo, $39/yr or $79 lifetime", c.price],
-  ["Free trial", "15 days, every feature", "See vendor site"],
+  ["Free trial", "21 days, every feature", "See vendor site"],
   ["Platforms", "Web (desktop, iPhone, Android browsers)", c.platforms],
   ...c.rows,
 ];

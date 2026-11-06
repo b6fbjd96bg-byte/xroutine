@@ -17,7 +17,7 @@ const Footer = () => (
             <span className="text-xl font-bold font-display">Superoutine</span>
           </div>
           <p className="text-muted-foreground text-sm max-w-xs leading-relaxed">
-            Superoutine is an AI habit tracker and routine planner with XP, streaks and an AI coach. From $4.99/month after a 15-day free trial.
+            Superoutine is an AI habit tracker and routine planner with XP, streaks and an AI coach. From $4.99/month after a 21-day free trial.
           </p>
         </div>
         {cols.map((c) => (
