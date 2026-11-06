@@ -96,7 +96,7 @@ const App = () => (
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/dashboard/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
             <Route path="/dashboard/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
-            <Route path="/dashboard/coach" element={<ProtectedRoute><PremiumGate paidOnly feature="AI Coach is part of Pro. Upgrade to chat with your personal coach." featureLabel="AI Coach"><AICoach /></PremiumGate></ProtectedRoute>} />
+            <Route path="/dashboard/coach" element={<ProtectedRoute><PremiumGate paidOnly inline feature="AI Coach is part of Pro. Upgrade to chat with your personal coach." featureLabel="AI Coach"><AICoach /></PremiumGate></ProtectedRoute>} />
             <Route path="/dashboard/routines" element={<ProtectedRoute><Routines /></ProtectedRoute>} />
             <Route path="/dashboard/learn" element={<ProtectedRoute><Learn /></ProtectedRoute>} />
             <Route path="/dashboard/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
