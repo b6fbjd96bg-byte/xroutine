@@ -2,7 +2,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { z } from "npm:zod@3";
 
-const TRIAL_DAYS = 15; // keep in sync with src/lib/plans.ts
+const TRIAL_DAYS = 21; // keep in sync with src/lib/plans.ts
 
 const Body = z.object({
   messages: z.array(z.object({ role: z.enum(["user", "assistant"]), content: z.string().min(1).max(2000) })).min(1).max(30),
@@ -66,7 +66,7 @@ Today's tasks: ${(todos || []).map((t: any) => `${t.title}${t.completed ? " (don
       }),
     });
     if (ai.status === 429) return json({ error: "The coach is busy right now. Try again in a minute." }, 429);
-    if (ai.status === 402) return json({ error: "AI usage limit reached. Please contact support." }, 402);
+    if (ai.status === 402) return json({ error: "The AI Coach is taking a short break. Please try again in a little while." }, 402);
     if (!ai.ok) return json({ error: "The coach couldn't answer. Try again." }, 500);
     const data = await ai.json();
     const reply = data.output_text ?? (data.output || []).flatMap((o: any) => o.content || []).filter((c: any) => c.type === "output_text").map((c: any) => c.text).join("");
