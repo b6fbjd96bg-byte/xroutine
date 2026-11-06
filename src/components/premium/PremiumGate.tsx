@@ -9,10 +9,12 @@ interface PremiumGateProps {
   feature: string;
   featureLabel?: string;
   inline?: boolean; // If true, show inline badge instead of overlay
+  paidOnly?: boolean; // If true, the free trial does not unlock it
 }
 
-const PremiumGate = ({ children, feature, featureLabel, inline = false }: PremiumGateProps) => {
-  const { isPremium, loading } = useSubscription();
+const PremiumGate = ({ children, feature, featureLabel, inline = false, paidOnly = false }: PremiumGateProps) => {
+  const { isPremium: anyAccess, isPaid, loading } = useSubscription();
+  const isPremium = paidOnly ? isPaid : anyAccess;
   const [showUpgrade, setShowUpgrade] = useState(false);
 
   if (loading || isPremium) return <>{children}</>;

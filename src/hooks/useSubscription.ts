@@ -85,7 +85,9 @@ export const useSubscription = () => {
   const isPremium = tier === "premium" || isTrial;
   // After the trial a non-paying account is locked until it buys Pro
   const trialExpired = !!user && loadedFor === user.id && tier !== "premium" && trialDaysLeft <= 0;
-  const limits = isPremium ? PREMIUM_LIMITS : FREE_LIMITS;
+  // Trial unlocks everything except unlimited habits and the AI Coach (paid only)
+  const isPaid = tier === "premium";
+  const limits = isPaid ? PREMIUM_LIMITS : isTrial ? { ...PREMIUM_LIMITS, maxDailyHabits: FREE_LIMITS.maxDailyHabits, maxWeeklyHabits: FREE_LIMITS.maxWeeklyHabits } : FREE_LIMITS;
 
   const canAccess = useCallback(
     (feature: keyof SubscriptionLimits): boolean => {
@@ -96,5 +98,5 @@ export const useSubscription = () => {
     [limits]
   );
 
-  return { tier, autoRenew, trialExpired, premiumUntil, isStudent, plan, refresh, isPremium, isTrial, trialDaysLeft, loading: loading || (!!user && loadedFor !== user.id), limits, canAccess };
+  return { isPaid, tier, autoRenew, trialExpired, premiumUntil, isStudent, plan, refresh, isPremium, isTrial, trialDaysLeft, loading: loading || (!!user && loadedFor !== user.id), limits, canAccess };
 };

@@ -27,7 +27,8 @@ Deno.serve(async (req) => {
     const { data: sub } = await admin.from("user_subscriptions").select("tier, premium_until").eq("user_id", user.id).maybeSingle();
     const pro = sub?.tier === "premium" && (!sub.premium_until || new Date(sub.premium_until).getTime() > Date.now());
     const inTrial = Date.now() - new Date(user.created_at).getTime() < TRIAL_DAYS * 86400000;
-    if (!pro && !inTrial) return json({ error: "AI Coach is a Pro feature. Pick a plan to keep chatting." }, 402);
+    void inTrial;
+    if (!pro) return json({ error: "AI Coach is a Pro feature. Upgrade to start chatting." }, 403);
 
     // Build a short progress summary for context
     const now = new Date();
