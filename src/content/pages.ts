@@ -4,14 +4,14 @@ export const FACTS = {
   monthly: "$4.99/month",
   yearly: "$39/year",
   lifetime: "$79 one-time (first 100 buyers)",
-  trial: "15-day free trial with every feature",
+  trial: "21-day free trial with every feature",
   platforms: "Web app that works in any modern browser on desktop, iPhone and Android",
 };
 
 export const billingFaq: QA[] = [
-  { q: "How much does Superoutine cost?", a: "Superoutine Pro costs $4.99 per month, $39 per year, or $79 once for lifetime access (limited to the first 100 buyers). Every new account starts with a 15-day free trial." },
-  { q: "Is there a free trial?", a: "Yes. Every new account gets a 15-day free trial with every Pro feature unlocked, including the AI Coach. You do not need a card to start." },
-  { q: "What happens when the trial ends?", a: "After 15 days the app is locked until you choose a plan. Your habits, streaks and history stay saved, so you continue exactly where you left off after upgrading." },
+  { q: "How much does Superoutine cost?", a: "Superoutine Pro costs $4.99 per month, $39 per year, or $79 once for lifetime access (limited to the first 100 buyers). Every new account starts with a 21-day free trial." },
+  { q: "Is there a free trial?", a: "Yes. Every new account gets a 21-day free trial with every Pro feature unlocked, including the AI Coach. You do not need a card to start." },
+  { q: "What happens when the trial ends?", a: "After 21 days the app is locked until you choose a plan. Your habits, streaks and history stay saved, so you continue exactly where you left off after upgrading." },
   { q: "Can I cancel at any time?", a: "Yes. Monthly and yearly plans can be cancelled from Settings at any time, and you keep Pro until the end of the period you already paid for." },
   { q: "How do I pay?", a: "Payments are processed securely by Razorpay in US dollars. You can pay with major international debit and credit cards." },
   { q: "Do you offer refunds?", a: "Refund requests are handled under our Cancellation and Refunds policy. Contact support with your payment reference and we will review it." },
@@ -19,7 +19,7 @@ export const billingFaq: QA[] = [
 
 export const generalFaq: QA[] = [
   { q: "What is Superoutine?", a: "Superoutine is an AI habit tracker and routine planner. It helps you build daily routines with XP levels, streaks, an AI coach and progress analytics.", more: "It is sometimes searched as Super Routine. You track daily and weekly habits in a monthly grid, plan your day, and get feedback from an AI coach that knows your progress." },
-  { q: "Is Superoutine free?", a: "Superoutine is free for the first 15 days with every feature. After that, Pro costs $4.99 per month, $39 per year or $79 once.", more: "There is no permanent free tier after the trial. Your data stays saved if you upgrade later." },
+  { q: "Is Superoutine free?", a: "Superoutine is free for the first 21 days with every feature. After that, Pro costs $4.99 per month, $39 per year or $79 once.", more: "There is no permanent free tier after the trial. Your data stays saved if you upgrade later." },
   { q: "Which devices does Superoutine work on?", a: "Superoutine is a web app that works in any modern browser on Windows, Mac, iPhone, iPad and Android.", more: "There is nothing to install. You can add it to your phone's home screen from the browser menu for app-like access." },
   { q: "What does the AI Coach do?", a: "The AI Coach is a chat assistant that reads your habits, streaks, XP and today's tasks, then gives specific, encouraging advice.", more: "You can ask it why a habit keeps slipping, how to plan a busy day, or how to restart after a break." },
   { q: "How do XP and levels work?", a: "You earn XP every time you complete a habit for today, and XP adds up into levels.", more: "Daily habits and weekly habits both give XP, so steady effort is rewarded more than occasional big pushes." },
@@ -29,17 +29,17 @@ export const generalFaq: QA[] = [
   { q: "Does Superoutine have a to-do list?", a: "Yes. The To-Do tab is a simple daily task list with high, medium and low priorities.", more: "Completed tasks count toward today's progress alongside your habits." },
   { q: "Is my data private?", a: "Yes. Each account can only read its own data, enforced at the database level, and passwords are never stored in readable form.", more: "See the Privacy Policy for full details." },
   { q: "Can I earn money by referring friends?", a: "Yes. Refer & Earn pays 10% of every payment your invited friends make, plus 2% and 0.5% from the next two levels of invites.", more: "Earnings become available 30 days after each payment, with a $10 minimum payout." },
-  { q: "How do I sign up?", a: "Go to the sign-up page and create an account with email or Google. Your 15-day free trial starts immediately.", more: "Email accounts need a quick verification click before the first sign-in." },
+  { q: "How do I sign up?", a: "Go to the sign-up page and create an account with email or Google. Your 21-day free trial starts immediately.", more: "Email accounts need a quick verification click before the first sign-in." },
 ];
 
 export const PAGES: Record<string, ContentPageData> = {
   pricing: {
     path: "/pricing",
     title: "Superoutine Pricing – Plans from $4.99/mo",
-    description: "Superoutine pricing: Pro is $4.99/month, $39/year or $79 lifetime. Every new account starts with a 15-day free trial with every feature. Cancel anytime.",
+    description: "Superoutine pricing: Pro is $4.99/month, $39/year or $79 lifetime. Every new account starts with a 21-day free trial with every feature. Cancel anytime.",
     crumb: "Pricing",
     h1: "Superoutine pricing",
-    intro: "Superoutine Pro costs $4.99 per month, $39 per year, or $79 once for lifetime access. Every new account starts with a 15-day free trial that includes every feature, so you can test the whole app before paying.",
+    intro: "Superoutine Pro costs $4.99 per month, $39 per year, or $79 once for lifetime access. Every new account starts with a 21-day free trial that includes every feature, so you can test the whole app before paying.",
     sections: [
       {
         h2: "How much does Superoutine cost?",
@@ -68,8 +68,8 @@ export const PAGES: Record<string, ContentPageData> = {
         ],
       },
       {
-        h2: "How does the 15-day free trial work?",
-        answer: "The trial starts the moment you create an account and gives you every Pro feature for 15 days.",
+        h2: "How does the 21-day free trial work?",
+        answer: "The trial starts the moment you create an account and gives you every Pro feature for 21 days.",
         body: [
           "You do not need to enter a card to start. During the trial the dashboard shows how many days are left and what you have built so far.",
           "When the trial ends, the app is locked until you pick a plan. Your habits, check-ins and history are kept, so nothing is lost if you upgrade a few days later.",
@@ -94,7 +94,7 @@ export const PAGES: Record<string, ContentPageData> = {
   features: {
     path: "/features",
     title: "Superoutine Features – XP, Streaks & AI Coach",
-    description: "Explore Superoutine features: XP levels, streaks, an AI coach, routines, to-do list, analytics, reminders and referrals. Try all of it free for 15 days.",
+    description: "Explore Superoutine features: XP levels, streaks, an AI coach, routines, to-do list, analytics, reminders and referrals. Try all of it free for 21 days.",
     crumb: "Features",
     h1: "Superoutine features",
     intro: "Superoutine combines a habit tracker, a routine planner and an AI coach in one web app. You earn XP for every habit you complete, protect your streaks, and see clear analytics on how your routines are going.",
@@ -157,7 +157,7 @@ export const PAGES: Record<string, ContentPageData> = {
   "ai-coach": {
     path: "/ai-coach",
     title: "Superoutine AI Coach – Personal Habit Coaching",
-    description: "The Superoutine AI Coach reads your habits, streaks and tasks to give specific, encouraging advice. See example chats and who it helps. Free for 15 days.",
+    description: "The Superoutine AI Coach reads your habits, streaks and tasks to give specific, encouraging advice. See example chats and who it helps. Free for 21 days.",
     crumb: "AI Coach",
     h1: "The Superoutine AI Coach",
     intro: "The Superoutine AI Coach is a chat assistant built into your dashboard. It reads your habits, streaks, XP and today's tasks, then gives specific, encouraging advice instead of generic tips.",
@@ -194,7 +194,7 @@ export const PAGES: Record<string, ContentPageData> = {
       },
       {
         h2: "Is the AI Coach included in every plan?",
-        answer: "Yes. The AI Coach is included in the 15-day free trial and in every Pro plan from $4.99 per month.",
+        answer: "Yes. The AI Coach is included in the 21-day free trial and in every Pro plan from $4.99 per month.",
         body: ["The coach is not a medical or mental-health service. For health concerns, please talk to a qualified professional."],
       },
     ],
@@ -218,7 +218,7 @@ export const PAGES: Record<string, ContentPageData> = {
         answer: "Superoutine is a web app for tracking daily and weekly habits, planning your day and getting coaching from an AI that knows your progress.",
         body: [
           "You track habits in a 31-day grid, tick off weekly habits in a Weeks 1–5 view, follow step-by-step routines, and keep a short to-do list for the day. Each completed habit earns XP, and your streaks and trends show how your routines are going.",
-          "Superoutine works in any modern browser on desktop and phone. Pro costs $4.99 per month, $39 per year or $79 lifetime, after a 15-day free trial.",
+          "Superoutine works in any modern browser on desktop and phone. Pro costs $4.99 per month, $39 per year or $79 lifetime, after a 21-day free trial.",
         ],
       },
       {
@@ -250,10 +250,10 @@ export const PAGES: Record<string, ContentPageData> = {
   faq: {
     path: "/faq",
     title: "Superoutine FAQ – Habit Tracker Questions",
-    description: "Answers about Superoutine: pricing, the 15-day free trial, AI Coach, XP and streaks, devices, routines, privacy and referrals. Short answers come first.",
+    description: "Answers about Superoutine: pricing, the 21-day free trial, AI Coach, XP and streaks, devices, routines, privacy and referrals. Short answers come first.",
     crumb: "FAQ",
     h1: "Superoutine frequently asked questions",
-    intro: "Superoutine is an AI habit tracker that costs $4.99 per month after a 15-day free trial. Below are short, direct answers to the most common questions, with more detail where it helps.",
+    intro: "Superoutine is an AI habit tracker that costs $4.99 per month after a 21-day free trial. Below are short, direct answers to the most common questions, with more detail where it helps.",
     sections: [],
     faq: [...generalFaq, ...billingFaq.slice(2)],
     related: [

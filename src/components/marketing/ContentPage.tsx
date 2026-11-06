@@ -101,7 +101,7 @@ const ContentPage = ({ page, parent }: { page: ContentPageData; parent?: Crumb }
         )}
 
         <div className="glass-card p-6 text-center mb-10">
-          <p className="font-display font-semibold text-lg mb-1">Try Superoutine free for 15 days</p>
+          <p className="font-display font-semibold text-lg mb-1">Try Superoutine free for 21 days</p>
           <p className="text-sm text-muted-foreground mb-4">Every feature included. Then $4.99/month, $39/year or $79 lifetime.</p>
           <Link to="/signup"><Button>Start free trial</Button></Link>
         </div>

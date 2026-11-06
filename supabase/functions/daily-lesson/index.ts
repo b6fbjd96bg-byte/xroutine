@@ -1,7 +1,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 
-const TRIAL_DAYS = 15; // keep in sync with src/lib/plans.ts
+const TRIAL_DAYS = 21; // keep in sync with src/lib/plans.ts
 const json = (b: unknown, status = 200) =>
   new Response(JSON.stringify(b), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 

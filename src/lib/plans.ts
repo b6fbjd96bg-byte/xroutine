@@ -8,7 +8,7 @@ export const PLANS: Record<PlanKey, { price: number; label: string; per: string;
 };
 export const LIFETIME_CAP = 100;
 export const usd = (n: number) => `$${Number(n || 0).toFixed(2)}`;
-export const TRIAL_DAYS = 15;
+export const TRIAL_DAYS = 21;
 export const PRO_FEATURES = [
   "Unlimited daily & weekly habits",
   "AI Coach chat that knows your progress",

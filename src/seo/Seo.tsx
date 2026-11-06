@@ -77,10 +77,10 @@ export const softwareAppLd = {
   url: `${SITE_URL}/`,
   applicationCategory: "LifestyleApplication",
   operatingSystem: "Web",
-  description: "AI habit tracker and routine planner with XP levels, streaks, an AI coach and analytics. 15-day free trial with every feature.",
+  description: "AI habit tracker and routine planner with XP levels, streaks, an AI coach and analytics. 21-day free trial with every feature.",
   offers: [
-    { "@type": "Offer", name: "Monthly", price: "4.99", priceCurrency: "USD", description: "15-day free trial, then $4.99 per month" },
-    { "@type": "Offer", name: "Yearly", price: "39", priceCurrency: "USD", description: "15-day free trial, then $39 per year" },
+    { "@type": "Offer", name: "Monthly", price: "4.99", priceCurrency: "USD", description: "21-day free trial, then $4.99 per month" },
+    { "@type": "Offer", name: "Yearly", price: "39", priceCurrency: "USD", description: "21-day free trial, then $39 per year" },
     { "@type": "Offer", name: "Lifetime", price: "79", priceCurrency: "USD", description: "One-time payment, limited to the first 100 buyers" },
   ],
 };
