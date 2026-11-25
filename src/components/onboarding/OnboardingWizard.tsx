@@ -202,7 +202,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
                     <div className="text-xs text-muted-foreground mb-3">$0 · no card needed</div>
                     <ul className="space-y-1.5 text-xs text-muted-foreground">
                       <li>✓ Every Pro feature unlocked</li>
-                      <li>✓ Ends after {TRIAL_DAYS} days</li>
+                      <li>✓ {TRIAL_DAYS} days, no card needed</li>
                       <li>✗ Locked until you pick a plan</li>
                     </ul>
                     <div className="mt-3 text-sm font-semibold text-primary group-hover:underline">Start my trial →</div>

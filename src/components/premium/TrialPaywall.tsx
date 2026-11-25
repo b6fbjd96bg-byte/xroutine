@@ -3,7 +3,7 @@ import { Crown, LogOut, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { PlanPicker } from "./UpgradePrompt";
-import { TRIAL_DAYS } from "@/lib/plans";
+
 import { useProgressInvestment } from "@/hooks/useProgressInvestment";
 
 /** Full-screen lock shown once the free trial is over and the user hasn't paid. */
@@ -27,7 +27,7 @@ const TrialPaywall = () => {
           </div>
           <h1 className="text-2xl font-bold font-display">You started something. Finish it.</h1>
           <p className="text-sm text-muted-foreground">
-            Your {TRIAL_DAYS}-day trial is over. Most people quit habits at this point — you got further than they do.
+            Your free trial is over. Most people quit habits at this point — you got further than they do.
           </p>
         </div>
 

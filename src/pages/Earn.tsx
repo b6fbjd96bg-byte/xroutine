@@ -2,7 +2,7 @@ import Seo from "@/seo/Seo";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Users, Percent, Wallet, Repeat, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { PLANS, PRO_FEATURES, TRIAL_DAYS, type PlanKey } from "@/lib/plans";
+import { PLANS, PRO_FEATURES, type PlanKey } from "@/lib/plans";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect } from "react";
 
@@ -29,7 +29,7 @@ const Earn = () => {
           <div className="relative">
             <h1 className="text-3xl sm:text-5xl font-bold font-display mb-4">Build habits. <span className="text-gradient">Earn while friends do too.</span></h1>
             <p className="text-muted-foreground max-w-2xl mx-auto mb-6">Share your link. When your friends go Pro, you earn from every payment they make, renewals included. When they invite their friends, you keep earning on three levels.</p>
-            <Link to={cta}><Button variant="hero" size="lg">{user ? "Get my invite link" : `Start ${TRIAL_DAYS}-day free trial`}</Button></Link>
+            <Link to={cta}><Button variant="hero" size="lg">{user ? "Get my invite link" : "Start free trial"}</Button></Link>
           </div>
         </section>
 
